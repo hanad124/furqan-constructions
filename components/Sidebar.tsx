@@ -14,6 +14,7 @@ import {
 } from "react-icons/fa";
 import { FiChevronRight, FiChevronDown } from "react-icons/fi";
 import { RiDashboardLine } from "react-icons/ri";
+import { BiCircle } from "react-icons/bi";
 import Link from "next/link";
 // import logo from "@/public/assets/logo.svg";
 import { menuItems } from "@/data/menuItems";
@@ -63,9 +64,9 @@ const Sidebar = () => {
   return (
     <div>
       {" "}
-      <div className="sidebar hidden md:block h-screen sticky top-0 border-r w-64 ">
+      <div className="sidebar hidden md:block h-screen sticky top-0 border-r w-60 overflow-y-scroll">
         {/* logo */}
-        <div className="flex items-center ml-5 mt-5 gap-3">
+        <div className="flex items-center ml-5 py-4 gap-3 border-b">
           <Image
             src={logo}
             alt="logo"
@@ -75,28 +76,36 @@ const Sidebar = () => {
           />
           <span className="text-2xl font-semibold"> Furqan</span>
         </div>
-        <ul className="menu py-4">
+        <ul className="menu py-3">
           {menuItems.map((item, index) => (
             <li
               key={index}
-              className={`  ${activeMenuIndex === index ? "" : ""}`}
+              className={`  ${activeMenuIndex === index ? " " : ""}`}
             >
               <Link
                 href="#"
-                className="flex items-center py-3 px-4  "
+                className="flex items-center py-1 px-4  "
                 onClick={() => handleMenuClick(index)}
               >
-                <item.icon className="mr-4 text-lg" />
-                <span>{item.text}</span>
-                {item.submenus.length > 0 && (
-                  <span className="ml-auto">
-                    {activeMenuIndex === index ? (
-                      <FiChevronDown className="ml-auto" />
-                    ) : (
-                      <FiChevronRight className="ml-auto" />
-                    )}
-                  </span>
-                )}
+                <div
+                  className={`${
+                    index === 0
+                      ? "bg-[#008cff]/5 dark:bg-[#008cff]/10 text-[#008cff] dark:text-slate-300"
+                      : ""
+                  } flex items-center w-full py-2 px-4 rounded-md  text-slate-600`}
+                >
+                  <item.icon className="mr-4 text-lg" />
+                  <span>{item.text}</span>
+                  {item.submenus.length > 0 && (
+                    <span className="ml-auto">
+                      {activeMenuIndex === index ? (
+                        <FiChevronDown className="ml-auto" />
+                      ) : (
+                        <FiChevronRight className="ml-auto" />
+                      )}
+                    </span>
+                  )}
+                </div>
               </Link>
               {item.submenus.length > 0 && (
                 <ul
@@ -105,32 +114,40 @@ const Sidebar = () => {
                   }`}
                 >
                   {item.submenus.map((submenu, subIndex) => (
-                    <li key={subIndex}>
-                      <Link href={submenu.url}>
-                        <p className="block py-2 px-4 ">{submenu.text}</p>
-                      </Link>
+                    <li key={subIndex} className=" ml-3 -mt-1">
+                      <div className="flex items-center">
+                        <BiCircle className="w-3" />
+                        <Link href={submenu.url}>
+                          <p className="block py-2 text-sm px-4 ">
+                            {submenu.text}
+                          </p>
+                        </Link>
+                      </div>
                     </li>
                   ))}
                 </ul>
               )}
             </li>
           ))}
-          <div className="flex items-center space-x-2 ml-4 mt-4 ">
+          <div className="flex items-center space-x-2 ml-7 mt-4 ">
             <Switch
               id="dark-mode-switch"
               checked={theme === "dark"}
               onClick={handleToggleMode}
             />
-            <Label htmlFor="dark-mode-switch" className="cursor-pointer">
+            <Label
+              htmlFor="dark-mode-switch"
+              className="cursor-pointer text-slate-600"
+            >
               {theme === "dark" ? "Dark Mode" : "White Mode"}
             </Label>
           </div>
         </ul>
       </div>
-      <div className="flex justify-between items-center w-full md:hidden mt-2">
+      <div className="flex justify-between items-center w-full  mt-2 md:hidden">
         <Sheet>
           <SheetTrigger>
-            <div className="inline-flex items-center p-2 mt-2 ml-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
+            <div className="inline-flex items-center p-2 mt-2 ml-3 text-sm text-gray-500 rounded-lg  hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
               <span className="sr-only">Open sidebar</span>
               <svg
                 className="w-6 h-6"
@@ -202,7 +219,7 @@ const Sidebar = () => {
                       )}
                     </li>
                   ))}
-                  <div className="flex items-center space-x-2 ml-4 mt-4 ">
+                  <div className="flex items-center space-x-2 ml-4 my-4 ">
                     <Switch
                       id="dark-mode-switch"
                       checked={theme === "dark"}
