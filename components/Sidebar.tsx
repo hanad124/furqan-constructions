@@ -180,7 +180,7 @@ const Sidebar = () => {
           <SheetContent side={"left"} className="overflow-y-scroll">
             <SheetHeader>
               <SheetDescription className="overflow-y-scroll">
-                <div className="flex items-center ml-5 mt-5 gap-3">
+                <div className="flex items-center ml-5 py-4 gap-3 border-b">
                   <Image
                     src={logo}
                     alt="logo"
@@ -190,49 +190,59 @@ const Sidebar = () => {
                   />
                   <span className="text-2xl font-semibold"> Furqan</span>
                 </div>
-                <ul className="menu py-4">
+                <ul className="menu py-3">
                   {menuItems.map((item, index) => (
-                    <li
-                      key={index}
-                      className={`  ${activeMenuIndex === index ? "" : ""}`}
-                    >
+                    <li key={index}>
                       <Link
                         href="#"
-                        className="flex items-center py-3 px-4  "
+                        className={`flex items-center py-1 px-4 `}
                         onClick={() => handleMenuClick(index)}
                       >
-                        <item.icon className="mr-4 text-lg" />
-                        <span>{item.text}</span>
-                        {item.submenus.length > 0 && (
-                          <span className="ml-auto">
-                            {activeMenuIndex === index ? (
-                              <FiChevronDown className="ml-auto" />
-                            ) : (
-                              <FiChevronRight className="ml-auto" />
-                            )}
-                          </span>
-                        )}
+                        <div
+                          className={`${
+                            activeTab === index
+                              ? "bg-[#008cff]/5 dark:bg-[#008cff]/10 text-[#008cff] dark:text-slate-300"
+                              : ""
+                          } flex items-center w-full py-2 px-4 rounded-md text-slate-600`}
+                        >
+                          <item.icon className="mr-4 text-lg" />
+                          <span>{item.text}</span>
+                          {item.submenus.length > 0 && (
+                            <span className="ml-auto">
+                              {activeTab === index ? (
+                                <FiChevronDown className="ml-auto" />
+                              ) : (
+                                <FiChevronRight className="ml-auto" />
+                              )}
+                            </span>
+                          )}
+                        </div>
                       </Link>
                       {item.submenus.length > 0 && (
                         <ul
                           className={`submenu ml-6 ${
-                            activeMenuIndex === index ? "block" : "hidden"
+                            activeMenuIndex === index
+                              ? "block duration-300"
+                              : "hidden"
                           }`}
                         >
                           {item.submenus.map((submenu, subIndex) => (
-                            <li key={subIndex}>
-                              <Link href={submenu.url}>
-                                <p className="block py-2 px-4 ">
-                                  {submenu.text}
-                                </p>
-                              </Link>
+                            <li key={subIndex} className="ml-3 -mt-1 ">
+                              <div className="flex items-center">
+                                <BiCircle className="w-3" />
+                                <Link href={submenu.url}>
+                                  <p className="block py-2 text-sm px-4">
+                                    {submenu.text}
+                                  </p>
+                                </Link>
+                              </div>
                             </li>
                           ))}
                         </ul>
                       )}
                     </li>
                   ))}
-                  <div className="flex items-center space-x-2 ml-4 my-4 ">
+                  <div className="flex items-center space-x-2 ml-7 mt-4">
                     <Switch
                       id="dark-mode-switch"
                       checked={theme === "dark"}
@@ -240,7 +250,7 @@ const Sidebar = () => {
                     />
                     <Label
                       htmlFor="dark-mode-switch"
-                      className="cursor-pointer"
+                      className="cursor-pointer text-slate-600"
                     >
                       {theme === "dark" ? "Dark Mode" : "White Mode"}
                     </Label>
