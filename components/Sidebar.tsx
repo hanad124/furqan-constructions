@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { firebaseApp } from "../firebaseConfig";
 import { useRouter } from "next/navigation";
@@ -50,7 +50,13 @@ const Sidebar = () => {
     const newTheme = theme === "dark" ? "white" : "dark";
     setTheme(newTheme);
   };
-  const [activeMenuIndex, setActiveMenuIndex] = useState(null);
+  const [activeMenuIndex, setActiveMenuIndex] = useState<number | null>(null);
+
+  useEffect(() => {
+    // making index 1 default active
+
+    setActiveMenuIndex(0);
+  }, []);
 
   const handleMenuClick = (index: any) => {
     setActiveMenuIndex(index === activeMenuIndex ? null : index);
@@ -78,21 +84,18 @@ const Sidebar = () => {
         </div>
         <ul className="menu py-3">
           {menuItems.map((item, index) => (
-            <li
-              key={index}
-              className={`  ${activeMenuIndex === index ? " " : ""}`}
-            >
+            <li key={index}>
               <Link
                 href="#"
-                className="flex items-center py-1 px-4  "
+                className={`flex items-center py-1 px-4 `}
                 onClick={() => handleMenuClick(index)}
               >
                 <div
                   className={`${
-                    index === 0
+                    activeMenuIndex === index
                       ? "bg-[#008cff]/5 dark:bg-[#008cff]/10 text-[#008cff] dark:text-slate-300"
                       : ""
-                  } flex items-center w-full py-2 px-4 rounded-md  text-slate-600`}
+                  } flex items-center w-full py-2 px-4 rounded-md text-slate-600`}
                 >
                   <item.icon className="mr-4 text-lg" />
                   <span>{item.text}</span>
@@ -114,11 +117,11 @@ const Sidebar = () => {
                   }`}
                 >
                   {item.submenus.map((submenu, subIndex) => (
-                    <li key={subIndex} className=" ml-3 -mt-1">
+                    <li key={subIndex} className="ml-3 -mt-1">
                       <div className="flex items-center">
                         <BiCircle className="w-3" />
                         <Link href={submenu.url}>
-                          <p className="block py-2 text-sm px-4 ">
+                          <p className="block py-2 text-sm px-4">
                             {submenu.text}
                           </p>
                         </Link>
@@ -129,7 +132,7 @@ const Sidebar = () => {
               )}
             </li>
           ))}
-          <div className="flex items-center space-x-2 ml-7 mt-4 ">
+          <div className="flex items-center space-x-2 ml-7 mt-4">
             <Switch
               id="dark-mode-switch"
               checked={theme === "dark"}
