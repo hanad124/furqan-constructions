@@ -15,7 +15,7 @@ import {
 import { FiChevronRight, FiChevronDown } from "react-icons/fi";
 import { RiDashboardLine } from "react-icons/ri";
 import Link from "next/link";
-import logo from "@/public/assets/logo.svg";
+// import logo from "@/public/assets/logo.svg";
 import { menuItems } from "@/data/menuItems";
 
 import { MoonIcon, SunIcon } from "@radix-ui/react-icons";
@@ -41,6 +41,9 @@ import {
 
 const Sidebar = () => {
   const { theme, setTheme } = useTheme();
+
+  const logo =
+    theme === "dark" ? "/assets/logo-dark.svg" : "/assets/logo-light.svg";
 
   const handleToggleMode = () => {
     const newTheme = theme === "dark" ? "white" : "dark";
