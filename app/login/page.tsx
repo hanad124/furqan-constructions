@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 
-import logo from "../../public//assets/logo.svg";
+import logo from "../../public//assets/logo-light.svg";
 import eye from "../../public/assets/eye.svg";
 import eyeoff from "../../public/assets/eye-off.svg";
 
