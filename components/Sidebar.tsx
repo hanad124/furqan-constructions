@@ -18,6 +18,17 @@ import Link from "next/link";
 import logo from "@/public/assets/logo.svg";
 import { menuItems } from "@/data/menuItems";
 
+import { MoonIcon, SunIcon } from "@radix-ui/react-icons";
+import { useTheme } from "next-themes";
+
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
 import {
   Sheet,
   SheetContent,
@@ -28,6 +39,7 @@ import {
 } from "@/components/ui/sheet";
 
 const Sidebar = () => {
+  const { setTheme } = useTheme();
   const [activeMenuIndex, setActiveMenuIndex] = useState(null);
 
   const handleMenuClick = (index: any) => {
@@ -96,7 +108,7 @@ const Sidebar = () => {
           ))}
         </ul>
       </div>
-      <div className="block md:hidden">
+      <div className="flex justify-between items-center w-full md:hidden mt-2">
         <Sheet>
           <SheetTrigger>
             <div className="inline-flex items-center p-2 mt-2 ml-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
@@ -116,9 +128,9 @@ const Sidebar = () => {
               </svg>
             </div>
           </SheetTrigger>
-          <SheetContent side={"left"}>
+          <SheetContent side={"left"} className="overflow-y-scroll">
             <SheetHeader>
-              <SheetDescription>
+              <SheetDescription className="overflow-y-scroll">
                 <div className="flex items-center ml-5 mt-5 gap-3">
                   <Image
                     src={logo}
@@ -137,10 +149,10 @@ const Sidebar = () => {
                     >
                       <Link
                         href="#"
-                        className="flex items-center py-2 px-4 text-lg "
+                        className="flex items-center py-3 px-4  "
                         onClick={() => handleMenuClick(index)}
                       >
-                        <item.icon className="mr-3" />
+                        <item.icon className="mr-4 text-lg" />
                         <span>{item.text}</span>
                         {item.submenus.length > 0 && (
                           <span className="ml-auto">
@@ -161,8 +173,8 @@ const Sidebar = () => {
                           {item.submenus.map((submenu, subIndex) => (
                             <li key={subIndex}>
                               <Link href={submenu.url}>
-                                <p className="block py-2 px-4 text-left text-lg ">
-                                  -- {submenu.text}
+                                <p className="block py-2 px-4 ">
+                                  {submenu.text}
                                 </p>
                               </Link>
                             </li>
@@ -176,6 +188,28 @@ const Sidebar = () => {
             </SheetHeader>
           </SheetContent>
         </Sheet>
+        <div className="flex items-center flex-shrink-0  mr-6">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="icon">
+                <SunIcon className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                <MoonIcon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                <span className="sr-only">Toggle theme</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => setTheme("light")}>
+                Light
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setTheme("dark")}>
+                Dark
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setTheme("system")}>
+                System
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
     </div>
   );
