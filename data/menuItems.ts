@@ -11,6 +11,7 @@ import {
   HiMiniCheckCircle,
   HiDocumentDuplicate,
 } from "react-icons/hi2";
+import { FaArrowRightFromBracket } from "react-icons/fa6";
 import {
   HiUsers,
   HiViewList,
@@ -62,4 +63,5 @@ export const menuItems = [
     ],
   },
   { icon: HiUsers, HiViewList, text: "Users", submenus: [] },
+  { icon: FaArrowRightFromBracket, HiViewList, text: "Log out", submenus: [] },
 ];

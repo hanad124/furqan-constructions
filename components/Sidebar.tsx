@@ -62,10 +62,10 @@ const Sidebar = () => {
             >
               <Link
                 href="#"
-                className="flex items-center py-2 px-4  "
+                className="flex items-center py-3 px-4  "
                 onClick={() => handleMenuClick(index)}
               >
-                <item.icon className="mr-3" />
+                <item.icon className="mr-4 text-lg" />
                 <span>{item.text}</span>
                 {item.submenus.length > 0 && (
                   <span className="ml-auto">
@@ -162,7 +162,7 @@ const Sidebar = () => {
                             <li key={subIndex}>
                               <Link href={submenu.url}>
                                 <p className="block py-2 px-4 text-left text-lg ">
-                                 -- {submenu.text}
+                                  -- {submenu.text}
                                 </p>
                               </Link>
                             </li>
