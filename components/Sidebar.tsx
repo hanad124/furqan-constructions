@@ -20,7 +20,8 @@ import { menuItems } from "@/data/menuItems";
 
 import { MoonIcon, SunIcon } from "@radix-ui/react-icons";
 import { useTheme } from "next-themes";
-
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -39,7 +40,12 @@ import {
 } from "@/components/ui/sheet";
 
 const Sidebar = () => {
-  const { setTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
+
+  const handleToggleMode = () => {
+    const newTheme = theme === "dark" ? "white" : "dark";
+    setTheme(newTheme);
+  };
   const [activeMenuIndex, setActiveMenuIndex] = useState(null);
 
   const handleMenuClick = (index: any) => {
@@ -106,6 +112,16 @@ const Sidebar = () => {
               )}
             </li>
           ))}
+          <div className="flex items-center space-x-2 ml-4 mt-4 ">
+            <Switch
+              id="dark-mode-switch"
+              checked={theme === "dark"}
+              onClick={handleToggleMode}
+            />
+            <Label htmlFor="dark-mode-switch" className="cursor-pointer">
+              {theme === "dark" ? "Dark Mode" : "White Mode"}
+            </Label>
+          </div>
         </ul>
       </div>
       <div className="flex justify-between items-center w-full md:hidden mt-2">
@@ -183,6 +199,19 @@ const Sidebar = () => {
                       )}
                     </li>
                   ))}
+                  <div className="flex items-center space-x-2 ml-4 mt-4 ">
+                    <Switch
+                      id="dark-mode-switch"
+                      checked={theme === "dark"}
+                      onClick={handleToggleMode}
+                    />
+                    <Label
+                      htmlFor="dark-mode-switch"
+                      className="cursor-pointer"
+                    >
+                      {theme === "dark" ? "Dark Mode" : "White Mode"}
+                    </Label>
+                  </div>
                 </ul>
               </SheetDescription>
             </SheetHeader>
@@ -203,9 +232,6 @@ const Sidebar = () => {
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => setTheme("dark")}>
                 Dark
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setTheme("system")}>
-                System
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
