@@ -1,23 +1,7 @@
 "use client";
 
-import React from "react";
-import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
-import { firebaseApp } from "../../firebaseConfig";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
-import { Sidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
-import { FiHome } from "react-icons/fi";
-import { FiUsers } from "react-icons/fi";
-import { FiList } from "react-icons/fi";
-import { FiBriefcase } from "react-icons/fi";
-import { FiFileText } from "react-icons/fi";
-import { FiDatabase } from "react-icons/fi";
-import { BiTransfer } from "react-icons/bi";
-import { BiUserPin } from "react-icons/bi";
-import { BiDollarCircle } from "react-icons/bi";
-import { BiUserCircle } from "react-icons/bi";
-import { BiSolidBank } from "react-icons/bi";
-import { FiCheckCircle } from "react-icons/fi";
+import React, { useState } from "react";
+
 import {
   Sheet,
   SheetContent,
@@ -27,101 +11,14 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 
-import logo from "@/public/assets/logo.svg";
-import Widgets from "@/components/Widgets";
+import Sidebar from "@/components/Sidebar";
 
 const Dashboard = () => {
-  const router = useRouter();
-  const handleSignOut = async () => {
-    signOut(getAuth(firebaseApp));
-    router.push("/login");
-  };
   return (
     <>
       <div className="flex flex-col md:flex-row">
-        <Sidebar className="hidden md:block">
-          <div className="flex items-center gap-1 ml-5 mt-3">
-            <Image src={logo} className="w-8 h-8" alt="logo" />
-            <span className="ml-2 text-xl font-bold text-gray-800 dark:text-white">
-              Furqan
-            </span>
-          </div>
-          <Menu className="mt-3">
-            <MenuItem>
-              <div className="flex items-center gap-2">
-                <FiHome className="mr-2" />
-                <span>Dashboard</span>
-              </div>
-            </MenuItem>
-            <MenuItem>
-              <div className="flex items-center gap-2">
-                <FiUsers className="mr-2" />
-                <span>Employee</span>
-              </div>
-            </MenuItem>
-            <MenuItem>
-              <div className="flex items-center gap-2">
-                <FiList className="mr-2" />
-                <span> Item list</span>
-              </div>
-            </MenuItem>
-            <SubMenu label="Purchcase">
-              <MenuItem>Containers</MenuItem>
-              <MenuItem> Market </MenuItem>
-            </SubMenu>
-            <MenuItem>
-              <div className="flex items-center gap-2">
-                <BiTransfer className="mr-2 text-lg" />
-                <span>Transfer</span>
-              </div>
-            </MenuItem>
-            <MenuItem>
-              <div className="flex items-center gap-2">
-                <BiUserPin className="mr-2 text-lg" />
-                <span>Customers</span>
-              </div>
-            </MenuItem>
-            <SubMenu label="Invoice">
-              <MenuItem> Cash </MenuItem>
-              <MenuItem> Credit </MenuItem>
-            </SubMenu>
-            <MenuItem>
-              <div className="flex items-center gap-2">
-                <FiDatabase className="mr-2" />
-                <span>Stock</span>
-              </div>
-            </MenuItem>
-            <MenuItem>
-              <div className="flex items-center gap-2">
-                <BiDollarCircle className="mr-2 text-lg" />
-                <span>Expense</span>
-              </div>
-            </MenuItem>
-            <MenuItem>
-              <div className="flex items-center gap-2">
-                <BiSolidBank className="mr-2 text-lg" />
-                <span>Bank</span>
-              </div>
-            </MenuItem>
-            <MenuItem>
-              <div className="flex items-center gap-2">
-                <FiCheckCircle className="mr-2 text-lg" />
-                <span>Clearance</span>
-              </div>
-            </MenuItem>
-            <MenuItem>
-              <div className="flex items-center gap-2">
-                <BiUserCircle className="mr-2 text-lg" />
-                <span>Users</span>
-              </div>
-            </MenuItem>
-            <SubMenu label="Report">
-              <MenuItem> All report </MenuItem>
-              <MenuItem> single reports </MenuItem>
-            </SubMenu>
-          </Menu>
-        </Sidebar>{" "}
-        <div className=" md:hidden">
+        <Sidebar />
+        <div className="block md:hidden">
           <Sheet>
             <SheetTrigger>
               <div className="inline-flex items-center p-2 mt-2 ml-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
@@ -143,90 +40,7 @@ const Dashboard = () => {
             </SheetTrigger>
             <SheetContent side={"left"}>
               <SheetHeader>
-                <SheetDescription>
-                  <Sidebar className="w-full bg-white">
-                    {/* <div className="flex items-center gap-1 ml-5 mt-3">
-                      <Image src={logo} className="w-8 h-8" alt="logo" />
-                      <span className="ml-2 text-xl font-bold text-gray-800 dark:text-white">
-                        Furqan
-                      </span>
-                    </div> */}
-                    <Menu className="mt-3 bg-white">
-                      <MenuItem>
-                        <div className="flex items-center gap-2">
-                          <FiHome className="mr-2" />
-                          <span>Dashboard</span>
-                        </div>
-                      </MenuItem>
-                      <MenuItem>
-                        <div className="flex items-center gap-2">
-                          <FiUsers className="mr-2" />
-                          <span>Employee</span>
-                        </div>
-                      </MenuItem>
-                      <MenuItem>
-                        <div className="flex items-center gap-2">
-                          <FiList className="mr-2" />
-                          <span> Item list</span>
-                        </div>
-                      </MenuItem>
-                      <SubMenu label="Purchcase">
-                        <MenuItem>Containers</MenuItem>
-                        <MenuItem> Market </MenuItem>
-                      </SubMenu>
-                      <MenuItem>
-                        <div className="flex items-center gap-2">
-                          <BiTransfer className="mr-2 text-lg" />
-                          <span>Transfer</span>
-                        </div>
-                      </MenuItem>
-                      <MenuItem>
-                        <div className="flex items-center gap-2">
-                          <BiUserPin className="mr-2 text-lg" />
-                          <span>Customers</span>
-                        </div>
-                      </MenuItem>
-                      <SubMenu label="Invoice">
-                        <MenuItem> Cash </MenuItem>
-                        <MenuItem> Credit </MenuItem>
-                      </SubMenu>
-                      <MenuItem>
-                        <div className="flex items-center gap-2">
-                          <FiDatabase className="mr-2" />
-                          <span>Stock</span>
-                        </div>
-                      </MenuItem>
-                      <MenuItem>
-                        <div className="flex items-center gap-2">
-                          <BiDollarCircle className="mr-2 text-lg" />
-                          <span>Expense</span>
-                        </div>
-                      </MenuItem>
-                      <MenuItem>
-                        <div className="flex items-center gap-2">
-                          <BiSolidBank className="mr-2 text-lg" />
-                          <span>Bank</span>
-                        </div>
-                      </MenuItem>
-                      <MenuItem>
-                        <div className="flex items-center gap-2">
-                          <FiCheckCircle className="mr-2 text-lg" />
-                          <span>Clearance</span>
-                        </div>
-                      </MenuItem>
-                      <MenuItem>
-                        <div className="flex items-center gap-2">
-                          <BiUserCircle className="mr-2 text-lg" />
-                          <span>Users</span>
-                        </div>
-                      </MenuItem>
-                      <SubMenu label="Report">
-                        <MenuItem> All report </MenuItem>
-                        <MenuItem> single reports </MenuItem>
-                      </SubMenu>
-                    </Menu>
-                  </Sidebar>{" "}
-                </SheetDescription>
+                <SheetDescription></SheetDescription>
               </SheetHeader>
             </SheetContent>
           </Sheet>
