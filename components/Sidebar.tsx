@@ -51,15 +51,25 @@ const Sidebar = () => {
     setTheme(newTheme);
   };
   const [activeMenuIndex, setActiveMenuIndex] = useState<number | null>(null);
+  const [activeTab, setActiveTab] = useState<number | null>(null);
 
   useEffect(() => {
     // making index 1 default active
-
-    setActiveMenuIndex(0);
+    setActiveTab(0);
   }, []);
 
   const handleMenuClick = (index: any) => {
-    setActiveMenuIndex(index === activeMenuIndex ? null : index);
+    if (activeMenuIndex === index) {
+      setActiveMenuIndex(null);
+    } else {
+      setActiveMenuIndex(index);
+    }
+
+    if (activeTab === index) {
+      return; // Don't update the active state if the clicked tab is already active
+    }
+
+    setActiveTab(index);
   };
 
   const router = useRouter();
@@ -92,7 +102,7 @@ const Sidebar = () => {
               >
                 <div
                   className={`${
-                    activeMenuIndex === index
+                    activeTab === index
                       ? "bg-[#008cff]/5 dark:bg-[#008cff]/10 text-[#008cff] dark:text-slate-300"
                       : ""
                   } flex items-center w-full py-2 px-4 rounded-md text-slate-600`}
@@ -101,7 +111,7 @@ const Sidebar = () => {
                   <span>{item.text}</span>
                   {item.submenus.length > 0 && (
                     <span className="ml-auto">
-                      {activeMenuIndex === index ? (
+                      {activeTab === index ? (
                         <FiChevronDown className="ml-auto" />
                       ) : (
                         <FiChevronRight className="ml-auto" />
@@ -113,11 +123,11 @@ const Sidebar = () => {
               {item.submenus.length > 0 && (
                 <ul
                   className={`submenu ml-6 ${
-                    activeMenuIndex === index ? "block" : "hidden"
+                    activeMenuIndex === index ? "block duration-300" : "hidden"
                   }`}
                 >
                   {item.submenus.map((submenu, subIndex) => (
-                    <li key={subIndex} className="ml-3 -mt-1">
+                    <li key={subIndex} className="ml-3 -mt-1 ">
                       <div className="flex items-center">
                         <BiCircle className="w-3" />
                         <Link href={submenu.url}>
