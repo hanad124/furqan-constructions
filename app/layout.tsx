@@ -1,5 +1,6 @@
 "use client";
 
+import { ThemeProvider } from "@/components/theme-provider";
 import { useRouter, usePathname } from "next/navigation";
 import useAuth from "../hooks/useAuth";
 import { useEffect } from "react";
@@ -36,7 +37,16 @@ export default function RootLayout({
         {/* <title>{metadata.title}</title> */}
         {/* <meta name="description" content={metadata.description} /> */}
       </head>
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+        </ThemeProvider>
+      </body>
     </html>
   );
 }

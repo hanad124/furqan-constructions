@@ -9,9 +9,10 @@ import {
   FaHome,
   FaUsers,
   FaCog,
-  FaChevronDown,
+  FaChevronCircleRight,
   FaChevronUp,
 } from "react-icons/fa";
+import { FiChevronRight, FiChevronDown } from "react-icons/fi";
 import { RiDashboardLine } from "react-icons/ri";
 import Link from "next/link";
 import logo from "@/public/assets/logo.svg";
@@ -54,16 +55,27 @@ const Sidebar = () => {
   return (
     <div>
       {" "}
-      <div className="hidden md:block sidebar h-screen sticky top-0 overflow-y-scroll w-64 bg-gray-800 text-white">
+      <div className="sidebar hidden md:block h-screen sticky top-0 border-r w-64 ">
+        {/* logo */}
+        <div className="flex items-center ml-5 mt-5 gap-3">
+          <Image
+            src={logo}
+            alt="logo"
+            width={100}
+            height={100}
+            className="w-8"
+          />
+          <span className="text-2xl font-semibold"> Furqan</span>
+        </div>
         <ul className="menu py-4">
           {menuItems.map((item, index) => (
             <li
               key={index}
-              className={` ${activeMenuIndex === index ? "" : ""}`}
+              className={`  ${activeMenuIndex === index ? "" : ""}`}
             >
               <Link
                 href="#"
-                className="flex items-center py-2 px-4 text-gray-400 hover:text-white  "
+                className="flex items-center py-2 px-4  "
                 onClick={() => handleMenuClick(index)}
               >
                 <item.icon className="mr-3" />
@@ -71,9 +83,9 @@ const Sidebar = () => {
                 {item.submenus.length > 0 && (
                   <span className="ml-auto">
                     {activeMenuIndex === index ? (
-                      <FaChevronUp className="ml-auto" />
+                      <FiChevronDown className="ml-auto" />
                     ) : (
-                      <FaChevronDown className="ml-auto" />
+                      <FiChevronRight className="ml-auto" />
                     )}
                   </span>
                 )}
@@ -87,9 +99,7 @@ const Sidebar = () => {
                   {item.submenus.map((submenu, subIndex) => (
                     <li key={subIndex}>
                       <Link href={submenu.url}>
-                        <p className="block py-2 px-4 text-gray-400 hover:text-white">
-                          {submenu.text}
-                        </p>
+                        <p className="block py-2 px-4 ">{submenu.text}</p>
                       </Link>
                     </li>
                   ))}
