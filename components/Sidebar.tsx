@@ -80,7 +80,7 @@ const Sidebar = () => {
   return (
     <div>
       {" "}
-      <div className="sidebar hidden md:block h-screen sticky top-0 border-r w-60 overflow-y-scroll">
+      <div className="sidebar hidden md:block h-screen sticky top-0 border-r w-60 ">
         {/* logo */}
         <div className="flex items-center ml-5 py-4 gap-3 border-b">
           <Image
@@ -92,7 +92,7 @@ const Sidebar = () => {
           />
           <span className="text-2xl font-semibold"> Furqan</span>
         </div>
-        <ul className="menu py-3">
+        <ul className="menu my-3 h-full overflow-y-scroll pb-28">
           {menuItems.map((item, index) => (
             <li key={index}>
               <Link
@@ -103,7 +103,7 @@ const Sidebar = () => {
                 <div
                   className={`${
                     activeTab === index
-                      ? "bg-[#008cff]/5 dark:bg-[#008cff]/10 text-[#008cff] dark:text-slate-300"
+                      ? "bg-[#008cff]/5 dark:bg-[#008cff]/10 text-blue-400 dark:text-slate-300"
                       : ""
                   } flex items-center w-full py-2 px-4 rounded-md text-slate-600`}
                 >
