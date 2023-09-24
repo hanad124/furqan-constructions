@@ -63,5 +63,5 @@ export const menuItems = [
     ],
   },
   { icon: HiUsers, HiViewList, text: "Users", submenus: [] },
-  { icon: FaArrowRightFromBracket, HiViewList, text: "Log out", submenus: [] },
+  // { icon: FaArrowRightFromBracket, HiViewList, text: "Log out", submenus: [] },
 ];

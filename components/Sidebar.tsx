@@ -68,7 +68,6 @@ const Sidebar = () => {
     if (activeTab === index) {
       return; // Don't update the active state if the clicked tab is already active
     }
-
     setActiveTab(index);
   };
 
@@ -103,7 +102,7 @@ const Sidebar = () => {
                 <div
                   className={`${
                     activeTab === index
-                      ? "bg-[#008cff]/5 dark:bg-[#008cff]/10 text-blue-400 dark:text-slate-300"
+                      ? "bg-primary text-white dark:bg-primary  dark:text-white"
                       : ""
                   } flex items-center w-full py-2 px-4 rounded-md text-slate-600`}
                 >
@@ -111,7 +110,7 @@ const Sidebar = () => {
                   <span>{item.text}</span>
                   {item.submenus.length > 0 && (
                     <span className="ml-auto">
-                      {activeTab === index ? (
+                      {activeMenuIndex === index ? (
                         <FiChevronDown className="ml-auto" />
                       ) : (
                         <FiChevronRight className="ml-auto" />
@@ -177,9 +176,9 @@ const Sidebar = () => {
               </svg>
             </div>
           </SheetTrigger>
-          <SheetContent side={"left"} className="overflow-y-scroll">
+          <SheetContent side={"left"} className="= h-full overflow-y-scroll">
             <SheetHeader>
-              <SheetDescription className="overflow-y-scroll">
+              <SheetDescription className="">
                 <div className="flex items-center ml-5 py-4 gap-3 border-b">
                   <Image
                     src={logo}
@@ -190,7 +189,7 @@ const Sidebar = () => {
                   />
                   <span className="text-2xl font-semibold"> Furqan</span>
                 </div>
-                <ul className="menu py-3">
+                <ul className="menu py-3 h-full overflow-y-scroll">
                   {menuItems.map((item, index) => (
                     <li key={index}>
                       <Link
