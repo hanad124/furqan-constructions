@@ -14,6 +14,8 @@ import {
 import Sidebar from "@/components/Sidebar";
 import Navbar from "@/components/Navbar";
 import Widgets from "@/components/Widgets";
+import Charts from "@/components/Charts";
+import DataTable from "@/components/DataTable";
 
 const Dashboard = () => {
   return (
@@ -23,6 +25,8 @@ const Dashboard = () => {
         <div className="p-4 flex-1">
           {/* <Navbar /> */}
           <Widgets />
+          <Charts />
+          <DataTable />
           <div className="p-4 ">
             <div className="grid grid-cols-3 gap-4 mb-4"></div>
             <div className="flex items-center justify-center h-48 mb-4 rounded bg-gray-50 dark:bg-gray-800">
