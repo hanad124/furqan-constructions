@@ -179,7 +179,7 @@ const Sidebar = () => {
           <SheetContent side={"left"} className="= h-full overflow-y-scroll">
             <SheetHeader>
               <SheetDescription className="">
-                <div className="flex items-center ml-5 py-4 gap-3">
+                <div className="flex items-center  py-4 gap-3">
                   <Image
                     src={logo}
                     alt="logo"
@@ -194,7 +194,7 @@ const Sidebar = () => {
                     <li key={index}>
                       <Link
                         href="#"
-                        className={`flex items-center py-1 px-4 `}
+                        className={`flex items-center py-1  `}
                         onClick={() => handleMenuClick(index)}
                       >
                         <div
@@ -205,7 +205,7 @@ const Sidebar = () => {
                           } flex items-center w-full py-[7px] px-4 rounded-md`}
                         >
                           <item.icon className="mr-4 text-lg" />
-                          <span>{item.text}</span>
+                          <span className="text-lg">{item.text}</span>
                           {item.submenus.length > 0 && (
                             <span className="ml-auto">
                               {activeMenuIndex === index ? (
