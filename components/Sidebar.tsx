@@ -16,7 +16,7 @@ import { FiChevronRight, FiChevronDown } from "react-icons/fi";
 import { RiDashboardLine } from "react-icons/ri";
 import { BiCircle } from "react-icons/bi";
 import Link from "next/link";
-// import logo from "@/public/assets/logo.svg";
+import logo from "@/public/assets/logo-light.svg";
 import { menuItems } from "@/data/menuItems";
 
 import { MoonIcon, SunIcon } from "@radix-ui/react-icons";
@@ -43,8 +43,8 @@ import {
 const Sidebar = () => {
   const { theme, setTheme } = useTheme();
 
-  const logo =
-    theme === "dark" ? "/assets/logo-dark.svg" : "/assets/logo-light.svg";
+  // const logo =
+  //   theme === "dark" ? "/assets/logo-dark.svg" : "/assets/logo-light.svg";
 
   const handleToggleMode = () => {
     const newTheme = theme === "dark" ? "white" : "dark";
@@ -79,9 +79,9 @@ const Sidebar = () => {
   return (
     <div>
       {" "}
-      <div className="sidebar hidden md:block h-screen sticky top-0 border-r w-60 ">
+      <div className="sidebar hidden md:block h-screen sticky top-0 border-salte-300 dark:border-slate-600 border-r w-60 ">
         {/* logo */}
-        <div className="flex items-center ml-5 py-4 gap-3 border-b">
+        <div className="flex items-center ml-8 py-4 gap-3 ">
           <Image
             src={logo}
             alt="logo"
@@ -102,9 +102,9 @@ const Sidebar = () => {
                 <div
                   className={`${
                     activeTab === index
-                      ? "bg-primary text-white dark:bg-primary  dark:text-white"
-                      : ""
-                  } flex items-center w-full py-2 px-4 rounded-md text-slate-600`}
+                      ? "bg-primary text-white"
+                      : " dark:text-[#949bbd]"
+                  } flex items-center w-full py-[7px] px-4 rounded-md`}
                 >
                   <item.icon className="mr-4 text-lg" />
                   <span>{item.text}</span>
@@ -179,7 +179,7 @@ const Sidebar = () => {
           <SheetContent side={"left"} className="= h-full overflow-y-scroll">
             <SheetHeader>
               <SheetDescription className="">
-                <div className="flex items-center ml-5 py-4 gap-3 border-b">
+                <div className="flex items-center ml-5 py-4 gap-3">
                   <Image
                     src={logo}
                     alt="logo"
@@ -189,7 +189,7 @@ const Sidebar = () => {
                   />
                   <span className="text-2xl font-semibold"> Furqan</span>
                 </div>
-                <ul className="menu py-3 h-full overflow-y-scroll">
+                <ul className="menu my-3 h-full overflow-y-scroll pb-28">
                   {menuItems.map((item, index) => (
                     <li key={index}>
                       <Link
@@ -200,15 +200,15 @@ const Sidebar = () => {
                         <div
                           className={`${
                             activeTab === index
-                              ? "bg-[#008cff]/5 dark:bg-[#008cff]/10 text-[#008cff] dark:text-slate-300"
-                              : ""
-                          } flex items-center w-full py-2 px-4 rounded-md text-slate-600`}
+                              ? "bg-primary text-white"
+                              : " dark:text-[#949bbd]"
+                          } flex items-center w-full py-[7px] px-4 rounded-md`}
                         >
                           <item.icon className="mr-4 text-lg" />
                           <span>{item.text}</span>
                           {item.submenus.length > 0 && (
                             <span className="ml-auto">
-                              {activeTab === index ? (
+                              {activeMenuIndex === index ? (
                                 <FiChevronDown className="ml-auto" />
                               ) : (
                                 <FiChevronRight className="ml-auto" />
