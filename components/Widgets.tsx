@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import { BiSolidWallet } from "react-icons/bi";
+import { BiSolidWallet, BiSolidCart } from "react-icons/bi";
 
 const Widgets = () => {
   return (
@@ -63,7 +63,7 @@ const Widgets = () => {
               </CardDescription>
             </CardHeader>
             <div className="w-12 h-12 bg-violet-400/40 rounded-lg mr-6 flex justify-center items-center">
-              <BiSolidWallet className="text-violet-500 text-2xl" />
+              <BiSolidCart className="text-violet-500 text-2xl" />
             </div>
           </div>
         </Card>
@@ -81,7 +81,7 @@ const Widgets = () => {
               </CardDescription>
             </CardHeader>
             <div className="w-12 h-12 bg-red-400/40 rounded-lg mr-6 flex justify-center items-center">
-              <BiSolidWallet className="text-red-500 text-2xl" />
+              <BiSolidCart className="text-red-500 text-2xl" />
             </div>
           </div>
         </Card>
