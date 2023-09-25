@@ -6,16 +6,7 @@ import { firebaseApp } from "../firebaseConfig";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
-import {
-  FaHome,
-  FaUsers,
-  FaCog,
-  FaChevronCircleRight,
-  FaChevronUp,
-} from "react-icons/fa";
-
 import { FiChevronRight, FiChevronDown } from "react-icons/fi";
-import { RiDashboardLine } from "react-icons/ri";
 import { BiCircle } from "react-icons/bi";
 import Link from "next/link";
 import logo from "@/public/assets/logo-light.svg";
@@ -44,9 +35,6 @@ import {
 
 const Sidebar = () => {
   const { theme, setTheme } = useTheme();
-
-  // const logo =
-  //   theme === "dark" ? "/assets/logo-dark.svg" : "/assets/logo-light.svg";
 
   const handleToggleMode = () => {
     const newTheme = theme === "dark" ? "white" : "dark";
@@ -104,8 +92,8 @@ const Sidebar = () => {
                 <div
                   className={`${
                     activeTab === index
-                      ? "bg-primary text-white"
-                      : " dark:text-[#949bbd]"
+                      ? "bg-primary text-white hover:bg-primary"
+                      : " text-slate-600 dark:text-[#949bbd] hover:bg-primary/10"
                   } flex items-center w-full py-[7px] px-4 rounded-md`}
                 >
                   <item.icon className="mr-4 text-lg" />
