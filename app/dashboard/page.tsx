@@ -25,7 +25,7 @@ const Dashboard = () => {
         <div className="p-4 flex-1">
           {/* <Navbar /> */}
           <Widgets />
-          {/* <Charts /> */}
+          <Charts />
           <DataTable />
         </div>{" "}
       </div>

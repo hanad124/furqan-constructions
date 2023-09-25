@@ -18,7 +18,16 @@ import { TotalRevenueOptions, TotalRevenueSeries } from "./chart.config";
 
 const ApexChart = () => {
   return (
-    <Card className="mt-5 p-5 ">
+    <Box
+      p={4}
+      flex={1}
+      bgcolor="#fcfcfc"
+      id="chart"
+      display="flex"
+      flexDirection="column"
+      borderRadius="15px"
+      className="mt-5 p-5 "
+    >
       <Typography
         fontSize={18}
         fontWeight={600}
@@ -56,7 +65,7 @@ const ApexChart = () => {
         height={310}
         options={TotalRevenueOptions}
       />
-    </Card>
+    </Box>
   );
 };
 
