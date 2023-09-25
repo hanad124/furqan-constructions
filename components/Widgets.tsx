@@ -31,7 +31,7 @@ const Widgets = () => {
             </div>
           </div>
         </div>
-        <Card className="flex-1 w-full md:min-w-[12rem] ">
+        <div className="flex-1 w-full md:min-w-[12rem] ">
           <div className="flex items-center justify-between">
             <div>
               <div>
@@ -48,8 +48,8 @@ const Widgets = () => {
               <BiSolidWallet className="text-yellow-500 text-2xl" />
             </div>
           </div>
-        </Card>
-        <Card className="flex-1 w-full md:min-w-[12rem] ">
+        </div>
+        <div className="flex-1 w-full md:min-w-[12rem] ">
           <div className="flex items-center justify-between">
             <div>
               <div>
@@ -66,8 +66,8 @@ const Widgets = () => {
               <BiSolidCart className="text-violet-500 text-2xl" />
             </div>
           </div>
-        </Card>
-        <Card className="flex-1 w-full md:min-w-[12rem] ">
+        </div>
+        <div className="flex-1 w-full md:min-w-[12rem] ">
           <div className="flex items-center justify-between">
             <div>
               <div>
@@ -84,7 +84,7 @@ const Widgets = () => {
               <BiSolidCart className="text-red-500 text-2xl" />
             </div>
           </div>
-        </Card>
+        </div>
       </div>
     </div>
   );
