@@ -46,7 +46,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="flex">
+          <div className="flex flex-col md:flex-row">
             <Sidebar />
             <div className="flex-1">
               <Navbar />
