@@ -23,7 +23,7 @@ const Dashboard = () => {
       <div className="flex flex-col md:flex-row">
         <Sidebar />
         <div className="p-4 flex-1">
-          {/* <Navbar /> */}
+          <Navbar />
           <Widgets />
           <Charts />
           <DataTable />

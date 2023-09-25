@@ -37,7 +37,7 @@ const rows = [
 export default function DataTable() {
   return (
     <div style={{ height: 400, width: "100%" }} className="mt-10 ">
-      <h1 className="text-xl font-semibold my-5">
+      <h1 className="text-xl font-semibold my-5 ml-3">
         Top Customers by Sales Volume
       </h1>
       <DataGrid

@@ -12,7 +12,7 @@ import { BiSolidWallet, BiSolidCart } from "react-icons/bi";
 const Widgets = () => {
   return (
     <div>
-      <div className="flex flex-wrap items-center gap-x-2 gap-y-4 w-full">
+      <div className="flex flex-wrap items-center gap-x-2 gap-y-4 w-full mt-6">
         <Card className="flex-1 w-full md:min-w-[12rem] ">
           <div className="flex items-center justify-between">
             <CardHeader>

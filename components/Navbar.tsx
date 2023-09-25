@@ -5,21 +5,66 @@ import { MoonIcon, SunIcon } from "@radix-ui/react-icons";
 import { useTheme } from "next-themes";
 
 import { Button } from "@/components/ui/button";
+import { Card } from "./ui/card";
+import { Input } from "@/components/ui/input";
+import { BiSearch } from "react-icons/bi";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Command,
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+  CommandShortcut,
+} from "@/components/ui/command";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export default function Navbar() {
   const { setTheme } = useTheme();
+  const [open, setOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    const down = (e: KeyboardEvent) => {
+      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        setOpen((open) => !open);
+      }
+    };
+    document.addEventListener("keydown", down);
+    return () => document.removeEventListener("keydown", down);
+  }, []);
 
   return (
     <>
       {/* navbar */}
-      <nav className="flex items-center justify-between flex-wrap  p-6 shadow-md">
-        <div className="flex items-center flex-shrink-0  mr-6">
+      <Card className="hidden md:flex items-center justify-between flex-wrap p-4 py-3 rounded-md  ">
+        <Card
+          className="flex items-center gap-2 px-2 py-2 min-w-[15rem] rounded-md cursor-pointer"
+          onClick={() => setOpen(true)}
+        >
+          <BiSearch className="h-5 w-5 text-gray-400" />
+          <p className="text-slate-400"> search</p>
+        </Card>
+        <CommandDialog open={open} onOpenChange={setOpen}>
+          <CommandInput placeholder="Type a command or search..." />
+          <CommandList>
+            <CommandEmpty>No results found.</CommandEmpty>
+            <CommandGroup heading="Suggestions">
+              <CommandItem>Calendar</CommandItem>
+              <CommandItem>Search Emoji</CommandItem>
+              <CommandItem>Calculator</CommandItem>
+            </CommandGroup>
+          </CommandList>
+        </CommandDialog>
+        <div className="flex items-center gap-4 cursor-pointer flex-shrink-0 mr-6">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="icon">
@@ -40,8 +85,12 @@ export default function Navbar() {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+          <Avatar>
+            <AvatarImage src="https://github.com/shadcn.png" />
+            <AvatarFallback>CN</AvatarFallback>
+          </Avatar>
         </div>
-      </nav>
+      </Card>
     </>
   );
 }

@@ -19,15 +19,15 @@ import { TotalRevenueOptions, TotalRevenueSeries } from "./chart.config";
 const ApexChart = () => {
   return (
     <Card
-      className=" rounded-[15px] p-5 mt-10 flex flex-col"
-      // p={4}
-      // flex={1}
-      // bgcolor="#fcfcfc"
-      // id="chart"
-      // display="flex"
-      // flexDirection="column"
-      // borderRadius="15px"
-      // className="mt-5 p-5 "
+      className=" rounded-[15px] p-5 mt-6 flex flex-col"
+        // p={4}
+        // flex={1}
+        // bgcolor="#fcfcfc"
+        // id="chart"
+        // display="flex"
+        // flexDirection="column"
+        // borderRadius="15px"
+        // className="mt-5 p-5 "
     >
       <Typography
         fontSize={18}
