@@ -36,10 +36,10 @@ export const menuItems = [
   {
     icon: HiShoppingCart,
     text: "Purchase",
-    url: "/purchase",
+    url: "#",
     submenus: [
-      { text: "Containers", url: "/dashboard/containers" },
-      { text: "Market", url: "/dashboard/market" },
+      { text: "Containers", url: "/containers" },
+      { text: "Market", url: "/market" },
     ],
   },
   {
@@ -56,11 +56,11 @@ export const menuItems = [
   },
   {
     icon: HiDocumentReport,
-    url: "/invoice",
+    url: "#",
     text: "Invoice",
     submenus: [
-      { text: "Cash", url: "/dashboard/cash" },
-      { text: "Credit", url: "/dashboard/credit" },
+      { text: "Cash", url: "/cash" },
+      { text: "Credit", url: "/credit" },
     ],
   },
   { icon: HiChartBar, text: "Stock", url: "/stock", submenus: [] },
@@ -76,11 +76,11 @@ export const menuItems = [
   },
   {
     icon: HiDocumentDuplicate,
-    url: "/reports",
+    url: "#",
     text: "Reports",
     submenus: [
-      { text: "All reports", url: "/dashboard/all-reports" },
-      { text: "Single report", url: "/dashboard/single-report" },
+      { text: "Single report", url: "/single-report" },
+      { text: "All reports", url: "/all-reports" },
     ],
   },
   { icon: HiUsers, HiViewList, text: "Users", url: "/users", submenus: [] },
