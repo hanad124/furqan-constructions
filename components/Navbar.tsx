@@ -45,7 +45,7 @@ export default function Navbar() {
   return (
     <>
       {/* navbar */}
-      <Card className="hidden md:flex items-center justify-between flex-wrap p-4 py-3 rounded-md  ">
+      <Card className="hidden md:flex items-center justify-between flex-wrap p-4 py-3 rounded-none rounded-b-lg bg-white/80 dark:bg-background/80  backdrop-blur-lg  m-4 sticky left-4 top-0 z-50">
         <Card
           className="flex items-center gap-2 px-2 py-2 min-w-[15rem] rounded-md cursor-pointer"
           onClick={() => setOpen(true)}

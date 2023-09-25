@@ -111,7 +111,7 @@ const Sidebar = () => {
           {menuItems.map((item, index) => (
             <li key={index}>
               <Link
-                href="#"
+                href={item.url}
                 className={`flex items-center py-1 px-4 `}
                 onClick={() => handleMenuClick(index)}
               >

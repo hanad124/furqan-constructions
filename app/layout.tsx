@@ -5,10 +5,12 @@ import { useRouter, usePathname } from "next/navigation";
 import useAuth from "../hooks/useAuth";
 import { useEffect } from "react";
 import { ProSidebarProvider } from "react-pro-sidebar";
+import Sidebar from "@/components/Sidebar";
 
 import "./globals.css";
 // import type { Metadata } from "react-helmet";
 import { Inter } from "next/font/google";
+import Navbar from "@/components/Navbar";
 const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout({
@@ -44,7 +46,14 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <div className="flex">
+            <Sidebar />
+            <div className="flex-1">
+              <Navbar />
+
+              {children}
+            </div>
+          </div>
         </ThemeProvider>
       </body>
     </html>
