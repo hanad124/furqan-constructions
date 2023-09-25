@@ -190,8 +190,8 @@ const Sidebar = () => {
                         <div
                           className={`${
                             activeTab === index
-                              ? "bg-primary text-white"
-                              : " dark:text-[#949bbd]"
+                              ? "bg-primary text-white hover:bg-primary"
+                              : " text-slate-600 dark:text-[#949bbd] hover:bg-primary/10"
                           } flex items-center w-full py-[7px] px-4 rounded-md`}
                         >
                           <item.icon className="mr-4 text-lg" />
