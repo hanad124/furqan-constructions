@@ -32,9 +32,35 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import {
+  Command,
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+  CommandShortcut,
+} from "@/components/ui/command";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Card } from "./ui/card";
+import { BiSearch } from "react-icons/bi";
 
 const Sidebar = () => {
   const { theme, setTheme } = useTheme();
+  const [open, setOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    const down = (e: KeyboardEvent) => {
+      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        setOpen((open) => !open);
+      }
+    };
+    document.addEventListener("keydown", down);
+    return () => document.removeEventListener("keydown", down);
+  }, []);
 
   const handleToggleMode = () => {
     const newTheme = theme === "dark" ? "white" : "dark";
@@ -111,12 +137,15 @@ const Sidebar = () => {
               </Link>
               {item.submenus.length > 0 && (
                 <ul
-                  className={`submenu ml-6 ${
+                  className={`submenu mx-4 cursor-pointer ${
                     activeMenuIndex === index ? "block duration-300" : "hidden"
                   }`}
                 >
                   {item.submenus.map((submenu, subIndex) => (
-                    <li key={subIndex} className="ml-3 -mt-1 ">
+                    <li
+                      key={subIndex}
+                      className="pl-7 rounded-md hover:bg-primary/5"
+                    >
                       <div className="flex items-center">
                         <BiCircle className="w-3" />
                         <Link href={submenu.url}>
@@ -209,14 +238,17 @@ const Sidebar = () => {
                       </Link>
                       {item.submenus.length > 0 && (
                         <ul
-                          className={`submenu ml-6 ${
+                          className={`submenu pl-3 ${
                             activeMenuIndex === index
                               ? "block duration-300"
                               : "hidden"
                           }`}
                         >
                           {item.submenus.map((submenu, subIndex) => (
-                            <li key={subIndex} className="ml-3 -mt-1 ">
+                            <li
+                              key={subIndex}
+                              className="pl-2 hover:bg-primary/5 rounded-md "
+                            >
                               <div className="flex items-center">
                                 <BiCircle className="w-3" />
                                 <Link href={submenu.url}>
@@ -231,19 +263,55 @@ const Sidebar = () => {
                       )}
                     </li>
                   ))}
-                  <div className="flex items-center space-x-2 ml-7 mt-4">
-                    <Switch
-                      id="dark-mode-switch"
-                      checked={theme === "dark"}
-                      onClick={handleToggleMode}
-                    />
-                    <Label
-                      htmlFor="dark-mode-switch"
-                      className="cursor-pointer text-slate-600"
+                  <div className="mt-4 py-3 border-t border-t-slate-300 flex flex-col gap-y-4 ml-5">
+                    <div className="flex items-center space-x-2 ml- mt-4">
+                      <Switch
+                        id="dark-mode-switch"
+                        checked={theme === "dark"}
+                        onClick={handleToggleMode}
+                      />
+                      <Label
+                        htmlFor="dark-mode-switch"
+                        className="cursor-pointer text-slate-600"
+                      >
+                        {theme === "dark" ? "Dark Mode" : "White Mode"}
+                      </Label>
+                    </div>
+                    <div className="flex  items-center gap-5">
+                      <Avatar>
+                        <AvatarImage src="https://github.com/shadcn.png" />
+                        <AvatarFallback>CN</AvatarFallback>
+                      </Avatar>
+                      <div className="flex flex-col gap-1">
+                        <p>Hanad Mohamed</p>
+                        <button
+                          onClick={handleSignOut}
+                          className="text-red-500 hover:text-red-600 text-left"
+                        >
+                          Sign Out
+                        </button>
+                      </div>
+                    </div>
+
+                    <Card
+                      className="flex items-center gap-2 px-2 py-2 min-w-[15rem] rounded-md cursor-pointer"
+                      onClick={() => setOpen(true)}
                     >
-                      {theme === "dark" ? "Dark Mode" : "White Mode"}
-                    </Label>
+                      <BiSearch className="h-5 w-5 text-gray-400" />
+                      <p className="text-slate-400"> search</p>
+                    </Card>
                   </div>
+                  <CommandDialog open={open} onOpenChange={setOpen}>
+                    <CommandInput placeholder="Type a command or search..." />
+                    <CommandList>
+                      <CommandEmpty>No results found.</CommandEmpty>
+                      <CommandGroup heading="Suggestions">
+                        <CommandItem>Calendar</CommandItem>
+                        <CommandItem>Search Emoji</CommandItem>
+                        <CommandItem>Calculator</CommandItem>
+                      </CommandGroup>
+                    </CommandList>
+                  </CommandDialog>
                 </ul>
               </SheetDescription>
             </SheetHeader>
