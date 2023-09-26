@@ -50,7 +50,6 @@ export default function RootLayout({
             <Sidebar />
             <div className="flex-1">
               <Navbar />
-
               {children}
             </div>
           </div>

@@ -95,7 +95,7 @@ const Sidebar = () => {
   return (
     <div>
       {" "}
-      <div className="sidebar hidden md:block h-screen sticky top-0 border-salte-300 dark:border-slate-600 border-r w-60 ">
+      <div className="sidebar hidden md:block sticky top-0 border-salte-300 dark:border-slate-600 border-r w-60 ">
         {/* logo */}
         <div className="flex items-center ml-8 py-4 gap-3 ">
           <Image
