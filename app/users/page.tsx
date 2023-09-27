@@ -6,20 +6,11 @@ import { BiPlus } from "react-icons/bi";
 import { DataGrid } from "@mui/x-data-grid";
 import { useEffect, useState, useContext } from "react";
 import { userColumns } from "@/data/userColumns";
-import {
-  collection,
-  getDocs,
-  getDoc,
-  doc,
-  deleteDoc,
-  onSnapshot,
-  query,
-  where,
-} from "firebase/firestore";
+import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebaseConfig";
 
 // create a type for the data
-interface Person {
+interface User {
   id: string;
   username: string;
   roll: string;
@@ -29,13 +20,13 @@ interface Person {
 }
 
 const page = () => {
-  const [data, setData] = useState<Person[]>([]);
+  const [data, setData] = useState<User[]>([]);
 
   useEffect(() => {
     const unsub = onSnapshot(
       collection(db, "users"),
       (snapShot) => {
-        let list: Person[] = [];
+        let list: User[] = [];
         snapShot.docs.forEach((doc) => {
           list.push({
             id: doc.id,
@@ -70,7 +61,10 @@ const page = () => {
       renderCell: (params: any) => {
         return (
           <div className="cellAction flex gap-3">
-            <Link href="/users/single-user" style={{ textDecoration: "none" }}>
+            <Link
+              href={`/users/${params.row.id}`}
+              style={{ textDecoration: "none" }}
+            >
               <div
                 className="viewButton px-3 py-1 border border-green-500 text-green-500 rounded-md border-dotted"
                 onClick={() => clickUser(params.row.id)}
