@@ -72,12 +72,6 @@ const months = [
 ];
 
 export default function NewUser() {
-  // const [username, setUsername] = useState("");
-  // const [email, setEmail] = useState("");
-  // const [password, setPassword] = useState("");
-  // const [roll, setRoll] = useState("");
-  // const [phone, setPhone] = useState("");
-
   // create a form instance with useForm
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

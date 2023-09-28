@@ -32,7 +32,7 @@ export const menuItems = [
     submenus: [],
   },
   { icon: FaUsers, text: "Emaployee", url: "/employee", submenus: [] },
-  { icon: HiViewList, text: "Item List", url: "/item-list", submenus: [] },
+  { icon: HiViewList, text: "Item List", url: "/items-list", submenus: [] },
   {
     icon: HiShoppingCart,
     text: "Purchase",

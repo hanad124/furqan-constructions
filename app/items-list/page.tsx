@@ -4,38 +4,33 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { BiPlus } from "react-icons/bi";
 import { DataGrid } from "@mui/x-data-grid";
-import { useEffect, useState,  } from "react";
-import { userColumns } from "@/data/userColumns";
+import { useEffect, useState } from "react";
+import { itemColumns } from "@/data/itemsColumns";
 // import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebaseConfig";
 import { collection, doc, deleteDoc, onSnapshot } from "firebase/firestore";
 
 // create a type for the data
-interface User {
+interface Item {
   id: string;
-  username: string;
-  roll: string;
-  email: string;
-  phone: string;
-  time: string;
+  itemname: string;
+  modal: string;
 }
 
 const page = () => {
-  const [data, setData] = useState<User[]>([]);
+  const [data, setData] = useState<Item[]>([]);
 
+  // get all items
   useEffect(() => {
     const unsub = onSnapshot(
-      collection(db, "users"),
+      collection(db, "items-list"),
       (snapShot) => {
-        let list: User[] = [];
+        let list: Item[] = [];
         snapShot.docs.forEach((doc) => {
           list.push({
             id: doc.id,
-            username: doc.data().username,
-            roll: doc.data().roll,
-            email: doc.data().email,
-            phone: doc.data().phone,
-            time: doc.data().time,
+            itemname: doc.data().itemname,
+            modal: doc.data().modal,
           });
         });
         setData(list);
@@ -55,7 +50,7 @@ const page = () => {
     const confirmed = confirm("Are you sure you want to delete this user?");
     if (confirmed) {
       try {
-        await deleteDoc(doc(db, "users", id));
+        await deleteDoc(doc(db, "items-list", id));
         setData(data.filter((item) => item.id !== id));
       } catch (error) {
         console.log(error);
@@ -72,14 +67,6 @@ const page = () => {
       renderCell: (params: any) => {
         return (
           <div className="cellAction flex gap-3">
-            <Link
-              href={`/users/${params.row.id}`}
-              style={{ textDecoration: "none" }}
-            >
-              <div className="viewButton px-3 py-1 border border-green-500 text-green-500 rounded-md border-dotted">
-                View
-              </div>
-            </Link>
             <Link href={`/users/edit-user/${params.row.id}`}>
               <div className="editButton px-3 py-1 border border-yellow-500 text-yellow-500 rounded-md border-dotted">
                 Edit
@@ -100,11 +87,11 @@ const page = () => {
   return (
     <div className="p-4">
       <div className="flex justify-between items-center">
-        <h1 className="text-xl text-slate-600 font-bold">Users</h1>
-        <Link href="/newuser">
+        <h1 className="text-xl text-slate-600 font-bold">Items List</h1>
+        <Link href="/newitem">
           <Button className="text-white">
             <BiPlus className="text-lg mr-2" />
-            <span className="">Add new user</span>
+            <span className="">Add new item</span>
           </Button>
         </Link>
       </div>
@@ -112,8 +99,7 @@ const page = () => {
         <DataGrid
           className="datagrid dark:text-slate-200"
           rows={data}
-          columns={userColumns.concat(actionColumn)}
-          // pageSize={9}
+          columns={itemColumns.concat(actionColumn)}
           // rowsPerPageOptions={[9]}
           // checkboxSelection
         />

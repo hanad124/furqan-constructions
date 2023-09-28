@@ -11,6 +11,7 @@ interface User {
   phone: string;
   password: string;
 }
+
 const getuser = async (id: string): Promise<User | null> => {
   const docRef = doc(db, "users", id);
   const docSnap = await getDoc(docRef);
@@ -31,7 +32,7 @@ const page = async (props: any) => {
     <Card className="p-6 md:w-96 mx-auto mt-16">
       <div className="flex items-center justify-center">
         <Card className="w-16 h-16  rounded-full flex items-center justify-center">
-          <Card className="w-20 h-20 px-3 rounded-full flex items-center justify-center text-3xl font-bold uppercase">
+          <Card className="w-20 h-16 px-3 rounded-full flex items-center justify-center text-2xl font-bold uppercase">
             {initials}
           </Card>
         </Card>
