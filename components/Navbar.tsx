@@ -27,6 +27,9 @@ import {
 } from "@/components/ui/command";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
+import avatorImage from "@/public/assets/avator.png";
+import type { StaticImageData } from "next/image";
+
 export default function Navbar() {
   const { setTheme } = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -86,7 +89,7 @@ export default function Navbar() {
             </DropdownMenuContent>
           </DropdownMenu>
           <Avatar>
-            <AvatarImage src="https://github.com/shadcn.png" />
+            {/* <AvatarImage src={avatorImage as StaticImageData} /> */}
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
         </div>

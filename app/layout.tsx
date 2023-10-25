@@ -22,6 +22,8 @@ export default function RootLayout({
   const router = useRouter();
   const pathname = usePathname();
 
+  console.log("pathname", pathname);
+
   // useEffect(() => {
   //   if (!user && pathname !== "/login") {
   //     router.push("/login");
@@ -46,10 +48,19 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="flex flex-col md:flex-row">
-            <Sidebar />
-            <div className="flex-1">
-              <Navbar />
+          {/* only display the sidebar & navigation if the path !== login */}
+          <div
+            className={`${
+              pathname !== "/login" ? "flex flex-col md:flex-row" : ""
+            }`}
+          >
+            {/* only display the sidebar if the path !== /login */}
+            {pathname !== "/login" && <Sidebar />}
+            <div className={`${pathname !== "/login" ? "flex-1" : ""}`}>
+              {
+                // only display the navbar if the path !== /login
+                pathname !== "/login" && <Navbar />
+              }
               {children}
             </div>
           </div>
