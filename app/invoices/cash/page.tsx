@@ -4,8 +4,10 @@ import Invoices from "@/components/Invoices";
 const page = () => {
   return (
     <>
-      <InvoiceCards />
-      <Invoices />
+      <div className="">
+        <InvoiceCards />
+        <Invoices />
+      </div>
     </>
   );
 };

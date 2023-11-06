@@ -36,7 +36,7 @@ export const menuItems = [
   {
     icon: HiShoppingCart,
     text: "Purchase",
-    url: "#",
+    url: "",
     submenus: [
       { text: "Containers", url: "/containers" },
       { text: "Market", url: "/market" },
@@ -56,10 +56,10 @@ export const menuItems = [
   },
   {
     icon: HiDocumentReport,
-    url: "#",
+    url: "",
     text: "Invoice",
     submenus: [
-      { text: "Cash", url: "invoice/cash" },
+      { text: "Cash", url: "invoices/cash" },
       { text: "Credit", url: "/credit" },
     ],
   },
@@ -76,7 +76,7 @@ export const menuItems = [
   },
   {
     icon: HiDocumentDuplicate,
-    url: "#",
+    url: "",
     text: "Reports",
     submenus: [
       { text: "Single report", url: "/single-report" },

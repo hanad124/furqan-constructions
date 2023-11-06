@@ -117,9 +117,8 @@ export default function Navbar() {
                 Settings
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="cursor-pointer">
+              <DropdownMenuItem className="cursor-pointer text-red-500">
                 Log out
-                <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
