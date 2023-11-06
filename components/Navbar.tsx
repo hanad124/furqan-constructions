@@ -11,7 +11,15 @@ import { BiSearch } from "react-icons/bi";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -88,10 +96,33 @@ export default function Navbar() {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <Avatar>
-            {/* <AvatarImage src={avatorImage as StaticImageData} /> */}
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
+          {/* ============ */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <div className="">
+                <Avatar>
+                  {/* <AvatarImage src={avatorImage as StaticImageData} /> */}
+                  <AvatarFallback>CN</AvatarFallback>
+                </Avatar>{" "}
+              </div>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56">
+              {/* <DropdownMenuLabel>My Account</DropdownMenuLabel> */}
+              {/* <DropdownMenuSeparator />
+              <DropdownMenuSeparator /> */}
+              <DropdownMenuItem className="cursor-pointer">
+                Account
+              </DropdownMenuItem>
+              <DropdownMenuItem className="cursor-pointer">
+                Settings
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem className="cursor-pointer">
+                Log out
+                <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </Card>
     </>

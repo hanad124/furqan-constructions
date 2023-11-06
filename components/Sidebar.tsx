@@ -69,22 +69,20 @@ const Sidebar = () => {
   const [activeMenuIndex, setActiveMenuIndex] = useState<number | null>(null);
   const [activeTab, setActiveTab] = useState<number | null>(null);
 
-  useEffect(() => {
-    // making index 1 default active
-    setActiveTab(0);
-  }, []);
-
   const handleMenuClick = (index: any) => {
-    if (activeMenuIndex === index) {
+    const clickedMenuItem = menuItems[index];
+
+    if (activeMenuIndex === index && clickedMenuItem.url !== "/dashboard") {
       setActiveMenuIndex(null);
     } else {
       setActiveMenuIndex(index);
     }
 
-    if (activeTab === index) {
-      return; // Don't update the active state if the clicked tab is already active
+    if (clickedMenuItem.url === "/dashboard") {
+      setActiveTab(index);
+    } else if (activeTab !== index) {
+      setActiveTab(index);
     }
-    setActiveTab(index);
   };
 
   const router = useRouter();

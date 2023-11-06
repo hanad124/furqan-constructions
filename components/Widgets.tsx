@@ -13,7 +13,7 @@ const Widgets = () => {
   return (
     <div>
       <div className="flex flex-wrap items-center gap-x-2 gap-y-4 w-full">
-        <Card className="flex-1 w-full md:min-w-[12rem] ">
+        <Card className="flex-1 w-full md:min-w-[12rem] shadow-none">
           <div className="flex items-center justify-between">
             <CardHeader>
               <CardTitle>
@@ -31,7 +31,7 @@ const Widgets = () => {
             </div>
           </div>
         </Card>
-        <Card className="flex-1 w-full md:min-w-[12rem] ">
+        <Card className="flex-1 w-full md:min-w-[12rem] shadow-none ">
           <div className="flex items-center justify-between">
             <CardHeader>
               <CardTitle>
@@ -49,7 +49,7 @@ const Widgets = () => {
             </div>
           </div>
         </Card>
-        <Card className="flex-1 w-full md:min-w-[12rem] ">
+        <Card className="flex-1 w-full md:min-w-[12rem] shadow-none ">
           <div className="flex items-center justify-between">
             <CardHeader>
               <CardTitle>
@@ -67,7 +67,7 @@ const Widgets = () => {
             </div>
           </div>
         </Card>
-        <Card className="flex-1 w-full md:min-w-[12rem] ">
+        <Card className="flex-1 w-full md:min-w-[12rem] shadow-none ">
           <div className="flex items-center justify-between">
             <CardHeader>
               <CardTitle>
