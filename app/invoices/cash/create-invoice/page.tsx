@@ -6,6 +6,7 @@ import logo from "../../../../public/assets/logo-light.svg";
 import Image from "next/image";
 import { format } from "date-fns";
 import toast, { Toaster } from "react-hot-toast";
+import ItemForm from "@/components/ItemForm";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -33,16 +34,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import {
-  addDoc,
-  getDoc,
-  collection,
-  doc,
-  serverTimestamp,
-  setDoc,
-} from "firebase/firestore";
-import { db } from "../../../../firebaseConfig";
-
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
@@ -50,6 +41,24 @@ import { CalendarIcon } from "@radix-ui/react-icons";
 
 // Define a schema for your form values.
 const formSchema = z.object({
+  itemname: z.string().min(4, {
+    message: "Item name must be at least 4 characters.",
+  }),
+  modal: z.string().min(4, {
+    message: "Modal must be at least 4 characters.",
+  }),
+  quantity: z.number().positive({
+    message: "Quantity must be a positive number.",
+  }),
+  price: z.number().positive({
+    message: "Price must be a positive number.",
+  }),
+  total: z
+    .number()
+    .positive({
+      message: "Total must be a positive number.",
+    })
+    .optional(),
   customername: z.string().min(4, {
     message: "customer nanme must be at least 4 characters.",
   }),
@@ -67,27 +76,19 @@ const formSchema = z.object({
     .optional(),
 });
 
-// get current date
-const date = new Date();
-const dayDate = date.getDate();
-const monthDate = date.getMonth();
-const yearDate = date.getFullYear();
-const months = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-];
+export default function CreateInvoice() {
+  const [itemCount, setItemCount] = useState(1);
 
-export default function NewUser() {
+  const addItem = () => {
+    setItemCount(itemCount + 1);
+  };
+
+  const removeItem = () => {
+    if (itemCount > 1) {
+      setItemCount(itemCount - 1);
+    }
+  };
+
   // create a form instance with useForm
   // dadte of birth
   const temDob = new Date();
@@ -280,49 +281,143 @@ export default function NewUser() {
             </div>
           </div>
         </div>
-        <div className="my-10">
-          {/* <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-              <div className="flex flex-wrap gap-x-3 gap-y-4 w-full">
-                <FormField
-                  control={form.control}
-                  name="itemname"
-                  render={({ field }) => (
-                    <FormItem className="w-full md:w-[15rem]">
-                      <FormLabel>Item name</FormLabel>
-                      <FormControl>
-                        <Input placeholder="item name" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="modal"
-                  render={({ field }) => (
-                    <FormItem className="w-full md:w-[15rem]">
-                      <FormLabel>Modal</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Modal " {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <Button
-                type="submit"
-                size={"lg"}
-                className="dark:text-white w-full md:w-[11.5rem] mb-10"
+        <div className="mt-10">
+          {/* Render the form items based on the itemCount */}
+          {Array.from({ length: itemCount }).map((_, index) => (
+            // <ItemForm key={index} />
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="relative space-y-8 border border-slate-200 dark:border-slate-700 p-8 rounded-lg w-full flex lg:w-5/6"
               >
-                Submit
-              </Button>
-            </form>
-          </Form> */}
+                <div className="flex flex-wrap gap-5 w-full flex-1">
+                  {/* item name field */}
+                  <FormField
+                    control={form.control}
+                    name="itemname"
+                    render={({ field }) => (
+                      <FormItem className="w-full md:w-[15rem]">
+                        <FormControl>
+                          <Input
+                            placeholder="item name"
+                            className="p-5"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  {/* modal field */}
+                  <FormField
+                    control={form.control}
+                    name="modal"
+                    render={({ field }) => (
+                      <FormItem className="w-full md:w-[15rem]">
+                        <FormControl>
+                          <Input
+                            placeholder="modal "
+                            className="p-5"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  {/* quantity field */}
+                  <FormField
+                    control={form.control}
+                    name="quantity"
+                    render={({ field }) => (
+                      <FormItem className="w-full md:w-[15rem]">
+                        <FormControl>
+                          <Input
+                            placeholder="quantity"
+                            className="p-5"
+                            type="number"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  {/* price field */}
+                  <FormField
+                    control={form.control}
+                    name="price"
+                    render={({ field }) => (
+                      <FormItem className="w-full md:w-[15rem]">
+                        <FormControl>
+                          <Input
+                            placeholder="price"
+                            className="p-5"
+                            type="number"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  {/* total field */}
+                  <FormField
+                    control={form.control}
+                    name="total"
+                    disabled
+                    render={({ field }) => (
+                      <FormItem className="w-full md:w-[15rem]">
+                        <FormControl>
+                          <Input
+                            placeholder="total"
+                            className="p-5"
+                            type="number"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="h-full">
+                  {/* close icon */}
+                  <button
+                    onClick={removeItem}
+                    className="absolute right-5 top-5"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-6 w-6 text-slate-700 dark:text-slate-200"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+                {/* <Button
+                  type="submit"
+                  size={"lg"}
+                  className="dark:text-white w-full md:w-[11.5rem] mb-10"
+                >
+                  Submit
+                </Button>
+                <Toaster /> */}
+              </form>
+            </Form>
+          ))}
         </div>
       </div>
+
+      <button
+        onClick={addItem}
+        className="bg-slate-700 dark:bg-slate-200 text-white dark:text-slate-700 px-8 py-2 rounded-lg"
+      >
+        Add Item
+      </button>
     </>
   );
 }

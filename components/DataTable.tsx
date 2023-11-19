@@ -49,7 +49,7 @@ export default function DataTable() {
           },
         }}
         pageSizeOptions={[5, 10]}
-        checkboxSelection
+        // checkboxSelection
         className="dark:bg-transparent dark:text-slate-300 dark:border-slate-600"
       />
     </div>

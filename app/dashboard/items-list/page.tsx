@@ -7,7 +7,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import { itemColumns } from "@/data/itemsColumns";
 // import { collection, onSnapshot } from "firebase/firestore";
-import { db } from "../../firebaseConfig";
+import { db } from "../../../firebaseConfig";
 import { collection, doc, deleteDoc, onSnapshot } from "firebase/firestore";
 
 // create a type for the data

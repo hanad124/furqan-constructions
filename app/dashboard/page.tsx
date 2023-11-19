@@ -1,32 +1,10 @@
-"use client";
-
-import React, { useState } from "react";
-
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-
+import React from "react";
 import Sidebar from "@/components/Sidebar";
 import Navbar from "@/components/Navbar";
-import Widgets from "@/components/Widgets";
-import Charts from "@/components/Charts";
-import DataTable from "@/components/DataTable";
+import Dashboard from "@/components/Dashboard";
 
-const Dashboard = () => {
-  return (
-    <>
-      <div className="p-4 flex-1 w-full">
-        <Widgets />
-        <Charts />
-        <DataTable />
-      </div>{" "}
-    </>
-  );
+const page = () => {
+  return <Dashboard />;
 };
 
-export default Dashboard;
+export default page;

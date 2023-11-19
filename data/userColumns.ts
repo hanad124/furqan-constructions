@@ -7,22 +7,22 @@ export const userColumns = [
   {
     field: "email",
     headerName: "Email",
-    width: 220,
+    width: 190,
   },
-  {
-    field: "roll",
-    headerName: "Role",
-    width: 80,
-  },
+
   {
     field: "phone",
     headerName: "Phone",
     width: 100,
   },
   {
-    field: "time",
-    headerName: "Date",
-    width: 110,
+    field: "role",
+    headerName: "Role",
+    width: 80,
   },
-
+  {
+    field: "date",
+    headerName: "Date",
+    width: 150,
+  },
 ];

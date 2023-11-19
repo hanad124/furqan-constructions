@@ -28,7 +28,7 @@ import {
   serverTimestamp,
   setDoc,
 } from "firebase/firestore";
-import { db } from "../../firebaseConfig";
+import { db } from "../../../firebaseConfig";
 
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";

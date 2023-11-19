@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { firebaseApp } from "../firebaseConfig";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import Image from "next/image";
 
 import { FiChevronRight, FiChevronDown } from "react-icons/fi";
@@ -86,6 +86,8 @@ const Sidebar = () => {
   };
 
   const router = useRouter();
+  const pathname = usePathname();
+
   const handleSignOut = async () => {
     signOut(getAuth(firebaseApp));
     router.push("/login");
@@ -106,7 +108,7 @@ const Sidebar = () => {
           <span className="text-2xl font-semibold"> Furqan</span>
         </div>
         <ul className="menu my-3 h-full overflow-y-scroll pb-28">
-          {menuItems.map((item, index) => (
+          {/* {menuItems.map((item, index) => (
             <li key={index}>
               <Link
                 href={item.url}
@@ -157,7 +159,73 @@ const Sidebar = () => {
                 </ul>
               )}
             </li>
-          ))}
+          ))} */}
+
+          {menuItems.map((item, index) => {
+            const isActive =
+              pathname === item.url ||
+              (item.submenus.length > 0 &&
+                item.submenus.some((submenu) => pathname === submenu.url));
+
+            if (pathname === "/" && (item.url === "/dashboard" || isActive)) {
+              return true;
+            }
+
+            return (
+              <li key={index}>
+                <Link
+                  href={item.url}
+                  className={`flex items-center py-1 px-4 `}
+                  onClick={() => handleMenuClick(index)}
+                >
+                  <div
+                    className={`${
+                      isActive
+                        ? "bg-primary text-white hover:bg-primary"
+                        : " text-slate-600 dark:text-[#949bbd] hover:bg-primary/10"
+                    } flex items-center w-full py-[7px] px-4 rounded-md`}
+                  >
+                    <item.icon className="mr-4 text-lg" />
+                    <span>{item.text}</span>
+                    {item.submenus.length > 0 && (
+                      <span className="ml-auto">
+                        {activeMenuIndex === index ? (
+                          <FiChevronDown className="ml-auto" />
+                        ) : (
+                          <FiChevronRight className="ml-auto" />
+                        )}
+                      </span>
+                    )}
+                  </div>
+                </Link>
+                {item.submenus.length > 0 && (
+                  <ul
+                    className={`submenu mx-4 cursor-pointer ${
+                      activeMenuIndex === index
+                        ? "block duration-300"
+                        : "hidden"
+                    }`}
+                  >
+                    {item.submenus.map((submenu, subIndex) => (
+                      <li
+                        key={subIndex}
+                        className="pl-7 rounded-md hover:bg-primary/5"
+                      >
+                        <div className="flex items-center">
+                          <BiCircle className="w-3" />
+                          <Link href={submenu.url}>
+                            <p className="block py-2 text-sm px-4">
+                              {submenu.text}
+                            </p>
+                          </Link>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+            );
+          })}
           <div className="flex items-center space-x-2 ml-7 mt-4">
             <Switch
               id="dark-mode-switch"

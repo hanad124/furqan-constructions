@@ -2,6 +2,9 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { createUser } from "../../../utils/dbOperations";
+import Account from "../../../models/Account";
+import { connectToDB } from "../../../utils/database";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -28,10 +31,11 @@ import {
   serverTimestamp,
   setDoc,
 } from "firebase/firestore";
-import { db } from "../../firebaseConfig";
+import { db } from "../../../firebaseConfig";
 
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
+import { useRouter, usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 
 // Define a schema for your form values.
@@ -51,27 +55,9 @@ const formSchema = z.object({
   role: z.string().optional(),
 });
 
-// get current date
-const date = new Date();
-const dayDate = date.getDate();
-const monthDate = date.getMonth();
-const yearDate = date.getFullYear();
-const months = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-];
-
 export default function NewUser() {
+  const router = useRouter();
+  const pathname = usePathname();
   // create a form instance with useForm
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -85,30 +71,30 @@ export default function NewUser() {
   });
 
   // Define a submit handler that will receive the form values.
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    // ✅ This will be type-safe and validated.
-    try {
-      // const res = await createUserWithEmailAndPassword(auth, email, password);
-      await addDoc(collection(db, "users"), {
-        roll: values.role,
-        phone: values.phone,
-        username: values.username,
-        email: values.email,
-        password: values.password,
-        time: dayDate + "/" + months[monthDate] + "/" + yearDate,
-      });
-      alert("User has been successfully added!");
-      // set form values to empty
-      form.setValue("username", "");
-      form.setValue("email", "");
-      form.setValue("password", "");
-      form.setValue("role", "");
-      form.setValue("phone", "");
-    } catch (error) {
-      console.log(error);
-      alert("Something went wrong!");
-    }
-  };
+  // const onSubmit = async (values: z.infer<typeof formSchema>) => {
+  //   // ✅ This will be type-safe and validated.
+  //   try {
+  //     // const res = await createUserWithEmailAndPassword(auth, email, password);
+  //     await addDoc(collection(db, "users"), {
+  //       roll: values.role,
+  //       phone: values.phone,
+  //       username: values.username,
+  //       email: values.email,
+  //       password: values.password,
+  //       time: dayDate + "/" + months[monthDate] + "/" + yearDate,
+  //     });
+  //     alert("User has been successfully added!");
+  //     // set form values to empty
+  //     form.setValue("username", "");
+  //     form.setValue("email", "");
+  //     form.setValue("password", "");
+  //     form.setValue("role", "");
+  //     form.setValue("phone", "");
+  //   } catch (error) {
+  //     console.log(error);
+  //     alert("Something went wrong!");
+  //   }
+  // };
 
   // handle role change
   const handleRoleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -119,10 +105,38 @@ export default function NewUser() {
   return (
     <>
       <div className="mx-4">
+        {/* back button */}
+        <div className="flex items-center gap-x-2">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-4 w-4 text-slate-600 cursor-pointer"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            onClick={() => router.back()}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={1.5}
+              d="M10 19l-7-7m0 0l7-7m-7 7h18"
+            />
+          </svg>
+          <p
+            className="text-slate-600 font-bold text-md cursor-pointer"
+            onClick={() => router.back()}
+          >
+            Back
+          </p>
+        </div>
         <h1 className="text-xl text-slate-600 font-bold mt-8">New User</h1>
         <div className="my-10">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <form
+              // onSubmit={form.handleSubmit(onSubmit)}
+              action={createUser}
+              className="space-y-8"
+            >
               <div className="flex flex-wrap gap-x-3 gap-y-4 w-full">
                 {/* username field */}
                 <FormField

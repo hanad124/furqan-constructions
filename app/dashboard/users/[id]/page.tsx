@@ -1,7 +1,6 @@
-
 import React from "react";
 import { doc, setDoc, getDoc } from "firebase/firestore";
-import { db } from "../../../firebaseConfig";
+import { db } from "../../../../firebaseConfig";
 import { Card } from "@/components/ui/card";
 // create a type for the data
 interface User {

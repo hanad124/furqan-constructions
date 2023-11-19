@@ -28,11 +28,16 @@ export const menuItems = [
   {
     icon: RiDashboardLine,
     text: "Dashboard",
-    url: "/dashboard",
+    url: "/dashboard" || "/",
     submenus: [],
   },
   { icon: FaUsers, text: "Emaployee", url: "/employee", submenus: [] },
-  { icon: HiViewList, text: "Item List", url: "/items-list", submenus: [] },
+  {
+    icon: HiViewList,
+    text: "Item List",
+    url: "/dashboard/items-list",
+    submenus: [],
+  },
   {
     icon: HiShoppingCart,
     text: "Purchase",
@@ -83,6 +88,12 @@ export const menuItems = [
       { text: "All reports", url: "/all-reports" },
     ],
   },
-  { icon: HiUsers, HiViewList, text: "Users", url: "/users", submenus: [] },
+  {
+    icon: HiUsers,
+    HiViewList,
+    text: "Users",
+    url: "/dashboard/users",
+    submenus: [],
+  },
   // { icon: FaArrowRightFromBracket, HiViewList, text: "Log out", submenus: [] },
 ];
