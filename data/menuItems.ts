@@ -69,7 +69,7 @@ export const menuItems = [
     url: "",
     text: "Invoice",
     submenus: [
-      { text: "Cash", url: "invoices/cash" },
+      { text: "Cash", url: "/dashboard/invoices/cash" },
       { text: "Credit", url: "/credit" },
     ],
   },

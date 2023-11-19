@@ -186,7 +186,7 @@ export const createEmployee = async (formData: any) => {
     // Check if Employee with the provided name or phone already exists
     const existingEmployee = await prisma.employee.findFirst({
       where: {
-        OR: [{ name: name }, { phone: phone }],
+        phone: phone,
       },
     });
 

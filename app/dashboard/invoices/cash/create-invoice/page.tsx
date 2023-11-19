@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import logo from "../../../../public/assets/logo-light.svg";
+import logo from "@/public/assets/logo-light.svg";
 import Image from "next/image";
 import { format } from "date-fns";
 import toast, { Toaster } from "react-hot-toast";
@@ -414,7 +414,7 @@ export default function CreateInvoice() {
 
       <button
         onClick={addItem}
-        className="bg-slate-700 dark:bg-slate-200 text-white dark:text-slate-700 px-8 py-2 rounded-lg"
+        className="bg-primary dark:bg-slate-200 text-white dark:text-slate-700 px-8 py-2 rounded-lg m-4"
       >
         Add Item
       </button>

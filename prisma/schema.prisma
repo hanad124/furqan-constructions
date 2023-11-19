@@ -7,7 +7,7 @@ generator client {
   provider        = "prisma-client-js"
 }
 
-
+// user model
 model User {
   id        String    @id @default(auto()) @map("_id") @db.ObjectId
   username  String    @unique
@@ -19,10 +19,20 @@ model User {
   updatedAt DateTime  @updatedAt
 }
 
+// employee model
 model Employee {
   id        String    @id @default(auto()) @map("_id") @db.ObjectId
   name      String
   phone     String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+// item model
+model Item {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  modal     String
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 }

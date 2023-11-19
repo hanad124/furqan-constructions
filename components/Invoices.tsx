@@ -73,7 +73,7 @@ const Invoices = () => {
       {/* create invoice button with icon */}
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-semibold text-slate-900">Invoices</h1>
-        <Link href="/invoices/cash/create-invoice">
+        <Link href="/dashboard/invoices/cash/create-invoice">
           <Button
             className="flex items-center gap-2 p-6"
             variant="default"

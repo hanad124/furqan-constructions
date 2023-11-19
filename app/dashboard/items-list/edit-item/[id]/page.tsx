@@ -2,7 +2,12 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { createItem } from "@/utils/db/Items";
+import {
+  findEmployeeById,
+  updateEmployee,
+} from "../../../../../utils/dbOperations";
+
+import { findItem, updateItem } from "@/utils/db/Items";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -17,7 +22,8 @@ import {
 
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter, usePathname, redirect } from "next/navigation";
+import { useState, useEffect } from "react";
 
 // Define a schema for your form values.
 const formSchema = z.object({
@@ -29,9 +35,9 @@ const formSchema = z.object({
   }),
 });
 
-export default function NewUser() {
+export default function UpdateUser({ params }: any) {
+  const { id } = params;
   const router = useRouter();
-  const pathname = usePathname();
   // create a form instance with useForm
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -40,6 +46,17 @@ export default function NewUser() {
       modal: "",
     },
   });
+
+  // fetch user data by id
+  useEffect(() => {
+    const fetchItems = async () => {
+      const item = await findItem(id);
+
+      form.setValue("name", item?.name ?? "");
+      form.setValue("modal", item?.modal ?? "");
+    };
+    fetchItems();
+  }, []);
 
   return (
     <>
@@ -52,7 +69,9 @@ export default function NewUser() {
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
-            onClick={() => router.back()}
+            onClick={() => {
+              router.replace("/dashboard/items-list");
+            }}
           >
             <path
               strokeLinecap="round"
@@ -63,19 +82,24 @@ export default function NewUser() {
           </svg>
           <p
             className="text-slate-600 font-bold text-md cursor-pointer"
-            onClick={() => router.back()}
+            onClick={() => {
+              router.replace("/dashboard/items-list");
+            }}
           >
             Back
           </p>
         </div>
-        <h1 className="text-xl text-slate-600 font-bold mt-8">New Item</h1>
+        <h1 className="text-xl text-slate-600 font-bold mt-8">
+          Update Employee
+        </h1>
         <div className="my-10">
           <Form {...form}>
             <form
-              //   onSubmit={form.handleSubmit(onSubmit)}
-              action={createItem}
+              // onSubmit={form.handleSubmit(onSubmit)}
+              action={updateItem}
               className="space-y-8"
             >
+              <input type="hidden" name="id" value={id} />
               <div className="flex flex-wrap gap-x-3 gap-y-4 w-full">
                 {/* name field */}
                 <FormField
@@ -83,9 +107,9 @@ export default function NewUser() {
                   name="name"
                   render={({ field }) => (
                     <FormItem className="w-full md:w-[19rem]">
-                      <FormLabel>Item name</FormLabel>
+                      <FormLabel>name</FormLabel>
                       <FormControl>
-                        <Input placeholder="item name" {...field} />
+                        <Input placeholder="shadcn" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -98,9 +122,9 @@ export default function NewUser() {
                   name="modal"
                   render={({ field }) => (
                     <FormItem className="w-full md:w-[19rem]">
-                      <FormLabel>Modal</FormLabel>
+                      <FormLabel>modal</FormLabel>
                       <FormControl>
-                        <Input placeholder=" modal" {...field} />
+                        <Input placeholder=" " {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

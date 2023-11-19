@@ -6,58 +6,49 @@ import { BiPlus } from "react-icons/bi";
 import { DataGrid } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import { itemColumns } from "@/data/itemsColumns";
-// import { collection, onSnapshot } from "firebase/firestore";
-import { db } from "../../../firebaseConfig";
-import { collection, doc, deleteDoc, onSnapshot } from "firebase/firestore";
+import { deleteItem } from "@/utils/db/Items";
+import { getItems } from "@/utils/db/Items";
+
+import { revalidatePath } from "next/cache";
 
 // create a type for the data
 interface Item {
   id: string;
-  itemname: string;
-  modal: string;
+  name: string;
+  modal: string | null;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 const page = () => {
-  const [data, setData] = useState<Item[]>([]);
+  const [data, setData] = useState<readonly Item[]>([]);
+  const fetchItems = async () => {
+    try {
+      const items = await getItems();
+      if (items) {
+        const mappedItems = (employee: Item): Item => {
+          return {
+            id: employee.id,
+            name: employee.name,
+            modal: employee.modal,
+            createdAt: employee.createdAt,
+            updatedAt: employee.updatedAt,
+          };
+        };
 
-  // get all items
-  useEffect(() => {
-    const unsub = onSnapshot(
-      collection(db, "items-list"),
-      (snapShot) => {
-        let list: Item[] = [];
-        snapShot.docs.forEach((doc) => {
-          list.push({
-            id: doc.id,
-            itemname: doc.data().itemname,
-            modal: doc.data().modal,
-          });
-        });
-        setData(list);
-      },
-      (error) => {
-        console.log(error);
+        const transformedUsers = items.map(mappedItems);
+        setData(transformedUsers);
       }
-    );
-
-    return () => {
-      unsub();
-    };
-  }, []);
-
-  // delete user
-  const handleDelete = async (id: string) => {
-    const confirmed = confirm("Are you sure you want to delete this user?");
-    if (confirmed) {
-      try {
-        await deleteDoc(doc(db, "items-list", id));
-        setData(data.filter((item) => item.id !== id));
-      } catch (error) {
-        console.log(error);
-      }
-    } else {
+    } catch (error) {
+      console.error("Error fetching users:", error);
     }
   };
+  useEffect(() => {
+    fetchItems();
+
+    // cleanup function
+    return () => {};
+  }, []);
 
   const actionColumn = [
     {
@@ -67,17 +58,24 @@ const page = () => {
       renderCell: (params: any) => {
         return (
           <div className="cellAction flex gap-3">
-            <Link href={`/users/edit-user/${params.row.id}`}>
+            <Link href={`/dashboard/items-list/edit-item/${params.row.id}`}>
               <div className="editButton px-3 py-1 border border-yellow-500 text-yellow-500 rounded-md border-dotted">
                 Edit
               </div>
             </Link>
-            <div
-              className="deleteButton px-3 py-1 border border-red-500 text-red-500 rounded-md border-dotted cursor-pointer"
-              onClick={() => handleDelete(params.row.id)}
-            >
-              Delete
-            </div>
+
+            <form action={deleteItem}>
+              <input type="hidden" name="id" value={params.row.id} />
+              <button
+                type="submit"
+                className="deleteButton px-3 py-1 border border-red-500 text-red-500 rounded-md border-dotted cursor-pointer"
+                onClick={() => {
+                  fetchItems();
+                }}
+              >
+                Delete
+              </button>
+            </form>
           </div>
         );
       },
@@ -87,11 +85,11 @@ const page = () => {
   return (
     <div className="p-4">
       <div className="flex justify-between items-center">
-        <h1 className="text-xl text-slate-600 font-bold">Items List</h1>
-        <Link href="/newitem">
+        <h1 className="text-xl text-slate-600 font-bold">Items</h1>
+        <Link href="/dashboard/newItem">
           <Button className="text-white">
             <BiPlus className="text-lg mr-2" />
-            <span className="">Add new item</span>
+            <span className="">Add new Item</span>
           </Button>
         </Link>
       </div>
@@ -100,6 +98,7 @@ const page = () => {
           className="datagrid dark:text-slate-200"
           rows={data}
           columns={itemColumns.concat(actionColumn)}
+          // pageSize={9}
           // rowsPerPageOptions={[9]}
           // checkboxSelection
         />

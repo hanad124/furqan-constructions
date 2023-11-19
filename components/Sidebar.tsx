@@ -5,6 +5,7 @@ import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { firebaseApp } from "../firebaseConfig";
 import { useRouter, usePathname } from "next/navigation";
 import Image from "next/image";
+import Avator from "./Avator";
 
 import { FiChevronRight, FiChevronDown } from "react-icons/fi";
 import { BiCircle } from "react-icons/bi";
@@ -304,7 +305,7 @@ const Sidebar = () => {
             </SheetHeader>
           </SheetContent>
         </Sheet>
-        <div className="flex items-center flex-shrink-0  mr-6">
+        {/* <div className="flex items-center flex-shrink-0  mr-6">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="icon">
@@ -322,7 +323,7 @@ const Sidebar = () => {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-        </div>
+        </div> */}
       </div>
     </div>
   );
