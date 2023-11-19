@@ -46,7 +46,6 @@ const Avator = async () => {
     }
   }
 
-  console.log("Initials:", initials);
   return (
     <div>
       <DropdownMenu>

@@ -2,19 +2,11 @@
 
 import User from "../models/User";
 import prisma from "@/prisma";
-import Account from "../models/Account";
 import { connectToDB } from "./database";
 import { revalidatePath } from "next/cache";
 // import hashPassword from "../providers/PasswordHassher";
 
-type UpdateFields = {
-  username: any;
-  email: any;
-  phone: any;
-  role: any;
-  password?: string; // Make password optional since it might be undefined
-};
-
+// ############################## User Operations ##############################
 export const getUsers = async () => {
   try {
     const users = await prisma.user.findMany();
@@ -135,7 +127,6 @@ export const findUserById = async (userId: string) => {
 
 export const deleteUser = async (formData: any) => {
   const { id } = Object.fromEntries(formData);
-  console.log("formData:", formData);
 
   try {
     // Ensure the database connection is established
@@ -169,75 +160,148 @@ export const deleteUser = async (formData: any) => {
     await prisma.$disconnect();
   }
 
-  revalidatePath("/users");
+  revalidatePath("/dashboard/users");
 };
 
-export const createAccount = async (accountData: any) => {
-  return Account.create(accountData);
-};
+// ############################## End User Operations ##############################
 
-export const getAccounts = async () => {
-  await connectToDB();
+// ############################## Employee Operations ##############################
+export const getEmployees = async () => {
   try {
-    const accounts = await Account.find();
-    return accounts;
+    const employees = await prisma.employee.findMany();
+    return employees;
+  } catch (err) {
+    console.error(err);
+  } finally {
+    await prisma.$disconnect(); // Disconnect the Prisma client after the operation
+  }
+};
+
+export const createEmployee = async (formData: any) => {
+  const { name, phone } = Object.fromEntries(formData);
+
+  try {
+    await connectToDB();
+
+    // Check if Employee with the provided name or phone already exists
+    const existingEmployee = await prisma.employee.findFirst({
+      where: {
+        OR: [{ name: name }, { phone: phone }],
+      },
+    });
+
+    if (existingEmployee) {
+      // throw new Error('User already exists');
+      console.log("Employee already exists");
+      return;
+    }
+
+    // Create and save the new Employee
+    const newEmployee = await prisma.employee.create({
+      data: {
+        name,
+        phone,
+      },
+    });
+
+    console.log("New Employee created successfully:", newEmployee);
+
+    // Revalidate the path after creating the user
+    revalidatePath("/dashboard/employee");
+  } catch (err) {
+    console.error("Error creating Employee:", err);
+    throw err; // Re-throw the error to propagate it further if needed
+  }
+};
+
+export const updateEmployee = async (formData: any) => {
+  const { id, name, phone } = Object.fromEntries(formData);
+
+  try {
+    // Initialize the updateFields object
+    const updateFields = {
+      name,
+      phone,
+    };
+
+    // Remove properties with undefined or null or "" values from the updateFields object
+    for (const key of Object.keys(updateFields)) {
+      if (
+        updateFields[key as keyof typeof updateFields] === undefined ||
+        updateFields[key as keyof typeof updateFields] === null ||
+        updateFields[key as keyof typeof updateFields] === ""
+      ) {
+        delete updateFields[key as keyof typeof updateFields];
+      }
+    }
+
+    // update the employee
+    await prisma.employee.update({
+      where: { id: id },
+      data: updateFields,
+    });
+
+    console.log(`Employee with ID ${id} updated successfully`);
+
+    // Revalidate the path after updating the employee
+    revalidatePath("/dashboard/employees");
+  } catch (err) {
+    console.error("Error updating employee:", err);
+    throw err; // Re-throw the error to propagate it further if needed
+  }
+};
+
+export const findEmployeeById = async (employeeId: string) => {
+  try {
+    // Find the employee by ID using Prisma
+    const employee = await prisma.employee.findUnique({
+      where: {
+        id: employeeId,
+      },
+    });
+
+    return employee;
   } catch (err) {
     console.log(err);
   }
 };
 
-export const getAccountById = async (accountId: string) => {
-  return Account.findById(accountId);
-};
+export const deleteEmployee = async (formData: any) => {
+  const { id } = Object.fromEntries(formData);
 
-export const updateAccount = async (accountId: string, updatedData: any) => {
-  return Account.findByIdAndUpdate(accountId, updatedData, { new: true });
-};
+  try {
+    // Ensure the database connection is established
+    await prisma.$connect();
 
-export const deleteAccount = async (accountId: string) => {
-  return Account.findByIdAndRemove(accountId);
-};
+    // Check if the employee with the specified ID exists before attempting to delete
+    const employeeToDelete = await prisma.employee.findUnique({
+      where: {
+        id: id, // Assuming the ID is of type integer
+      },
+    });
 
-// Debit and Credit Operations
+    if (!employeeToDelete) {
+      console.log("Employee not found");
+      return;
+    }
 
-export const debitAccount = async (
-  accountId: string,
-  amount: number
-): Promise<any> => {
-  const account = await Account.findById(accountId);
+    // Delete the employee with the specified ID using Prisma
+    await prisma.employee.delete({
+      where: {
+        id: id,
+      },
+    });
 
-  if (!account) {
-    throw new Error("Account not found");
+    console.log(`Employee with ID ${id} deleted successfully`);
+  } catch (err) {
+    console.error(`Error deleting employee with ID ${id}:`, err);
+    throw err; // Re-throw the error to propagate it further if needed
+  } finally {
+    // Disconnect Prisma client
+    await prisma.$disconnect();
   }
 
-  const updatedDebit = account.debit + amount;
-
-  const updatedAccount = await Account.findByIdAndUpdate(
-    accountId,
-    { debit: updatedDebit },
-    { new: true }
-  );
-
-  return updatedAccount;
+  revalidatePath("/dashboard/employees");
 };
 
-export const creditAccount = async (
-  accountId: string,
-  amount: number
-): Promise<any> => {
-  const account = await Account.findById(accountId);
-
-  if (!account) {
-    throw new Error("Account not found");
-  }
-
-  const updatedCredit = account.credit + amount;
-
-  const updatedAccount = await Account.findByIdAndUpdate(
-    accountId,
-    { credit: updatedCredit },
-    { new: true }
-  );
-
-  return updatedAccount;
-};
+// ############################## End Employee Operations ##############################

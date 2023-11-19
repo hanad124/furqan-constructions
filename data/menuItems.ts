@@ -31,7 +31,12 @@ export const menuItems = [
     url: "/dashboard" || "/",
     submenus: [],
   },
-  { icon: FaUsers, text: "Emaployee", url: "/employee", submenus: [] },
+  {
+    icon: FaUsers,
+    text: "Emaployee",
+    url: "/dashboard/employee",
+    submenus: [],
+  },
   {
     icon: HiViewList,
     text: "Item List",
