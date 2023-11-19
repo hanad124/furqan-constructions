@@ -108,59 +108,6 @@ const Sidebar = () => {
           <span className="text-2xl font-semibold"> Furqan</span>
         </div>
         <ul className="menu my-3 h-full overflow-y-scroll pb-28">
-          {/* {menuItems.map((item, index) => (
-            <li key={index}>
-              <Link
-                href={item.url}
-                className={`flex items-center py-1 px-4 `}
-                onClick={() => handleMenuClick(index)}
-              >
-                <div
-                  className={`${
-                    activeTab === index
-                      ? "bg-primary text-white hover:bg-primary"
-                      : " text-slate-600 dark:text-[#949bbd] hover:bg-primary/10"
-                  } flex items-center w-full py-[7px] px-4 rounded-md`}
-                >
-                  <item.icon className="mr-4 text-lg" />
-                  <span>{item.text}</span>
-                  {item.submenus.length > 0 && (
-                    <span className="ml-auto">
-                      {activeMenuIndex === index ? (
-                        <FiChevronDown className="ml-auto" />
-                      ) : (
-                        <FiChevronRight className="ml-auto" />
-                      )}
-                    </span>
-                  )}
-                </div>
-              </Link>
-              {item.submenus.length > 0 && (
-                <ul
-                  className={`submenu mx-4 cursor-pointer ${
-                    activeMenuIndex === index ? "block duration-300" : "hidden"
-                  }`}
-                >
-                  {item.submenus.map((submenu, subIndex) => (
-                    <li
-                      key={subIndex}
-                      className="pl-7 rounded-md hover:bg-primary/5"
-                    >
-                      <div className="flex items-center">
-                        <BiCircle className="w-3" />
-                        <Link href={submenu.url}>
-                          <p className="block py-2 text-sm px-4">
-                            {submenu.text}
-                          </p>
-                        </Link>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </li>
-          ))} */}
-
           {menuItems.map((item, index) => {
             const isActive =
               pathname === item.url ||
@@ -226,19 +173,6 @@ const Sidebar = () => {
               </li>
             );
           })}
-          <div className="flex items-center space-x-2 ml-7 mt-4">
-            <Switch
-              id="dark-mode-switch"
-              checked={theme === "dark"}
-              onClick={handleToggleMode}
-            />
-            <Label
-              htmlFor="dark-mode-switch"
-              className="cursor-pointer text-slate-600"
-            >
-              {theme === "dark" ? "Dark Mode" : "White Mode"}
-            </Label>
-          </div>
         </ul>
       </div>
       <div className="flex justify-between items-center w-full  mt-2 md:hidden">
@@ -330,19 +264,6 @@ const Sidebar = () => {
                     </li>
                   ))}
                   <div className="mt-4 py-3 border-t border-t-slate-300 flex flex-col gap-y-4 ml-5">
-                    <div className="flex items-center space-x-2 ml- mt-4">
-                      <Switch
-                        id="dark-mode-switch"
-                        checked={theme === "dark"}
-                        onClick={handleToggleMode}
-                      />
-                      <Label
-                        htmlFor="dark-mode-switch"
-                        className="cursor-pointer text-slate-600"
-                      >
-                        {theme === "dark" ? "Dark Mode" : "White Mode"}
-                      </Label>
-                    </div>
                     <div className="flex  items-center gap-5">
                       <Avatar>
                         <AvatarImage src="https://github.com/shadcn.png" />
