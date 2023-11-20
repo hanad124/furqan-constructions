@@ -2,10 +2,8 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import {
-  findEmployeeById,
-  updateEmployee,
-} from "../../../../../utils/dbOperations";
+
+import { findSupplier, updateSupplier } from "@/utils/db/Suppliers";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -34,8 +32,10 @@ const formSchema = z.object({
   }),
 });
 
-export default function UpdateUser({ params }: any) {
+export default function UpdateSupplier({ params }: any) {
   const { id } = params;
+
+  console.log("ID:", id);
   const router = useRouter();
   // create a form instance with useForm
   const form = useForm<z.infer<typeof formSchema>>({
@@ -48,13 +48,13 @@ export default function UpdateUser({ params }: any) {
 
   // fetch user data by id
   useEffect(() => {
-    const fetchEmployee = async () => {
-      const employee = await findEmployeeById(id);
+    const fetchSupplier = async () => {
+      const supplier = await findSupplier(id);
 
-      form.setValue("name", employee?.name ?? "");
-      form.setValue("phone", employee?.phone ?? "");
+      form.setValue("name", supplier?.name ?? "");
+      form.setValue("phone", supplier?.phone ?? "");
     };
-    fetchEmployee();
+    fetchSupplier();
   }, []);
 
   return (
@@ -69,7 +69,7 @@ export default function UpdateUser({ params }: any) {
             viewBox="0 0 24 24"
             stroke="currentColor"
             onClick={() => {
-              router.replace("/dashboard/employee");
+              router.replace("/dashboard/suppliers");
             }}
           >
             <path
@@ -82,20 +82,20 @@ export default function UpdateUser({ params }: any) {
           <p
             className="text-slate-600 font-bold text-md cursor-pointer"
             onClick={() => {
-              router.replace("/dashboard/employee");
+              router.replace("/dashboard/suppliers");
             }}
           >
             Back
           </p>
         </div>
         <h1 className="text-xl text-slate-600 font-bold mt-8">
-          Update Employee
+          Update Supplier
         </h1>
         <div className="my-10">
           <Form {...form}>
             <form
               // onSubmit={form.handleSubmit(onSubmit)}
-              action={updateEmployee}
+              action={updateSupplier}
               className="space-y-8"
             >
               <input type="hidden" name="id" value={id} />

@@ -36,3 +36,12 @@ model Item {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 }
+
+// supplier model
+model Supplier {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  phone     String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}

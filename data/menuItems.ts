@@ -11,7 +11,7 @@ import {
   HiMiniCheckCircle,
   HiDocumentDuplicate,
 } from "react-icons/hi2";
-import { FaArrowRightFromBracket } from "react-icons/fa6";
+import { TbUserSquare } from "react-icons/tb";
 import {
   HiUsers,
   HiViewList,
@@ -33,8 +33,14 @@ export const menuItems = [
   },
   {
     icon: FaUsers,
-    text: "Emaployee",
+    text: "Emaployees",
     url: "/dashboard/employee",
+    submenus: [],
+  },
+  {
+    icon: TbUserSquare,
+    text: "Suppliers",
+    url: "/dashboard/suppliers",
     submenus: [],
   },
   {
@@ -55,13 +61,13 @@ export const menuItems = [
   {
     icon: HiOutlineSwitchHorizontal,
     text: "Transfer",
-    url: "/transfer",
+    url: "/dashboard/transfer",
     submenus: [],
   },
   {
     icon: HiOutlineUserCircle,
     text: "Customers",
-    url: "/customers",
+    url: "dashboard/customers",
     submenus: [],
   },
   {
@@ -70,18 +76,28 @@ export const menuItems = [
     text: "Invoice",
     submenus: [
       { text: "Cash", url: "/dashboard/invoices/cash" },
-      { text: "Credit", url: "/credit" },
+      { text: "Credit", url: "/dashboard/invoices/credit" },
     ],
   },
-  { icon: HiChartBar, text: "Stock", url: "/stock", submenus: [] },
-  { icon: HiCreditCard, text: "Expense", url: "/expense", submenus: [] },
+  { icon: HiChartBar, text: "Stock", url: "/dashboard/stock", submenus: [] },
+  {
+    icon: HiCreditCard,
+    text: "Expense",
+    url: "/dashboard/expense",
+    submenus: [],
+  },
   // { icon: FaCog, text: "Settings",
   // submenus: [] },
-  { icon: HiMiniBuildingLibrary, text: "Bank", url: "/bank", submenus: [] },
+  {
+    icon: HiMiniBuildingLibrary,
+    text: "Bank",
+    url: "/dashboard/bank",
+    submenus: [],
+  },
   {
     icon: HiMiniCheckCircle,
     text: "Clearance",
-    url: "/clearance",
+    url: "/dashboard/clearance",
     submenus: [],
   },
   {

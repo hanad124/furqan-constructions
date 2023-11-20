@@ -2,10 +2,8 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import {
-  findEmployeeById,
-  updateEmployee,
-} from "../../../../../utils/dbOperations";
+import { createEmployee } from "../../../utils/dbOperations";
+import { createSupplier } from "@/utils/db/Suppliers";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -20,22 +18,19 @@ import {
 
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
-import { useRouter, usePathname, redirect } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useRouter, usePathname } from "next/navigation";
 
 // Define a schema for your form values.
 const formSchema = z.object({
   name: z.string().min(2, {
     message: "name must be at least 2 characters.",
   }),
-
   phone: z.string().regex(/^\d{10}$/, {
     message: "Invalid phone number format. Please enter a 10-digit number.",
   }),
 });
 
-export default function UpdateUser({ params }: any) {
-  const { id } = params;
+export default function NewUser() {
   const router = useRouter();
   // create a form instance with useForm
   const form = useForm<z.infer<typeof formSchema>>({
@@ -45,17 +40,6 @@ export default function UpdateUser({ params }: any) {
       phone: "",
     },
   });
-
-  // fetch user data by id
-  useEffect(() => {
-    const fetchEmployee = async () => {
-      const employee = await findEmployeeById(id);
-
-      form.setValue("name", employee?.name ?? "");
-      form.setValue("phone", employee?.phone ?? "");
-    };
-    fetchEmployee();
-  }, []);
 
   return (
     <>
@@ -68,9 +52,7 @@ export default function UpdateUser({ params }: any) {
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
-            onClick={() => {
-              router.replace("/dashboard/employee");
-            }}
+            onClick={() => router.back()}
           >
             <path
               strokeLinecap="round"
@@ -81,24 +63,19 @@ export default function UpdateUser({ params }: any) {
           </svg>
           <p
             className="text-slate-600 font-bold text-md cursor-pointer"
-            onClick={() => {
-              router.replace("/dashboard/employee");
-            }}
+            onClick={() => router.back()}
           >
             Back
           </p>
         </div>
-        <h1 className="text-xl text-slate-600 font-bold mt-8">
-          Update Employee
-        </h1>
+        <h1 className="text-xl text-slate-600 font-bold mt-8">New Supplier</h1>
         <div className="my-10">
           <Form {...form}>
             <form
-              // onSubmit={form.handleSubmit(onSubmit)}
-              action={updateEmployee}
+              //   onSubmit={form.handleSubmit(onSubmit)}
+              action={createSupplier}
               className="space-y-8"
             >
-              <input type="hidden" name="id" value={id} />
               <div className="flex flex-wrap gap-x-3 gap-y-4 w-full">
                 {/* name field */}
                 <FormField
@@ -106,9 +83,9 @@ export default function UpdateUser({ params }: any) {
                   name="name"
                   render={({ field }) => (
                     <FormItem className="w-full md:w-[19rem]">
-                      <FormLabel>name</FormLabel>
+                      <FormLabel>Supplier name</FormLabel>
                       <FormControl>
-                        <Input placeholder="name" {...field} />
+                        <Input placeholder="Supplier name" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

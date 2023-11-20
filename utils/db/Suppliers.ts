@@ -4,12 +4,14 @@ import prisma from "@/prisma";
 import { connectToDB } from "../database";
 import { revalidatePath } from "next/cache";
 
-// ############################## Items Operations ##############################
-export const getItems = async () => {
+// ############################## Supplier Operations ##############################
+
+// get suppliers
+export const getSuppliers = async () => {
   try {
     await connectToDB();
-    const items = await prisma.item.findMany();
-    return items;
+    const suppliers = await prisma.supplier.findMany();
+    return suppliers;
   } catch (err) {
     console.error(err);
   } finally {
@@ -17,52 +19,55 @@ export const getItems = async () => {
   }
 };
 
-export const createItem = async (formData: any) => {
-  const { name, modal } = Object.fromEntries(formData);
+// create supplier
+export const createSupplier = async (formData: any) => {
+  const { name, phone } = Object.fromEntries(formData);
+
+  console.log("Supplier Data:", name, phone);
 
   try {
     await connectToDB();
 
     // Check if Employee with the provided name or phone already exists
-    const existingItem = await prisma.item.findFirst({
+    const existingSupplier = await prisma.supplier.findFirst({
       where: {
-        modal: modal,
+        phone: phone,
       },
     });
 
-    if (existingItem) {
+    if (existingSupplier) {
       // throw new Error('User already exists');
-      console.log("Item already exists");
+      console.log("Supplier already exists");
       return;
     }
 
     // Create and save the new Employee
-    const newItem = await prisma.item.create({
+    const newSupplier = await prisma.supplier.create({
       data: {
         name,
-        modal,
+        phone,
       },
     });
 
-    console.log("New Item created successfully:", newItem);
+    console.log("New Supplier created successfully:", newSupplier);
 
     // Revalidate the path after creating the user
-    revalidatePath("/dashboard/item-list");
+    revalidatePath("/dashboard/suppliers");
   } catch (err) {
-    console.error("Error creating Item:", err);
+    console.error("Error creating Supplier:", err);
     throw err; // Re-throw the error to propagate it further if needed
   }
 };
 
-// Update Item
-export const updateItem = async (formData: any) => {
-  const { id, name, modal } = Object.fromEntries(formData);
+// update supplier
+export const updateSupplier = async (formData: any) => {
+  const { id, name, phone } = Object.fromEntries(formData);
 
   try {
     // Initialize the updateFields object
     const updateFields = {
       name,
-      modal,
+      phone,
     };
 
     // Remove properties with undefined or null or "" values from the updateFields object
@@ -77,62 +82,57 @@ export const updateItem = async (formData: any) => {
     }
 
     // update the employee
-    await prisma.item.update({
+    await prisma.supplier.update({
       where: { id: id },
       data: updateFields,
     });
 
-    console.log(`Item with ID ${id} updated successfully`);
+    console.log(`Supplier with ID ${id} updated successfully`);
 
     // Revalidate the path after updating the employee
-    revalidatePath("/dashboard/items-list");
+    revalidatePath("/dashboard/suppliers");
   } catch (err) {
-    console.error("Error updating item:", err);
+    console.error("Error updating Supplier:", err);
     throw err; // Re-throw the error to propagate it further if needed
   }
 };
 
-// find Item
-export const findItem = async (id: string) => {
+// find supplier by id
+export const findSupplier = async (id: string) => {
   try {
     await connectToDB();
 
     // Find the item
-    const item = await prisma.item.findUnique({
+    const supplier = await prisma.supplier.findUnique({
       where: {
         id: id,
       },
     });
 
-    console.log("Item found successfully:", item);
+    console.log("supplier found successfully:", supplier);
 
-    return item;
+    return supplier;
   } catch (err) {
-    console.error("Error finding item:", err);
+    console.error("Error finding supplier:", err);
     throw err; // Re-throw the error to propagate it further if needed
   }
+  await prisma.$disconnect(); // Disconnect the Prisma client after the operation
 };
 
-// Delete Item
-export const deleteItem = async (formData: any) => {
+// delete supplier
+export const deleteSupplier = async (formData: any) => {
   const { id } = Object.fromEntries(formData);
-
   try {
     await connectToDB();
-
-    // Delete the item
-    await prisma.item.delete({
+    const supplier = await prisma.supplier.delete({
       where: {
         id: id,
       },
     });
-
-    console.log("Item deleted successfully");
-
-    // Revalidate the path after deleting the item
-    revalidatePath("/dashboard/items-list");
+    return supplier;
   } catch (err) {
-    console.error("Error deleting item:", err);
-    throw err; // Re-throw the error to propagate it further if needed
+    console.error(err);
+  } finally {
+    await prisma.$disconnect(); // Disconnect the Prisma client after the operation
   }
 };
