@@ -45,3 +45,18 @@ model Supplier {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 }
+
+// purchase model
+model Purchase {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  item      String 
+  supplier  String
+  quantity  Int
+  price     Float
+  total     Float
+  date      DateTime
+  place     String    @default("container")
+  status    String    @default("pending")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}

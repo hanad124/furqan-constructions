@@ -21,6 +21,7 @@ import {
   HiDocumentReport,
   HiChartBar,
   HiCreditCard,
+  HiOutlineLogout,
 } from "react-icons/hi";
 
 export const menuItems = [
@@ -52,11 +53,8 @@ export const menuItems = [
   {
     icon: HiShoppingCart,
     text: "Purchase",
-    url: "",
-    submenus: [
-      { text: "Containers", url: "/containers" },
-      { text: "Market", url: "/market" },
-    ],
+    url: "/dashboard/purchase",
+    submenus: [],
   },
   {
     icon: HiOutlineSwitchHorizontal,
@@ -116,5 +114,11 @@ export const menuItems = [
     url: "/dashboard/users",
     submenus: [],
   },
+  // {
+  //   icon: HiOutlineLogout,
+  //   text: "Log out",
+  //   url: "",
+  //   submenus: [],
+  // },
   // { icon: FaArrowRightFromBracket, HiViewList, text: "Log out", submenus: [] },
 ];

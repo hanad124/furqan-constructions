@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
-import { firebaseApp } from "../firebaseConfig";
+
 import { useRouter, usePathname } from "next/navigation";
 import Image from "next/image";
 import Avator from "./Avator";
@@ -13,17 +12,7 @@ import Link from "next/link";
 import logo from "@/public/assets/logo-light.svg";
 import { menuItems } from "@/data/menuItems";
 
-import { MoonIcon, SunIcon } from "@radix-ui/react-icons";
 import { useTheme } from "next-themes";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 
 import {
   Sheet,
@@ -90,8 +79,8 @@ const Sidebar = () => {
   const pathname = usePathname();
 
   const handleSignOut = async () => {
-    signOut(getAuth(firebaseApp));
-    router.push("/login");
+    // signOut(getAuth(firebaseApp));
+    // router.push("/login");
   };
   return (
     <div>
