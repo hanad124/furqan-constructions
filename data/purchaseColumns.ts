@@ -12,22 +12,27 @@ export const purchaseColumns = [
   {
     field: "quantity",
     headerName: "quantity",
-    width: 100,
+    width: 50,
   },
   {
     field: "price",
     headerName: "price",
-    width: 100,
+    width: 80,
   },
   {
     field: "total",
     headerName: "total",
-    width: 100,
+    width: 70,
   },
   {
     field: "place",
     headerName: "place",
-    width: 100,
+    width: 80,
+  },
+  {
+    field: "date",
+    headerName: "Date",
+    width: 120,
   },
   {
     field: "status",

@@ -2,12 +2,12 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { createPurchase } from "@/utils/db/Purchase";
 import { getSuppliers } from "@/utils/db/Suppliers";
 import { getItems } from "@/utils/db/Items";
 
-import { Button } from "@/components/ui/button";
+import { getPurchaseById, updatePurchase } from "@/utils/db/Purchase";
 
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -19,11 +19,26 @@ import {
 } from "@/components/ui/form";
 
 import { Input } from "@/components/ui/input";
-import { useForm, FormProvider } from "react-hook-form";
-import { useRouter, usePathname } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { useRouter, usePathname, redirect } from "next/navigation";
 import { useState, useEffect } from "react";
 
-import React from "react";
+type Suppliers = {
+  id: string;
+  name: string;
+  phone: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+interface Item {
+  id: string;
+  name: string;
+  modal: string | null;
+  description: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
 // Define a schema for your form values.
 const formSchema = z.object({
@@ -51,26 +66,9 @@ const formSchema = z.object({
   }),
 });
 
-type Suppliers = {
-  id: string;
-  name: string;
-  phone: string;
-  createdAt: Date;
-  updatedAt: Date;
-};
-
-interface Item {
-  id: string;
-  name: string;
-  modal: string | null;
-  description: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-export default function NewPurchase() {
-  const [value, setValue] = React.useState("");
-  const [value2, setValue2] = React.useState("");
+export default function UpdateUser({ params }: any) {
+  const [value, setValue] = useState("");
+  const [value2, setValue2] = useState("");
   const [suppliers, setSuppliers] = useState<Suppliers[]>([]);
   const [items, setItems] = useState<Item[]>([]);
 
@@ -116,6 +114,7 @@ export default function NewPurchase() {
     console.log("Item:", event.target.value);
   };
 
+  const { id } = params;
   const router = useRouter();
   const pathname = usePathname();
   // create a form instance with useForm
@@ -132,6 +131,22 @@ export default function NewPurchase() {
       // date: new Date() || "",
     },
   });
+
+  // fetch user data by id
+  useEffect(() => {
+    const fetchPurchase = async () => {
+      const purchase = await getPurchaseById(id);
+
+      form.setValue("supplier", purchase?.supplier ?? "");
+      form.setValue("item", purchase?.item ?? "");
+      form.setValue("quantity", purchase?.quantity ?? 0);
+      form.setValue("price", purchase?.price ?? 0);
+      form.setValue("place", purchase?.place ?? "");
+      form.setValue("total", purchase?.total ?? 0);
+      form.setValue("status", purchase?.status ?? "");
+    };
+    fetchPurchase();
+  }, []);
 
   const handleStatusChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     form.setValue("status", event.target.value);
@@ -167,7 +182,9 @@ export default function NewPurchase() {
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
-            onClick={() => router.back()}
+            onClick={() => {
+              router.replace("/dashboard/purchase");
+            }}
           >
             <path
               strokeLinecap="round"
@@ -178,19 +195,24 @@ export default function NewPurchase() {
           </svg>
           <p
             className="text-slate-600 font-bold text-md cursor-pointer"
-            onClick={() => router.back()}
+            onClick={() => {
+              router.replace("/dashboard/purchase");
+            }}
           >
             Back
           </p>
         </div>
-        <h1 className="text-xl text-slate-600 font-bold mt-8">New Purchase</h1>
+        <h1 className="text-xl text-slate-600 font-bold mt-8">
+          Update Purchase
+        </h1>
         <div className="my-10">
           <Form {...form}>
             <form
               // onSubmit={form.handleSubmit(onSubmit)}
-              action={createPurchase}
+              action={updatePurchase}
               className="space-y-8"
             >
+              <input type="text" hidden name="id" value={id} />
               <div className="flex flex-wrap gap-x-3 gap-y-5 w-full ">
                 {/* supplier field */}
                 <FormField

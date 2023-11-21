@@ -27,6 +27,9 @@ const formSchema = z.object({
   modal: z.string().min(1, {
     message: "modal must be at least 1 characters.",
   }),
+  description: z.string().min(5, {
+    message: "description must be at least 5 characters.",
+  }),
 });
 
 export default function NewUser() {
@@ -38,6 +41,7 @@ export default function NewUser() {
     defaultValues: {
       name: "",
       modal: "",
+      description: "",
     },
   });
 
@@ -101,6 +105,22 @@ export default function NewUser() {
                       <FormLabel>Modal</FormLabel>
                       <FormControl>
                         <Input placeholder=" modal" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* description field */}
+                <FormField
+                  control={form.control}
+                  name="description"
+                  // disabled
+                  render={({ field }) => (
+                    <FormItem className="w-full md:w-[19rem]">
+                      <FormLabel>Description</FormLabel>
+                      <FormControl>
+                        <Input placeholder="description" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

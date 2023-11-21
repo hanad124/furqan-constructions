@@ -10,4 +10,9 @@ export const itemColumns = [
     headerName: "Modal",
     width: 220,
   },
+  {
+    field: "description",
+    headerName: "Description",
+    width: 300,
+  },
 ];

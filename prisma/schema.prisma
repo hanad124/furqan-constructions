@@ -33,6 +33,7 @@ model Item {
   id        String    @id @default(auto()) @map("_id") @db.ObjectId
   name      String
   modal     String
+  description  String
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 }
@@ -54,7 +55,7 @@ model Purchase {
   quantity  Int
   price     Float
   total     Float
-  date      DateTime
+  // date      DateTime
   place     String    @default("container")
   status    String    @default("pending")
   createdAt DateTime  @default(now())

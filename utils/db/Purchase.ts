@@ -36,8 +36,13 @@ export const getPurchaseById = async (id: string) => {
 
 // create purchase
 export const createPurchase = async (formData: any) => {
-  const { supplier, item, quantity, price, place, total, status, date } =
+  const { supplier, item, quantity, price, place, total, status } =
     Object.fromEntries(formData);
+
+  // change [price, quantity, total] to number
+  const priceNumber = Number(price);
+  const quantityNumber = Number(quantity);
+  const totalNumber = parseFloat(total);
 
   try {
     await connectToDB();
@@ -47,11 +52,10 @@ export const createPurchase = async (formData: any) => {
       data: {
         supplier: supplier,
         item: item,
-        quantity: quantity,
-        price: price,
+        quantity: quantityNumber,
+        price: priceNumber,
         place: place,
-        total: total,
-        date: date,
+        total: totalNumber,
         status: status,
       },
     });
@@ -68,25 +72,43 @@ export const createPurchase = async (formData: any) => {
 
 // update purchase
 export const updatePurchase = async (formData: any) => {
-  const { id, supplier, item, quantity, price, place, total, date, status } =
+  const { id, supplier, item, quantity, price, place, total, status } =
     Object.fromEntries(formData);
+
+  // change [price, quantity, total] to number
+  const priceNumber = Number(price);
+  const quantityNumber = Number(quantity);
+  const totalNumber = parseFloat(total);
 
   try {
     await connectToDB();
 
+    // Initialize the updateFields object
+    const updateFields = {
+      supplier,
+      item,
+      quantity: quantityNumber,
+      price: priceNumber,
+      place,
+      total: totalNumber,
+      status,
+    };
+
+    // Remove properties with undefined or null or "" values from the updateFields object
+    for (const key of Object.keys(updateFields)) {
+      if (
+        updateFields[key as keyof typeof updateFields] === undefined ||
+        updateFields[key as keyof typeof updateFields] === null ||
+        updateFields[key as keyof typeof updateFields] === ""
+      ) {
+        delete updateFields[key as keyof typeof updateFields];
+      }
+    }
+
     // Update the Purchase
     const updatedPurchase = await prisma.purchase.update({
       where: { id: id },
-      data: {
-        supplier: supplier,
-        item: item,
-        quantity: quantity,
-        price: price,
-        place: place,
-        total: total,
-        date: date,
-        status: status,
-      },
+      data: updateFields,
     });
 
     console.log("Purchase updated successfully:", updatedPurchase);

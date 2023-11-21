@@ -22,6 +22,7 @@ interface Purchase {
   status: string;
   createdAt: Date;
   updatedAt: Date;
+  date?: string;
 }
 
 const page = () => {
@@ -33,8 +34,7 @@ const page = () => {
         const mappedPurchases = (purchase: Purchase): Purchase => {
           return {
             ...purchase,
-            createdAt: new Date(purchase.createdAt),
-            updatedAt: new Date(purchase.updatedAt),
+            date: purchase.createdAt.toString().slice(4, 16),
           };
         };
 

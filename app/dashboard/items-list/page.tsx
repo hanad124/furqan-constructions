@@ -16,6 +16,7 @@ interface Item {
   id: string;
   name: string;
   modal: string | null;
+  description: string | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -31,6 +32,7 @@ const page = () => {
             id: employee.id,
             name: employee.name,
             modal: employee.modal,
+            description: employee.description,
             createdAt: employee.createdAt,
             updatedAt: employee.updatedAt,
           };
