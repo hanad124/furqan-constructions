@@ -27,6 +27,7 @@ interface Purchase {
 
 const page = () => {
   const [data, setData] = useState<readonly Purchase[]>([]);
+  const [salesStatus, setSalesStatus] = useState<string[]>([]);
   const fetchPurchases = async () => {
     try {
       const purchases = await getPurchases();
@@ -39,6 +40,7 @@ const page = () => {
         };
 
         const transformedPurchases = purchases.map(mappedPurchases);
+        setSalesStatus(transformedPurchases.map((item) => item.status));
         setData(transformedPurchases);
       }
     } catch (error) {
@@ -84,6 +86,50 @@ const page = () => {
     },
   ];
 
+  const statusColumn = [
+    {
+      field: "status",
+      headerName: "Status",
+      width: 100,
+      renderCell: (params: any) => {
+        const index = data.findIndex((item) => item.id === params.row.id);
+        const status = salesStatus[index];
+
+        useEffect(() => {
+          const timeoutId = setTimeout(() => {
+            const nextIndex = index + 1;
+            if (nextIndex < data.length) {
+              setData((prevData) => {
+                const newData = [...prevData];
+                newData[nextIndex].status = salesStatus[nextIndex];
+                return newData;
+              });
+            }
+          }, (index + 1) * 1000);
+
+          return () => {
+            clearTimeout(timeoutId);
+          };
+        }, [index]);
+
+        return (
+          <div className="cellAction">
+            <div
+              className={`status ${status} ${
+                status === "pending"
+                  ? "bg-yellow-500/20 border border-yellow-300 text-yellow-600 py-[.2rem] px-[.5rem] rounded-md"
+                  : "text-green-600 bg-green-500/20 border border-green-300  py-[.2rem] px-[.5rem] rounded-md"
+              } `}
+            >
+              {status}
+            </div>
+          </div>
+        );
+      },
+    },
+  ];
+  let columns = purchaseColumns.concat(statusColumn);
+
   return (
     <div className="p-4">
       <div className="flex justify-between items-center">
@@ -99,7 +145,7 @@ const page = () => {
         <DataGrid
           className="datagrid dark:text-slate-200"
           rows={data}
-          columns={purchaseColumns.concat(actionColumn)}
+          columns={columns.concat(actionColumn)}
           // pageSize={9}
           // rowsPerPageOptions={[9]}
           // checkboxSelection

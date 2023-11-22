@@ -11,7 +11,7 @@ export const purchaseColumns = [
   },
   {
     field: "quantity",
-    headerName: "quantity",
+    headerName: "Qty",
     width: 50,
   },
   {
@@ -33,10 +33,5 @@ export const purchaseColumns = [
     field: "date",
     headerName: "Date",
     width: 120,
-  },
-  {
-    field: "status",
-    headerName: "status",
-    width: 100,
   },
 ];
