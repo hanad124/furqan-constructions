@@ -61,3 +61,12 @@ model Purchase {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 }
+
+// customer model
+model Customer {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  phone     String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}

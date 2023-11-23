@@ -2,7 +2,12 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { createEmployee } from "../../../utils/dbOperations";
+import {
+  findEmployeeById,
+  updateEmployee,
+} from "../../../../../utils/dbOperations";
+
+import { findCustomerById, updateCustomer } from "@/utils/db/Customer";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -14,26 +19,10 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  addDoc,
-  getDoc,
-  collection,
-  doc,
-  serverTimestamp,
-  setDoc,
-} from "firebase/firestore";
-import { db } from "../../../firebaseConfig";
 
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter, usePathname, redirect } from "next/navigation";
 import { useState, useEffect } from "react";
 
 // Define a schema for your form values.
@@ -41,14 +30,15 @@ const formSchema = z.object({
   name: z.string().min(2, {
     message: "name must be at least 2 characters.",
   }),
+
   phone: z.string().regex(/^\d{10}$/, {
     message: "Invalid phone number format. Please enter a 10-digit number.",
   }),
 });
 
-export default function NewEmployee() {
+export default function UpdateCustomer({ params }: any) {
+  const { id } = params;
   const router = useRouter();
-  const pathname = usePathname();
   // create a form instance with useForm
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -58,14 +48,16 @@ export default function NewEmployee() {
     },
   });
 
-  // Define a submit handler that will receive the form values.
-  //   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-  //     // ✅ This will be type-safe and validated.
+  // fetch user data by id
+  useEffect(() => {
+    const fetchCustomer = async () => {
+      const customer = await findCustomerById(id);
 
-  //     // set form values to empty
-  //     form.setValue("name", "");
-  //     form.setValue("phone", "");
-  //   };
+      form.setValue("name", customer?.name ?? "");
+      form.setValue("phone", customer?.phone ?? "");
+    };
+    fetchCustomer();
+  }, []);
 
   return (
     <>
@@ -78,7 +70,9 @@ export default function NewEmployee() {
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
-            onClick={() => router.back()}
+            onClick={() => {
+              router.replace("/dashboard/customers");
+            }}
           >
             <path
               strokeLinecap="round"
@@ -89,19 +83,24 @@ export default function NewEmployee() {
           </svg>
           <p
             className="text-slate-600 font-bold text-md cursor-pointer"
-            onClick={() => router.back()}
+            onClick={() => {
+              router.replace("/dashboard/customers");
+            }}
           >
             Back
           </p>
         </div>
-        <h1 className="text-xl text-slate-600 font-bold mt-8">New Employee</h1>
+        <h1 className="text-xl text-slate-600 font-bold mt-8">
+          Update Customer
+        </h1>
         <div className="my-10">
           <Form {...form}>
             <form
-              //   onSubmit={form.handleSubmit(onSubmit)}
-              action={createEmployee}
+              // onSubmit={form.handleSubmit(onSubmit)}
+              action={updateCustomer}
               className="space-y-8"
             >
+              <input type="hidden" name="id" value={id} />
               <div className="flex flex-wrap gap-x-3 gap-y-4 w-full">
                 {/* name field */}
                 <FormField
@@ -109,9 +108,9 @@ export default function NewEmployee() {
                   name="name"
                   render={({ field }) => (
                     <FormItem className="w-full md:w-[19rem]">
-                      <FormLabel>Employee name</FormLabel>
+                      <FormLabel>name</FormLabel>
                       <FormControl>
-                        <Input placeholder="employee name" {...field} />
+                        <Input placeholder="name" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

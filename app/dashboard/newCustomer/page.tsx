@@ -2,9 +2,9 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { createEmployee } from "../../../utils/dbOperations";
 
 import { Button } from "@/components/ui/button";
+import { useFormStatus } from "react-dom";
 import {
   Form,
   FormControl,
@@ -14,27 +14,12 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  addDoc,
-  getDoc,
-  collection,
-  doc,
-  serverTimestamp,
-  setDoc,
-} from "firebase/firestore";
-import { db } from "../../../firebaseConfig";
 
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { useRouter, usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
+import { createCustomer } from "@/utils/db/Customer";
 
 // Define a schema for your form values.
 const formSchema = z.object({
@@ -46,7 +31,8 @@ const formSchema = z.object({
   }),
 });
 
-export default function NewEmployee() {
+export default function NewCustomer() {
+  const { pending } = useFormStatus();
   const router = useRouter();
   const pathname = usePathname();
   // create a form instance with useForm
@@ -57,15 +43,6 @@ export default function NewEmployee() {
       phone: "",
     },
   });
-
-  // Define a submit handler that will receive the form values.
-  //   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-  //     // ✅ This will be type-safe and validated.
-
-  //     // set form values to empty
-  //     form.setValue("name", "");
-  //     form.setValue("phone", "");
-  //   };
 
   return (
     <>
@@ -94,12 +71,12 @@ export default function NewEmployee() {
             Back
           </p>
         </div>
-        <h1 className="text-xl text-slate-600 font-bold mt-8">New Employee</h1>
+        <h1 className="text-xl text-slate-600 font-bold mt-8">New Customer</h1>
         <div className="my-10">
           <Form {...form}>
             <form
               //   onSubmit={form.handleSubmit(onSubmit)}
-              action={createEmployee}
+              action={createCustomer}
               className="space-y-8"
             >
               <div className="flex flex-wrap gap-x-3 gap-y-4 w-full">
@@ -109,9 +86,9 @@ export default function NewEmployee() {
                   name="name"
                   render={({ field }) => (
                     <FormItem className="w-full md:w-[19rem]">
-                      <FormLabel>Employee name</FormLabel>
+                      <FormLabel>Customer name</FormLabel>
                       <FormControl>
-                        <Input placeholder="employee name" {...field} />
+                        <Input placeholder="customer name" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -137,7 +114,10 @@ export default function NewEmployee() {
               <Button
                 type="submit"
                 size={"lg"}
-                className="dark:text-white w-full md:w-[11.5rem] mb-10"
+                arai-disabled={pending}
+                className={`dark:text-white w-full md:w-[11.5rem] mb-10${
+                  pending ? " opacity-50 cursor-not-allowed" : ""
+                }`}
               >
                 Submit
               </Button>

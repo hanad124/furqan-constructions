@@ -65,7 +65,7 @@ export const menuItems = [
   {
     icon: HiOutlineUserCircle,
     text: "Customers",
-    url: "dashboard/customers",
+    url: "/dashboard/customers",
     submenus: [],
   },
   {
