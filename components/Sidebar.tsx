@@ -13,6 +13,7 @@ import logo from "@/public/assets/logo-light.svg";
 import { menuItems } from "@/data/menuItems";
 
 import { useTheme } from "next-themes";
+import { auth } from "@/auth";
 
 import {
   Sheet,
@@ -37,9 +38,16 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card } from "./ui/card";
 import { BiSearch } from "react-icons/bi";
 
-const Sidebar = () => {
+const Sidebar = ({ user }: any) => {
   const { theme, setTheme } = useTheme();
   const [open, setOpen] = React.useState(false);
+
+  const [activeMenuIndex, setActiveMenuIndex] = useState<number | null>(null);
+  const [activeTab, setActiveTab] = useState<number | null>(null);
+  const [access, setAccess] = useState(false);
+
+  const router = useRouter();
+  const pathname = usePathname();
 
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -51,13 +59,6 @@ const Sidebar = () => {
     document.addEventListener("keydown", down);
     return () => document.removeEventListener("keydown", down);
   }, []);
-
-  const handleToggleMode = () => {
-    const newTheme = theme === "dark" ? "white" : "dark";
-    setTheme(newTheme);
-  };
-  const [activeMenuIndex, setActiveMenuIndex] = useState<number | null>(null);
-  const [activeTab, setActiveTab] = useState<number | null>(null);
 
   const handleMenuClick = (index: any) => {
     const clickedMenuItem = menuItems[index];
@@ -75,13 +76,14 @@ const Sidebar = () => {
     }
   };
 
-  const router = useRouter();
-  const pathname = usePathname();
-
   const handleSignOut = async () => {
     // signOut(getAuth(firebaseApp));
     // router.push("/login");
   };
+
+  //check if user is admin
+  console.log(user);
+
   return (
     <div>
       {" "}

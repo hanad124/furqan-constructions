@@ -178,7 +178,9 @@ export const getEmployees = async () => {
 };
 
 export const createEmployee = async (formData: any) => {
-  const { name, phone } = Object.fromEntries(formData);
+  const { name, phone } = formData;
+
+  console.log(name, phone);
 
   try {
     await connectToDB();
@@ -215,7 +217,7 @@ export const createEmployee = async (formData: any) => {
 };
 
 export const updateEmployee = async (formData: any) => {
-  const { id, name, phone } = Object.fromEntries(formData);
+  const { id, name, phone } = formData;
 
   try {
     // Initialize the updateFields object
@@ -267,8 +269,8 @@ export const findEmployeeById = async (employeeId: string) => {
 };
 
 export const deleteEmployee = async (formData: any) => {
-  const { id } = Object.fromEntries(formData);
-
+  const id = formData;
+  console.log(id);
   try {
     // Ensure the database connection is established
     await prisma.$connect();
@@ -304,4 +306,4 @@ export const deleteEmployee = async (formData: any) => {
   revalidatePath("/dashboard/employees");
 };
 
-// ############################## End Employee Operations ##############################
+// ####################### End Employee Operations ############################

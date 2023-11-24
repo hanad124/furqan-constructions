@@ -2,7 +2,9 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import toast, { Toaster } from "react-hot-toast";
 import { createEmployee } from "../../../utils/dbOperations";
+import { BiLoaderAlt } from "react-icons/bi";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -14,27 +16,11 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  addDoc,
-  getDoc,
-  collection,
-  doc,
-  serverTimestamp,
-  setDoc,
-} from "firebase/firestore";
-import { db } from "../../../firebaseConfig";
 
 import { Input } from "@/components/ui/input";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useRouter, usePathname } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 // Define a schema for your form values.
 const formSchema = z.object({
@@ -47,8 +33,9 @@ const formSchema = z.object({
 });
 
 export default function NewEmployee() {
+  const [loading, setLoading] = useState(false);
+
   const router = useRouter();
-  const pathname = usePathname();
   // create a form instance with useForm
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -58,14 +45,34 @@ export default function NewEmployee() {
     },
   });
 
-  // Define a submit handler that will receive the form values.
-  //   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-  //     // ✅ This will be type-safe and validated.
+  const onSubmit = async (data: any) => {
+    setLoading(true);
+    try {
+      toast.promise(
+        createEmployee(data),
+        {
+          loading: "Creating employee...",
+          success: "Employee created successfully!",
+          error: "Failed to create employee. Please try again.",
+        },
+        {
+          style: {
+            minWidth: "250px",
+          },
+        }
+      );
 
-  //     // set form values to empty
-  //     form.setValue("name", "");
-  //     form.setValue("phone", "");
-  //   };
+      setLoading(false);
+      // reset the form
+      form.reset();
+
+      // Redirect to the desired page
+      // router.push("/dashboard/employee");
+    } catch (error) {
+      // Handle any errors that occurred during employee creation
+      toast.error("Failed to create employee. Please try again.");
+    }
+  };
 
   return (
     <>
@@ -97,11 +104,7 @@ export default function NewEmployee() {
         <h1 className="text-xl text-slate-600 font-bold mt-8">New Employee</h1>
         <div className="my-10">
           <Form {...form}>
-            <form
-              //   onSubmit={form.handleSubmit(onSubmit)}
-              action={createEmployee}
-              className="space-y-8"
-            >
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
               <div className="flex flex-wrap gap-x-3 gap-y-4 w-full">
                 {/* name field */}
                 <FormField
@@ -137,14 +140,20 @@ export default function NewEmployee() {
               <Button
                 type="submit"
                 size={"lg"}
-                className="dark:text-white w-full md:w-[11.5rem] mb-10"
+                disabled={loading}
+                className={`dark:text-white w-full md:w-[11.5rem] mb-10
+                c
+                 ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-primary"}`}
               >
-                Submit
+                {/* {loading && <BiLoaderAlt className="animate-spin w-4 h-4" />} */}
+                <span>Submit</span>
               </Button>
             </form>
           </Form>
         </div>
       </div>
+      <Toaster />{" "}
+      {/* Add the Toaster component to display the toast notifications */}
     </>
   );
 }

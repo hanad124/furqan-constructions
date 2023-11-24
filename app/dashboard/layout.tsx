@@ -1,12 +1,14 @@
 import React, { ReactNode } from "react";
 import Navbar from "@/components/Navbar";
 import Sidebar from "@/components/Sidebar";
+import { auth } from "@/auth";
 
-const layout = ({ children }: { children: ReactNode }) => {
+const layout = async ({ children }: { children: ReactNode }) => {
+  const user = await auth();
   return (
     <div>
       <div className={"flex flex-col md:flex-row"}>
-        <Sidebar />
+        <Sidebar user={user} />
         <div className={"flex-1 block"}>
           <Navbar />
           {children}

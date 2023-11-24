@@ -9,6 +9,7 @@ import { employeeColumns } from "@/data/employeeColumns";
 import { getEmployees, deleteEmployee } from "../../../utils/dbOperations";
 
 import { revalidatePath } from "next/cache";
+import toast, { Toaster } from "react-hot-toast";
 
 // create a type for the data
 interface Employee {
@@ -21,11 +22,14 @@ interface Employee {
 
 const page = () => {
   const [data, setData] = useState<readonly Employee[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [emID, setEmID] = useState("");
   const fetchEmployees = async () => {
     try {
       const employees = await getEmployees();
       if (employees) {
         const mappedEmployee = (employee: Employee): Employee => {
+          setEmID(employee.id);
           return {
             id: employee.id,
             name: employee.name,
@@ -49,6 +53,31 @@ const page = () => {
     return () => {};
   }, []);
 
+  const handleDelete = async (id: string) => {
+    setLoading(true);
+    // add id
+    try {
+      toast.promise(
+        deleteEmployee(id),
+        {
+          loading: "Deleting employee...",
+          success: "Employee deleted successfully!",
+          error: "Failed to delete employee. Please try again.",
+        },
+        {
+          style: {
+            minWidth: "250px",
+          },
+        }
+      );
+      fetchEmployees();
+      setLoading(false);
+    } catch (error) {
+      // Handle any errors that occurred during employee creation
+      toast.error("Failed to delete employee. Please try again.");
+    }
+  };
+
   const actionColumn = [
     {
       field: "action",
@@ -71,7 +100,12 @@ const page = () => {
               </div>
             </Link>
 
-            <form action={deleteEmployee}>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleDelete(params.row.id);
+              }}
+            >
               <input type="hidden" name="id" value={params.row.id} />
               <button
                 type="submit"
@@ -83,6 +117,7 @@ const page = () => {
                 Delete
               </button>
             </form>
+            <Toaster />
           </div>
         );
       },
