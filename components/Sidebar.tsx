@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 
 import { useRouter, usePathname } from "next/navigation";
 import Image from "next/image";
@@ -76,18 +76,39 @@ const Sidebar = ({ user }: any) => {
     }
   };
 
-  const handleSignOut = async () => {
-    // signOut(getAuth(firebaseApp));
-    // router.push("/login");
-  };
+  const allowedMenuItemsForUser = new Set([
+    "Dashboard",
+    "Users",
+    "Employees",
+    "Reports",
+    "Suppliers",
+    "Item List",
+    "Transfer",
+    "Purchase",
+    "Stock",
+    "Expense",
+    "Bank",
+    "Clearance",
+    // Add other allowed menu items for the "user" role
+  ]);
 
   //check if user is admin
-  console.log(user);
+  // useLayoutEffect(() => {
+  //   if (user) {
+  //     if (user.user.role.trim() === "admin") {
+  //       setAccess(true);
+  //     } else {
+  //       setAccess(false);
+  //     }
+  //   }
+  // }, [user]);
+
+  // console.log(access);
 
   return (
     <div>
       {" "}
-      <div className="sidebar hidden md:block sticky top-0 border-salte-300 dark:border-slate-600 border-r w-60 ">
+      <div className="sidebar hidden md:block sticky top-0 border-salte-300 dark:border-slate-600 border-r w-60 min-h-screen ">
         {/* logo */}
         <div className="flex items-center ml-8 py-4 gap-3 ">
           <Image
@@ -108,6 +129,34 @@ const Sidebar = ({ user }: any) => {
 
             if (pathname === "/" && (item.url === "/dashboard" || isActive)) {
               return true;
+            }
+
+            // if (
+            //   (user.user.role === "user" && item.text === "Dashboard") ||
+            //   item.text === "Dashboard" ||
+            //   item.text === "Users" ||
+            //   item.text === "Emaployees" ||
+            //   item.text === "Suppliers" ||
+            //   item.text === "Item List" ||
+            //   item.text === "Reports" ||
+            //   item.text === "Purchase" ||
+            //   item.text === "Sales" ||
+            //   item.text === "Transfer" ||
+            //   item.text === "Stock" ||
+            //   item.text === "Invoice" ||
+            //   item.text === "Expense" ||
+            //   item.text === "Bank" ||
+            //   item.text === "Clearance"
+            // ) {
+            //   console.log(user.user.role);
+            //   return null;
+            // }
+
+            if (
+              user.user.role === "user" &&
+              allowedMenuItemsForUser.has(item.text)
+            ) {
+              return null;
             }
 
             return (
@@ -263,10 +312,7 @@ const Sidebar = ({ user }: any) => {
                       </Avatar>
                       <div className="flex flex-col gap-1">
                         <p>Hanad Mohamed</p>
-                        <button
-                          onClick={handleSignOut}
-                          className="text-red-500 hover:text-red-600 text-left"
-                        >
+                        <button className="text-red-500 hover:text-red-600 text-left">
                           Sign Out
                         </button>
                       </div>

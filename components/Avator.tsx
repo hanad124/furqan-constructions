@@ -31,7 +31,7 @@ interface TokenData {
 const Avator = async () => {
   const getAuth: any = await auth();
 
-  const name = getAuth?.username;
+  const name = getAuth?.user?.username;
 
   let initials = "";
   if (name) {

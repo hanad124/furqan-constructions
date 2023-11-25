@@ -109,7 +109,10 @@ const page = () => {
               <input type="hidden" name="id" value={params.row.id} />
               <button
                 type="submit"
-                className="deleteButton px-3 py-1 border border-red-500 text-red-500 rounded-md border-dotted cursor-pointer"
+                disabled={loading}
+                className={`deleteButton px-3 py-1 border border-red-500 text-red-500 rounded-md border-dotted cursor-pointer ${
+                  loading ? "opacity-50 cursor-not-allowed" : ""
+                }`}
                 onClick={() => {
                   fetchEmployees();
                 }}

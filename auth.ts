@@ -1,8 +1,9 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import Providers from "next-auth/providers";
 import { authConfig } from "./authconfig";
 import { connectToDB } from "./utils/database";
-import User, { IUser } from "./models/User";
+
 // import bcrypt from "bcrypt";
 import prisma from "@/prisma";
 // import { decryptPassword } from "./providers/PasswordHassher";
@@ -28,7 +29,6 @@ const login = async (credentials: any) => {
     // );
 
     // if (!isValidPassword) throw new Error("Password is not valid");
-
     return user;
   } catch (error) {
     console.error("Login error:", error);
@@ -39,8 +39,45 @@ const login = async (credentials: any) => {
   }
 };
 
+// export const { signIn, signOut, auth } = NextAuth({
+//   ...authConfig,
+//   providers: [
+//     CredentialsProvider({
+//       async authorize(credentials) {
+//         try {
+//           const user = await login(credentials);
+//           return user;
+//         } catch (error) {
+//           console.error("NextAuth Error", error);
+//           return null;
+//         }
+//       },
+//     }),
+//   ],
+//   callbacks: {
+//     async jwt({ token, user }: any) {
+//       if (user) {
+//         token.username = user.username;
+//         token.role = user.role;
+//         //token.user = user;
+//       }
+
+//       return token;
+//     },
+
+//     async session({ session, token }: any) {
+//       if (token) {
+//         session.user.username = token.username;
+//         session.user.role = token.role;
+//         // session = token;
+//       }
+//       return session;
+//     },
+//   },
+// });
+
 export const { signIn, signOut, auth } = NextAuth({
-  ...authConfig,
+  // ...authConfig,
   providers: [
     CredentialsProvider({
       async authorize(credentials) {
@@ -59,16 +96,18 @@ export const { signIn, signOut, auth } = NextAuth({
       if (user) {
         token.username = user.username;
         token.role = user.role;
-        token.user = user;
+        //token.user = user;
       }
 
       return token;
     },
 
     async session({ session, token }: any) {
-      session.username = token.username;
-      session.role = token.role;
-      session = token;
+      if (token) {
+        session.user.username = token.username;
+        session.user.role = token.role;
+        // session = token;
+      }
       return session;
     },
   },

@@ -1,6 +1,5 @@
 "use server";
 
-import User from "../models/User";
 import prisma from "@/prisma";
 import { connectToDB } from "./database";
 import { revalidatePath } from "next/cache";
@@ -103,11 +102,23 @@ export const updateUser = async (formData: any) => {
 };
 
 export const findUserByUsername = async (username: string) => {
-  return User.findOne({ username });
+  // return User.findOne({ username });
 };
 
 export const findUserByEmail = async (email: string) => {
-  return User.findOne({ email });
+  // console.log(email);
+  try {
+    // Find the user by Email using Prisma
+    const user = await prisma.user.findFirst({
+      where: {
+        email: email,
+      },
+    });
+
+    return user;
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 export const findUserById = async (userId: string) => {

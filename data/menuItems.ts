@@ -34,7 +34,7 @@ export const menuItems = [
   },
   {
     icon: FaUsers,
-    text: "Emaployees",
+    text: "Employees",
     url: "/dashboard/employee",
     submenus: [],
   },
