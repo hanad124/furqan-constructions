@@ -13,7 +13,7 @@ import logo from "@/public/assets/logo-light.svg";
 import { menuItems } from "@/data/menuItems";
 
 import { useTheme } from "next-themes";
-import { auth } from "@/auth";
+import { signOut } from "@/auth";
 
 import {
   Sheet,
@@ -92,18 +92,12 @@ const Sidebar = ({ user }: any) => {
     // Add other allowed menu items for the "user" role
   ]);
 
-  //check if user is admin
-  // useLayoutEffect(() => {
-  //   if (user) {
-  //     if (user.user.role.trim() === "admin") {
-  //       setAccess(true);
-  //     } else {
-  //       setAccess(false);
-  //     }
-  //   }
-  // }, [user]);
-
-  // console.log(access);
+  // sign out handler
+  const handleSignOut = async () => {
+    // "use server";
+    await signOut();
+    router.push("/login");
+  };
 
   return (
     <div>
@@ -130,27 +124,6 @@ const Sidebar = ({ user }: any) => {
             if (pathname === "/" && (item.url === "/dashboard" || isActive)) {
               return true;
             }
-
-            // if (
-            //   (user.user.role === "user" && item.text === "Dashboard") ||
-            //   item.text === "Dashboard" ||
-            //   item.text === "Users" ||
-            //   item.text === "Emaployees" ||
-            //   item.text === "Suppliers" ||
-            //   item.text === "Item List" ||
-            //   item.text === "Reports" ||
-            //   item.text === "Purchase" ||
-            //   item.text === "Sales" ||
-            //   item.text === "Transfer" ||
-            //   item.text === "Stock" ||
-            //   item.text === "Invoice" ||
-            //   item.text === "Expense" ||
-            //   item.text === "Bank" ||
-            //   item.text === "Clearance"
-            // ) {
-            //   console.log(user.user.role);
-            //   return null;
-            // }
 
             if (
               user.user.role === "user" &&
@@ -214,6 +187,10 @@ const Sidebar = ({ user }: any) => {
               </li>
             );
           })}
+          {/* sign out form  */}
+          <form action={handleSignOut}>
+            <button type="submit">Log out</button>
+          </form>
         </ul>
       </div>
       <div className="flex justify-between items-center w-full  mt-2 md:hidden">
