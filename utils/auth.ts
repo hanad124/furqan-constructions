@@ -1,4 +1,5 @@
 // // utils/auth.ts
+"use server";
 
 import { signIn, signOut } from "@/auth";
 import { redirect } from "next/dist/server/api-utils";
@@ -30,8 +31,7 @@ import { redirect } from "next/dist/server/api-utils";
 // };
 
 export const authenticate = async (formdata: any) => {
-  "use server";
-  const { username, password } = Object.fromEntries(formdata);
+  const { username, password } = formdata;
   console.log("formdata", formdata);
   try {
     await signIn("credentials", {
