@@ -142,9 +142,9 @@ const Sidebar = ({ user }: any) => {
                   <div
                     className={`${
                       isActive
-                        ? "bg-primary text-white hover:bg-primary"
-                        : " text-slate-600 dark:text-[#949bbd] hover:bg-primary/10"
-                    } flex items-center w-full py-[7px] px-4 rounded-md`}
+                        ? "bg-primary text-white hover:bg-primary cursor-pointer"
+                        : " text-slate-600 dark:text-[#949bbd] hover:bg-primary/10 cursor-pointer"
+                    } flex items-center w-full py-[7px] px-4 rounded-md cursor-pointer`}
                   >
                     <item.icon className="mr-4 text-lg" />
                     <span>{item.text}</span>
@@ -191,7 +191,7 @@ const Sidebar = ({ user }: any) => {
           <form action={handleSignOut}>
             <button
               type="submit"
-              className=" mx-4 text-slate-600 dark:text-[#949bbd hover:bg-primary/10 flex items-center  py-[7px] px-4 rounded-md"
+              className=" mx-4 text-slate-600 dark:text-[#949bbd hover:bg-primary/10 flex items-center  py-[7px] px-4 rounded-md cursor-pointer"
             >
               <BiLogOut className="mr-4 text-lg rotate-180" />
               Log out
