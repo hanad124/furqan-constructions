@@ -77,7 +77,7 @@ export const menuItems = [
       { text: "Credit", url: "/dashboard/invoices/credit" },
     ],
   },
-  { icon: HiChartBar, text: "Stock", url: "/dashboard/stock", submenus: [] },
+  { icon: HiChartBar, text: "Stocks", url: "/dashboard/stocks", submenus: [] },
   {
     icon: HiCreditCard,
     text: "Expense",

@@ -70,3 +70,26 @@ model Customer {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 }
+
+// stocks model
+model Stock {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  stock      String
+  quantity  Int
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+// transfer model
+model Transfer {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  to        String
+  item      String 
+  date      DateTime
+  quantity  Int
+  price     Float
+  total     Float
+  // from      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}

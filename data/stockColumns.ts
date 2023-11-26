@@ -1,11 +1,11 @@
 export const stockColumns = [
   {
-    field: "name",
+    field: "stock",
     headerName: "Stock Name",
     width: 200,
   },
   {
-    field: "phone",
+    field: "quantity",
     headerName: "Quantity",
     width: 100,
   },

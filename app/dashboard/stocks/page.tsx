@@ -5,50 +5,49 @@ import Link from "next/link";
 import { BiPlus } from "react-icons/bi";
 import { DataGrid } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
-import { employeeColumns } from "@/data/employeeColumns";
 import { stockColumns } from "@/data/stockColumns";
-import { getEmployees, deleteEmployee } from "../../../utils/dbOperations";
+import { getStocks, deleteStock } from "@/utils/db/Stocks";
 
 import { revalidatePath } from "next/cache";
 import toast, { Toaster } from "react-hot-toast";
 
 // create a type for the data
-interface Employee {
+interface Stock {
   id: string;
-  name: string;
-  phone: string | null;
+  stock: string;
+  quantity: number;
   createdAt: Date;
   updatedAt: Date;
 }
 
 const page = () => {
-  const [data, setData] = useState<readonly Employee[]>([]);
+  const [data, setData] = useState<readonly Stock[]>([]);
   const [loading, setLoading] = useState(false);
   const [emID, setEmID] = useState("");
-  const fetchEmployees = async () => {
+  const fetchStocks = async () => {
     try {
-      const employees = await getEmployees();
-      if (employees) {
-        const mappedEmployee = (employee: Employee): Employee => {
-          setEmID(employee.id);
+      const stocks = await getStocks();
+      if (stocks) {
+        const mappedStocks = (stock: Stock): Stock => {
+          setEmID(stock.id);
           return {
-            id: employee.id,
-            name: employee.name,
-            phone: employee.phone,
-            createdAt: employee.createdAt,
-            updatedAt: employee.updatedAt,
+            id: stock.id,
+            stock: stock.stock,
+            quantity: stock.quantity,
+            createdAt: stock.createdAt,
+            updatedAt: stock.updatedAt,
           };
         };
 
-        const transformedUsers = employees.map(mappedEmployee);
-        setData(transformedUsers);
+        const transformedStocks = stocks.map(mappedStocks);
+        setData(transformedStocks);
       }
     } catch (error) {
-      console.error("Error fetching users:", error);
+      console.error("Error fetching Stocks:", error);
     }
   };
   useEffect(() => {
-    fetchEmployees();
+    fetchStocks();
 
     // cleanup function
     return () => {};
@@ -59,11 +58,11 @@ const page = () => {
     // add id
     try {
       toast.promise(
-        deleteEmployee(id),
+        deleteStock(id),
         {
-          loading: "Deleting employee...",
-          success: "Employee deleted successfully!",
-          error: "Failed to delete employee. Please try again.",
+          loading: "Deleting stock...",
+          success: "Stock deleted successfully!",
+          error: "Failed to delete stock. Please try again.",
         },
         {
           style: {
@@ -71,11 +70,11 @@ const page = () => {
           },
         }
       );
-      fetchEmployees();
+      fetchStocks();
       setLoading(false);
     } catch (error) {
-      // Handle any errors that occurred during employee creation
-      toast.error("Failed to delete employee. Please try again.");
+      // Handle any errors that occurred during stock creation
+      toast.error("Failed to delete Stock. Please try again.");
     }
   };
 
@@ -95,7 +94,7 @@ const page = () => {
                 View
               </div>
             </Link>
-            <Link href={`/dashboard/employee/edit-employee/${params.row.id}`}>
+            <Link href={`/dashboard/stocks/edit-st/${params.row.id}`}>
               <div className="editButton px-3 py-1 border border-yellow-500 text-yellow-500 rounded-md border-dotted">
                 Edit
               </div>
@@ -115,7 +114,7 @@ const page = () => {
                   loading ? "opacity-50 cursor-not-allowed" : ""
                 }`}
                 onClick={() => {
-                  fetchEmployees();
+                  fetchStocks();
                 }}
               >
                 Delete
@@ -132,7 +131,7 @@ const page = () => {
     <div className="p-4">
       <div className="flex justify-between items-center">
         <h1 className="text-xl text-slate-600 font-bold">Stocks</h1>
-        <Link href="/dashboard/newEmployee">
+        <Link href="/dashboard/newStock">
           <Button className="text-white">
             <BiPlus className="text-lg mr-2" />
             <span className="">Add new Stock</span>
@@ -144,9 +143,6 @@ const page = () => {
           className="datagrid dark:text-slate-200"
           rows={data}
           columns={stockColumns.concat(actionColumn)}
-          // pageSize={9}
-          // rowsPerPageOptions={[9]}
-          // checkboxSelection
         />
       </div>
     </div>
