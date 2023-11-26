@@ -160,7 +160,7 @@ export default function NewPurchase() {
     <>
       <div className="mx-4">
         {/* back button */}
-        <div className="flex items-center gap-x-2">
+        <div className="flex items-center gap-x-2 mt-4">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-4 w-4 text-slate-600 cursor-pointer"
@@ -183,8 +183,7 @@ export default function NewPurchase() {
             Back
           </p>
         </div>
-        <h1 className="text-xl text-slate-600 font-bold mt-8">New Purchase</h1>
-        <div className="my-10">
+        <div className="mt-14">
           <Form {...form}>
             <form
               // onSubmit={form.handleSubmit(onSubmit)}
@@ -344,7 +343,7 @@ export default function NewPurchase() {
               <Button
                 type="submit"
                 size={"lg"}
-                className="dark:text-white w-full  mb-10"
+                className="dark:text-white w-full  my-20"
               >
                 Submit
               </Button>
