@@ -40,6 +40,7 @@ export const authenticate = async (formdata: any) => {
     });
   } catch (error) {
     console.error("Authentication error:", error);
+    return "Username or password is incorrect";
     // throw new Error("Authentication failed");
     // return { success: false };
   }

@@ -17,7 +17,7 @@
         font-size: 0.9rem;
         font-weight: 500;
         margin-bottom: 0.3rem;
-        color: #04285c;
+        // color: #04285c;
       }
 
       .password {
@@ -31,13 +31,13 @@
         padding: 0.4rem 0.5rem;
         font-size: 0.9rem;
         font-weight: 500;
-        color: #04285c;
+        // color: #04285c;
         background-color: white;
 
-        &:focus {
-          outline: 3px solid #0b63e561;
-          border: 0.1rem solid #0b63e5;
-        }
+        // &:focus {
+        //   outline: 3px solid #0b63e561;
+        //   border: 0.1rem solid #0b63e5;
+        // }
       }
 
       .passWrapper {
@@ -48,10 +48,10 @@
         align-items: center;
         padding: 0.4rem 0.5rem;
 
-        &:has(input:focus) {
-          outline: 3px solid #0b63e561;
-          border: 0.1rem solid #0b63e5;
-        }
+        // &:has(input:focus) {
+        //   outline: 3px solid #0b63e561;
+        //   border: 0.1rem solid #0b63e5;
+        // }
 
         input {
           border: none;

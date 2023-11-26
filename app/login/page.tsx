@@ -53,24 +53,15 @@ export default function LoginPage() {
   const onSubmit = async (data: any) => {
     setLoading(true);
     try {
-      toast.promise(
-        authenticate(data),
-        {
-          loading: "Authenticating...",
-          success: "Login successful!",
-          error: "Failed to login. Please try again.",
-        },
-        {
-          style: {
-            minWidth: "250px",
-            borderRadius: "10px",
-            background: "#333",
-            color: "#fff",
-          },
-        }
-      );
+      const user = await authenticate(data);
+      // toast.success("Login successful");
+
       router.push("/dashboard");
     } catch (error) {
+      form.setError("username", {
+        type: "manual",
+        message: "Username or password is incorrect",
+      });
       console.error(error);
     } finally {
       setLoading(false);
@@ -111,6 +102,7 @@ export default function LoginPage() {
                           type="text"
                           id="username"
                           placeholder="employee name"
+                          className="shadow-none"
                           {...field}
                         />
                       </FormControl>
@@ -128,6 +120,7 @@ export default function LoginPage() {
                         <Input
                           type="password"
                           placeholder="******* "
+                          className="shadow-none"
                           {...field}
                         />
                       </FormControl>
@@ -143,7 +136,9 @@ export default function LoginPage() {
                   disabled={loading}
                   className={`dark:text-white w-full mb-10
                 c
-                 ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-primary"}`}
+                 ${
+                   loading ? "bg-primary/60 cursor-not-allowed" : "bg-primary"
+                 }`}
                 >
                   <span>Submit</span>
                 </Button>

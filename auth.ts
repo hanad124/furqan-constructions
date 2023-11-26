@@ -6,11 +6,13 @@ import Providers from "next-auth/providers";
 import { authConfig } from "./authconfig";
 import { connectToDB } from "./utils/database";
 
+
 // import bcrypt from "bcrypt";
 import prisma from "@/prisma";
 // import { decryptPassword } from "./providers/PasswordHassher";
 
 const login = async (credentials: any) => {
+  console.log("credentials", credentials);
   try {
     // Ensure the database connection is established
     await prisma.$connect();
@@ -23,6 +25,11 @@ const login = async (credentials: any) => {
     });
 
     if (!user) throw new Error("User not found");
+
+    // check the password without decrypting it
+    const isPasswordValid = user.password === credentials.password;
+
+    if (!isPasswordValid) throw new Error("Password is not valid");
 
     // Compare the passwords using bcrypt
     // const isValidPassword = await bcrypt.compare(

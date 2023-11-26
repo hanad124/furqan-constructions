@@ -6,10 +6,6 @@ import { findUserByEmail } from "@/utils/dbOperations";
 
 const layout = async ({ children }: { children: ReactNode }) => {
   const user = await auth();
-  // const userByEmail = await findUserByEmail(user?.user?.email!);
-
-  console.log("userByEmail", user);
-
   return (
     <div>
       <div className={"flex flex-col md:flex-row"}>
