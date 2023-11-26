@@ -36,7 +36,7 @@ import {
 } from "@/components/ui/command";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card } from "./ui/card";
-import { BiSearch } from "react-icons/bi";
+import { BiSearch, BiLogOut } from "react-icons/bi";
 
 const Sidebar = ({ user }: any) => {
   const { theme, setTheme } = useTheme();
@@ -189,7 +189,13 @@ const Sidebar = ({ user }: any) => {
           })}
           {/* sign out form  */}
           <form action={handleSignOut}>
-            <button type="submit">Log out</button>
+            <button
+              type="submit"
+              className=" mx-4 text-slate-600 dark:text-[#949bbd hover:bg-primary/10 flex items-center  py-[7px] px-4 rounded-md"
+            >
+              <BiLogOut className="mr-4 text-lg rotate-180" />
+              Log out
+            </button>
           </form>
         </ul>
       </div>
