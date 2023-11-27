@@ -20,8 +20,10 @@ export const getTransfers = async () => {
 };
 
 // Create Transfer
-export const createTransfer = async (FormData: any) => {
-  const { to, item, date, quantity, price, total } = FormData;
+export const createTransfer = async (formData: any) => {
+  const { to, item, date, quantity, price, total } = formData;
+
+  console.log("formData: ", formData);
 
   try {
     await connectToDB();

@@ -2,9 +2,11 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { createPurchase } from "@/utils/db/Purchase";
-import { getSuppliers } from "@/utils/db/Suppliers";
-import { getItems } from "@/utils/db/Items";
+import toast, { Toaster } from "react-hot-toast";
+
+import { getPurchases } from "@/utils/db/Purchase";
+import { getStocks } from "@/utils/db/Stocks";
+import { createTransfer } from "@/utils/db/Transfer";
 
 import { Button } from "@/components/ui/button";
 
@@ -27,8 +29,8 @@ import React from "react";
 
 // Define a schema for your form values.
 const formSchema = z.object({
-  supplier: z.string().min(2, {
-    message: "supplier must be at least 2 characters.",
+  to: z.string().min(2, {
+    message: "to must be at least 2 characters.",
   }),
   item: z.string().min(2, {
     message: "item must be at least 2 characters.",
@@ -40,30 +42,29 @@ const formSchema = z.object({
   price: z.number().min(1, {
     message: "price must be at least 1 characters.",
   }),
-  place: z.string().min(2, {
-    message: "place must be at least 2 characters.",
-  }),
   total: z.number().min(1, {
     message: "total must be at least 1 characters.",
   }),
-  status: z.string().min(2, {
-    message: "status must be at least 2 characters.",
-  }),
+  date: z.date().optional(),
 });
 
-type Suppliers = {
+type Purchase = {
   id: string;
-  name: string;
-  phone: string;
+  item: string;
+  supplier: string;
+  quantity: number;
+  price: number;
+  total: number;
+  place: string;
+  status: string;
   createdAt: Date;
   updatedAt: Date;
 };
 
-interface Item {
+interface Stock {
   id: string;
-  name: string;
-  modal: string | null;
-  description: string;
+  stock: string;
+  quantity: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -71,47 +72,50 @@ interface Item {
 export default function NewPurchase() {
   const [value, setValue] = React.useState("");
   const [value2, setValue2] = React.useState("");
-  const [suppliers, setSuppliers] = useState<Suppliers[]>([]);
-  const [items, setItems] = useState<Item[]>([]);
+  const [purchases, setPurchases] = useState<Purchase[]>([]);
+  const [stocks, setStocks] = useState<Stock[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  // get suppliers
+  // get purchases
   useEffect(() => {
-    const getSuppliersData = async () => {
-      const suppliersData: any = await getSuppliers();
+    const getPurchasesData = async () => {
+      const purchasesData: any = await getPurchases();
 
-      setSuppliers(suppliersData);
+      setPurchases(purchasesData);
     };
-    getSuppliersData();
+    getPurchasesData();
   }, []);
 
-  // get items
+  // get stocks
   useEffect(() => {
-    const getItemsData = async () => {
-      const itemsData: any = await getItems();
+    const getStocksData = async () => {
+      const stocksData: any = await getStocks();
 
-      setItems(itemsData);
+      setStocks(stocksData);
     };
-    getItemsData();
+    getStocksData();
   }, []);
 
-  const filteredSuppliers = suppliers.filter((supplier) =>
-    supplier.name.toLowerCase().includes(value.toLowerCase())
+  const filteredStocks = stocks.filter((stock) =>
+    stock.stock.toLowerCase().includes(value.toLowerCase())
   );
 
-  const filteredItems = items.filter((item) =>
-    item.description.toLowerCase().includes(value2.toLowerCase())
+  const filteredPurchases = purchases.filter((purchase) =>
+    (purchase.item + " - " + purchase.quantity)
+      .toLowerCase()
+      .includes(value2.toLowerCase())
   );
 
-  // handle supplier change
-  const handleSupplierChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    form.setValue("supplier", event.target.value);
-    console.log("Supplier:", event.target.value);
+  // handle stock change
+  const handleStockChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    form.setValue("to", event.target.value);
+    console.log("shop to:", event.target.value);
   };
 
-  // handle item change
-  const handleItemChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  // handle purchase change
+  const handlePurchaseChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
     form.setValue("item", event.target.value);
     console.log("Item:", event.target.value);
   };
@@ -122,27 +126,14 @@ export default function NewPurchase() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      supplier: "",
+      to: "",
       item: "",
       quantity: 0,
       price: 0,
-      place: "",
       total: 0,
-      status: "",
-      // date: new Date() || "",
+      date: new Date(),
     },
   });
-
-  const handleStatusChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    form.setValue("status", event.target.value);
-    console.log("Status:", event.target.value);
-  };
-
-  // handle place change
-  const handlePlaceChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    form.setValue("place", event.target.value);
-    console.log("Place:", event.target.value);
-  };
 
   // calculate total automatically when quantity and price changes
   const calculateTotal = () => {
@@ -155,6 +146,34 @@ export default function NewPurchase() {
   useEffect(() => {
     calculateTotal();
   }, [form.watch("quantity"), form.watch("price")]);
+
+  // handle submit
+  const onSubmit = async (data: any) => {
+    setLoading(true);
+    try {
+      toast.promise(
+        createTransfer(data),
+        {
+          loading: "Creating transfer...",
+          success: "transfer created successfully!",
+          error: "Failed to create transfer. Please try again.",
+        },
+        {
+          style: {
+            minWidth: "250px",
+          },
+        }
+      );
+      setLoading(false);
+      // reset the form
+      form.reset();
+      // Redirect to the desired page
+      // router.push("/dashboard/employee");
+    } catch (error) {
+      // Handle any errors that occurred during employee creation
+      toast.error("Failed to create transfer. Please try again.");
+    }
+  };
 
   return (
     <>
@@ -185,29 +204,25 @@ export default function NewPurchase() {
         </div>
         <div className="mt-14">
           <Form {...form}>
-            <form
-              // onSubmit={form.handleSubmit(onSubmit)}
-              action={createPurchase}
-              className="space-y-8"
-            >
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
               <div className="flex flex-wrap gap-x-3 gap-y-5 w-full ">
-                {/* supplier field */}
+                {/* stock field */}
                 <FormField
                   control={form.control}
-                  name="supplier"
+                  name="to"
                   render={({ field }) => (
                     <FormItem className="w-full md:w-[13rem] ">
-                      <FormLabel> Supplier</FormLabel>
+                      <FormLabel> Shop to</FormLabel>
                       <FormControl>
                         <select
                           className="w-full md:w-[13rem] h-[38px] border rounded-md px-2   py-1 focus:outline-none focus:ring-1 focus:ring-primary focus:border-transparent bg-transparent dark:text-white"
                           {...field}
-                          onChange={handleSupplierChange}
+                          onChange={handleStockChange}
                         >
-                          <option value="">Select supplier</option>
-                          {filteredSuppliers.map((supplier) => (
-                            <option key={supplier.name} value={supplier.name}>
-                              {supplier.name}
+                          <option value="">Shop to</option>
+                          {filteredStocks.map((stock) => (
+                            <option key={stock.id} value={stock.stock}>
+                              {stock.stock}
                             </option>
                           ))}
                         </select>
@@ -216,26 +231,57 @@ export default function NewPurchase() {
                     </FormItem>
                   )}
                 />
-                {/* item field */}
+                {/* item to stranfer field */}
                 <FormField
                   control={form.control}
                   name="item"
                   render={({ field }) => (
                     <FormItem className="w-full md:w-[13rem]  ">
-                      <FormLabel> Item</FormLabel>
+                      <FormLabel> Item 2 transfer</FormLabel>
                       <FormControl>
                         <select
                           className="w-full md:w-[13rem] h-[38px] border rounded-md px-2   py-1 focus:outline-none focus:ring-1 focus:ring-primary focus:border-transparent bg-transparent dark:text-white"
                           {...field}
-                          onChange={handleItemChange}
+                          onChange={handlePurchaseChange}
                         >
-                          <option value="">Select item</option>
-                          {filteredItems.map((item) => (
-                            <option key={item.name} value={item.description}>
-                              {item.description}
+                          <option value="">Select item 2 transfer</option>
+                          {filteredPurchases.map((purchase) => (
+                            <option
+                              key={purchase.id}
+                              value={purchase.item + " - " + purchase.quantity}
+                            >
+                              {purchase.item + " - " + purchase.quantity}
                             </option>
                           ))}
                         </select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* date */}
+                <FormField
+                  control={form.control}
+                  name="date"
+                  render={({ field }) => (
+                    <FormItem className="w-full md:w-[14rem]">
+                      <FormLabel>Date</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Date"
+                          type="date"
+                          {...field}
+                          value={
+                            field.value instanceof Date
+                              ? field.value.toISOString().split("T")[0]
+                              : field.value
+                          }
+                          onChange={(e) => {
+                            const value = new Date(e.target.value);
+                            field.onChange(value);
+                          }}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -254,6 +300,10 @@ export default function NewPurchase() {
                           placeholder="Quantity"
                           {...field}
                           type="number"
+                          onChange={(e) => {
+                            const value = Number(e.target.value);
+                            field.onChange(value);
+                          }}
                         />
                       </FormControl>
                       <FormMessage />
@@ -268,34 +318,21 @@ export default function NewPurchase() {
                     <FormItem className="w-full md:w-[14rem] ">
                       <FormLabel>Price</FormLabel>
                       <FormControl>
-                        <Input placeholder="Price" {...field} type="number" />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                {/* place */}
-                <FormField
-                  control={form.control}
-                  name="place"
-                  render={({ field }) => (
-                    <FormItem className="w-full md:w-[14rem]">
-                      <FormLabel>Place</FormLabel>
-                      <FormControl>
-                        <select
-                          id="place"
+                        <Input
+                          placeholder="Price"
                           {...field}
-                          onChange={handlePlaceChange}
-                          className="w-full md:w-[13rem] h-[38px] border rounded-md px-4 py-2 focus:outline-none focus:ring-1 focus:ring-primary focus:border-transparent bg-transparent dark:text-white"
-                        >
-                          <option value="container">container</option>
-                          <option value="market">market</option>
-                        </select>
+                          type="number"
+                          onChange={(e) => {
+                            const value = Number(e.target.value);
+                            field.onChange(value);
+                          }}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+
                 {/* total */}
                 <FormField
                   control={form.control}
@@ -309,30 +346,11 @@ export default function NewPurchase() {
                           type="number"
                           readOnly
                           {...field}
+                          onChange={(e) => {
+                            const value = Number(e.target.value);
+                            field.onChange(value);
+                          }}
                         />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                {/* status */}
-                <FormField
-                  control={form.control}
-                  name="status"
-                  render={({ field }) => (
-                    <FormItem className="w-full md:w-[19rem]">
-                      <FormLabel className="">Status</FormLabel> <br />
-                      <FormControl>
-                        <select
-                          id="status"
-                          {...field}
-                          onChange={handleStatusChange}
-                          className="w-full md:w-[13rem] h-[38px] border rounded-md px-4  py-2 focus:outline-none focus:ring-1 focus:ring-primary focus:border-transparent bg-transparent dark:text-white"
-                        >
-                          <option value="pending">pending</option>
-                          <option value="approved">approved</option>
-                        </select>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -343,14 +361,20 @@ export default function NewPurchase() {
               <Button
                 type="submit"
                 size={"lg"}
-                className="dark:text-white w-full  my-20"
+                disabled={loading}
+                className={`dark:text-white w-full mb-10
+                 ${
+                   loading ? "bg-primary/60 cursor-not-allowed" : "bg-primary"
+                 }`}
               >
-                Submit
+                {/* {loading && <BiLoaderAlt className="animate-spin w-4 h-4" />} */}
+                <span>Submit</span>
               </Button>
             </form>
           </Form>
         </div>
       </div>
+      <Toaster />{" "}
     </>
   );
 }

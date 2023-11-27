@@ -49,6 +49,7 @@ const formSchema = z.object({
   status: z.string().min(2, {
     message: "status must be at least 2 characters.",
   }),
+  
 });
 
 type Suppliers = {
