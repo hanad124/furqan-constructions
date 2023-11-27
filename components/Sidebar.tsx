@@ -143,7 +143,7 @@ const Sidebar = ({ user }: any) => {
                     className={`${
                       isActive
                         ? "bg-primary text-white hover:bg-primary cursor-pointer"
-                        : " text-slate-600 dark:text-[#949bbd] hover:bg-primary/10 cursor-pointer"
+                        : "text-slate-600 dark:text-[#949bbd] hover:bg-primary/10 cursor-pointer"
                     } flex items-center w-full py-[7px] px-4 rounded-md cursor-pointer`}
                   >
                     <item.icon className="mr-4 text-lg" />
@@ -167,21 +167,27 @@ const Sidebar = ({ user }: any) => {
                         : "hidden"
                     }`}
                   >
-                    {item.submenus.map((submenu, subIndex) => (
-                      <li
-                        key={subIndex}
-                        className="pl-7 rounded-md hover:bg-primary/5"
-                      >
-                        <div className="flex items-center">
-                          <BiCircle className="w-3" />
-                          <Link href={submenu.url}>
-                            <p className="block py-2 text-sm px-4">
-                              {submenu.text}
-                            </p>
-                          </Link>
-                        </div>
-                      </li>
-                    ))}
+                    {item.submenus.map((submenu, subIndex) => {
+                      const isSubmenuActive = pathname === submenu.url;
+
+                      return (
+                        <li
+                          key={subIndex}
+                          className={`pl-7 rounded-md hover:bg-primary/5 ${
+                            isSubmenuActive ? "bg-primary/10" : ""
+                          }`}
+                        >
+                          <div className="flex items-center">
+                            <BiCircle className="w-3" />
+                            <Link href={submenu.url}>
+                              <p className="block py-2 text-sm px-4">
+                                {submenu.text}
+                              </p>
+                            </Link>
+                          </div>
+                        </li>
+                      );
+                    })}
                   </ul>
                 )}
               </li>
