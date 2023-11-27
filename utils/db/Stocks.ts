@@ -21,12 +21,12 @@ export const getStocks = async () => {
 
 // Create Stock
 export const createStock = async (formData: any) => {
-  const { stock, quantity } = formData;
+  const { stock } = formData;
 
   try {
     await connectToDB();
 
-    const quantityNumber = Number(quantity);
+    // const quantityNumber = Number(quantity);
 
     // Check if Stock with the provided name or phone already exists
     const existingStock = await prisma.stock.findFirst({
@@ -45,7 +45,7 @@ export const createStock = async (formData: any) => {
     const newStock = await prisma.stock.create({
       data: {
         stock,
-        quantity: quantityNumber,
+        // quantity: quantityNumber,
       },
     });
 

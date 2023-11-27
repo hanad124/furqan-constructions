@@ -1,68 +1,58 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { BiPlus } from "react-icons/bi";
-import { DataGrid } from "@mui/x-data-grid";
-import { useEffect, useState } from "react";
-import { stockColumns } from "@/data/stockColumns";
-import { getStocks, deleteStock } from "@/utils/db/Stocks";
-
-import { revalidatePath } from "next/cache";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 import toast, { Toaster } from "react-hot-toast";
+import { createStock } from "@/utils/db/Stocks";
 
-// create a type for the data
-interface Stock {
-  id: string;
-  stock: string;
-  quantity: number;
-  createdAt: Date;
-  updatedAt: Date;
-}
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 
-const page = () => {
-  const [data, setData] = useState<readonly Stock[]>([]);
+import { Input } from "@/components/ui/input";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
+
+// Define a schema for your form values.
+const formSchema = z.object({
+  stock: z.string().min(2, {
+    message: "stock must be at least 2 characters.",
+  }),
+  // quantity: z.number().min(1, {
+  //   message: "quantity must be at least 1.",
+  // }),
+});
+
+export default function NewEmployee() {
   const [loading, setLoading] = useState(false);
-  const [emID, setEmID] = useState("");
-  const fetchStocks = async () => {
-    try {
-      const stocks = await getStocks();
-      if (stocks) {
-        const mappedStocks = (stock: Stock): Stock => {
-          setEmID(stock.id);
-          return {
-            id: stock.id,
-            stock: stock.stock,
-            quantity: stock.quantity,
-            createdAt: stock.createdAt,
-            updatedAt: stock.updatedAt,
-          };
-        };
 
-        const transformedStocks = stocks.map(mappedStocks);
-        setData(transformedStocks);
-      }
-    } catch (error) {
-      console.error("Error fetching Stocks:", error);
-    }
-  };
-  useEffect(() => {
-    fetchStocks();
+  const router = useRouter();
+  // create a form instance with useForm
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      stock: "",
+      // quantity: 0,
+    },
+  });
 
-    // cleanup function
-    return () => {};
-  }, []);
-
-  const handleDelete = async (id: string) => {
+  const onSubmit = async (data: any) => {
     setLoading(true);
-    // add id
     try {
       toast.promise(
-        deleteStock(id),
+        createStock(data),
         {
-          loading: "Deleting stock...",
-          success: "Stock deleted successfully!",
-          error: "Failed to delete stock. Please try again.",
+          loading: "Creating stock...",
+          success: "Stock created successfully!",
+          error: "Failed to create stock. Please try again.",
         },
         {
           style: {
@@ -70,83 +60,106 @@ const page = () => {
           },
         }
       );
-      fetchStocks();
+
       setLoading(false);
+      // reset the form
+      form.reset();
+
+      // Redirect to the desired page
+      // router.push("/dashboard/employee");
     } catch (error) {
-      // Handle any errors that occurred during stock creation
-      toast.error("Failed to delete Stock. Please try again.");
+      // Handle any errors that occurred during employee creation
+      toast.error("Failed to create stock. Please try again.");
     }
   };
 
-  const actionColumn = [
-    {
-      field: "action",
-      headerName: "Action",
-      width: 230,
-      renderCell: (params: any) => {
-        return (
-          <div className="cellAction flex gap-3">
-            <Link
-              href={`/users/${params.row.id}`}
-              style={{ textDecoration: "none" }}
-            >
-              <div className="viewButton px-3 py-1 border border-green-500 text-green-500 rounded-md border-dotted">
-                View
-              </div>
-            </Link>
-            <Link href={`/dashboard/stocks/edit-st/${params.row.id}`}>
-              <div className="editButton px-3 py-1 border border-yellow-500 text-yellow-500 rounded-md border-dotted">
-                Edit
-              </div>
-            </Link>
-
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                handleDelete(params.row.id);
-              }}
-            >
-              <input type="hidden" name="id" value={params.row.id} />
-              <button
-                type="submit"
-                disabled={loading}
-                className={`deleteButton px-3 py-1 border border-red-500 text-red-500 rounded-md border-dotted cursor-pointer ${
-                  loading ? "opacity-50 cursor-not-allowed" : ""
-                }`}
-                onClick={() => {
-                  fetchStocks();
-                }}
-              >
-                Delete
-              </button>
-            </form>
-            <Toaster />
-          </div>
-        );
-      },
-    },
-  ];
-
   return (
-    <div className="p-4">
-      <div className="flex justify-between items-center">
-        <h1 className="text-xl text-slate-600 font-bold">Stocks</h1>
-        <Link href="/dashboard/newStock">
-          <Button className="text-white">
-            <BiPlus className="text-lg mr-2" />
-            <span className="">Add new Stock</span>
-          </Button>
-        </Link>
-      </div>
-      <div className="datatable mt-10">
-        <DataGrid
-          className="datagrid dark:text-slate-200"
-          rows={data}
-          columns={stockColumns.concat(actionColumn)}
-        />
-      </div>
-    </div>
-  );
-};
+    <>
+      <div className="mx-4">
+        {/* back button */}
+        <div className="flex items-center gap-x-2">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-4 w-4 text-slate-600 cursor-pointer"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            onClick={() => router.back()}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={1.5}
+              d="M10 19l-7-7m0 0l7-7m-7 7h18"
+            />
+          </svg>
+          <p
+            className="text-slate-600 font-bold text-md cursor-pointer"
+            onClick={() => router.back()}
+          >
+            Back
+          </p>
+        </div>
+        <h1 className="text-xl text-slate-600 font-bold mt-8">New Stock</h1>
+        <div className="my-10">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+              <div className="flex flex-wrap gap-x-3 gap-y-4 w-full">
+                {/* stock field */}
+                <FormField
+                  control={form.control}
+                  name="stock"
+                  render={({ field }) => (
+                    <FormItem className="w-full md:w-[19rem]">
+                      <FormLabel>stock name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="stock name" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-export default page;
+                {/* quantity field */}
+                {/* <FormField
+                  control={form.control}
+                  name="quantity"
+                  render={({ field }) => (
+                    <FormItem className="w-full md:w-[19rem]">
+                      <FormLabel>quantity</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          placeholder="quantity"
+                          {...field}
+                          onChange={(e) => {
+                            const value = Number(e.target.value);
+                            field.onChange(value);
+                          }}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                /> */}
+              </div>
+
+              <Button
+                type="submit"
+                size={"lg"}
+                disabled={loading}
+                className={`dark:text-white w-full md:w-[19rem] mb-10
+                 ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-primary"}`}
+              >
+                {/* {loading && <BiLoaderAlt className="animate-spin w-4 h-4" />} */}
+                <span>Submit</span>
+              </Button>
+            </form>
+          </Form>
+        </div>
+      </div>
+      <Toaster />{" "}
+      {/* Add the Toaster component to display the toast notifications */}
+    </>
+  );
+}
