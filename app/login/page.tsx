@@ -101,7 +101,7 @@ export default function LoginPage() {
                         <Input
                           type="text"
                           id="username"
-                          placeholder="employee name"
+                          placeholder="username name"
                           className="shadow-none"
                           {...field}
                         />

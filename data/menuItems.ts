@@ -77,7 +77,7 @@ export const menuItems = [
       { text: "Credit", url: "/dashboard/invoices/credit" },
     ],
   },
-  { icon: HiChartBar, text: "Stocks", url: "/dashboard/stocks", submenus: [] },
+  { icon: HiChartBar, text: "Stock", url: "/dashboard/stock", submenus: [] },
   {
     icon: HiCreditCard,
     text: "Expense",
@@ -103,8 +103,8 @@ export const menuItems = [
     url: "",
     text: "Reports",
     submenus: [
-      { text: "Single report", url: "/single-report" },
-      { text: "All reports", url: "/all-reports" },
+      { text: "All reports", url: "/dashboard/all-reports" },
+      { text: "Stock report", url: "/dashboard/stock-report" },
     ],
   },
   {
