@@ -142,9 +142,6 @@ const page = () => {
           className="datagrid dark:text-slate-200"
           rows={data}
           columns={employeeColumns.concat(actionColumn)}
-          // pageSize={9}
-          // rowsPerPageOptions={[9]}
-          // checkboxSelection
         />
       </div>
     </div>

@@ -104,7 +104,7 @@ const Sidebar = ({ user }: any) => {
       {" "}
       <div className="sidebar hidden md:block sticky top-0 border-salte-300 dark:border-slate-600 border-r w-60 min-h-screen ">
         {/* logo */}
-        <div className="flex items-center ml-8 py-4 gap-3 ">
+        <div className="flex items-center mt-4 mx-8 py-4 pb-5 border-b  gap-3 ">
           <Image
             src={logo}
             alt="logo"
@@ -114,7 +114,7 @@ const Sidebar = ({ user }: any) => {
           />
           <span className="text-2xl font-semibold"> Furqan</span>
         </div>
-        <ul className="menu my-3 h-full overflow-y-scroll pb-28">
+        <ul className="menu my-3 mt-[2rem] h-full overflow-y-scroll pb-28">
           {menuItems.map((item, index) => {
             const isActive =
               pathname === item.url ||

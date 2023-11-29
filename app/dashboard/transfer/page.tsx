@@ -73,7 +73,7 @@ interface Stock {
   updatedAt: Date;
 }
 
-export default function NewPurchase() {
+export default function Newtransfer() {
   const [value, setValue] = React.useState("");
   const [value2, setValue2] = React.useState("");
   const [purchases, setPurchases] = useState<Purchase[]>([]);
