@@ -13,10 +13,12 @@ const AllStocks = forwardRef<HTMLDivElement>(
   (props, ref: Ref<HTMLDivElement>) => {
     const [stocks, setStocks] = useState<IStock[]>([]);
     const [totalStocks, setTotalStocks] = useState<number>(0);
+    const [loading, setLoading] = useState<boolean>(false);
 
     // get stocks
     useEffect(() => {
       const getStocksData = async () => {
+        setLoading(true);
         const stocksData: any = await getStocks();
 
         // match all the stocks with the same stock name and add their quantity
@@ -33,9 +35,7 @@ const AllStocks = forwardRef<HTMLDivElement>(
         // convert the map to an array
         const stocksDataArray: IStock[] = [];
         stocksDataMap.forEach((value: number, key: string) => {
-          console.log("key:", key);
-          console.log("value:", value);
-          //   add unique id to each stock
+          // add unique id to each stock
           const id = Math.floor(Math.random() * 1000000);
           stocksDataArray.push({
             id,
@@ -56,6 +56,7 @@ const AllStocks = forwardRef<HTMLDivElement>(
       };
 
       getStocksData();
+      setLoading(false);
     }, []);
 
     const NoPagination = () => null;
@@ -71,6 +72,12 @@ const AllStocks = forwardRef<HTMLDivElement>(
             Pagination: NoPagination, // Hide the default pagination component
           }}
         />
+        {/* buautiful banner or card that displays total quantity of the stock */}
+        <div className="flex flex-col items-start ml-56 justify-start mt-5">
+          <p className="text-xl  text-slate-700">
+            {loading ? "" : `${totalStocks}`}
+          </p>
+        </div>
       </div>
     );
   }

@@ -94,8 +94,36 @@ export default function Newtransfer() {
   useEffect(() => {
     const getStocksData = async () => {
       const stocksData: any = await getStocks();
-      console.log("stocksData:", stocksData);
-      setStocks(stocksData);
+
+      // just remove duplicate stocks don't add their quantity
+      const stocksDataMap = new Map<string, number>();
+
+      stocksData.forEach((stock: Stock) => {
+        if (!stocksDataMap.has(stock.stock)) {
+          stocksDataMap.set(stock.stock, stock.quantity);
+        }
+      });
+
+      // convert the map to an array
+      const stocksDataArray: Stock[] = [];
+      stocksDataMap.forEach((value: number, key: string) => {
+        // add unique id to each stock
+        const id = Math.floor(Math.random() * 1000000).toString();
+        stocksDataArray.push({
+          id,
+          stock: key,
+          item: "",
+          supplier: "",
+          quantity: value,
+          price: 0,
+          total: 0,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        });
+      });
+
+      console.log("stocksData:", stocksDataArray);
+      setStocks(stocksDataArray);
     };
     getStocksData();
   }, []);
