@@ -8,8 +8,6 @@ import { useEffect, useState } from "react";
 import { userColumns } from "@/data/userColumns";
 import { getUsers, deleteUser } from "../../../utils/dbOperations";
 
-import { revalidatePath } from "next/cache";
-
 // create a type for the data
 interface User {
   id: string;
@@ -65,14 +63,6 @@ const page = () => {
       renderCell: (params: any) => {
         return (
           <div className="cellAction flex gap-3">
-            {/* <Link
-              href={`/users/${params.row.id}`}
-              style={{ textDecoration: "none" }}
-            >
-              <div className="viewButton px-3 py-1 border border-green-500 text-green-500 rounded-md border-dotted">
-                View
-              </div>
-            </Link> */}
             <Link href={`/users/edit-user/${params.row.id}`}>
               <div className="editButton px-3 py-1 border border-yellow-500 text-yellow-500 rounded-md border-dotted">
                 Edit
@@ -113,9 +103,6 @@ const page = () => {
           className="datagrid dark:text-slate-200"
           rows={data}
           columns={userColumns.concat(actionColumn)}
-          // pageSize={9}
-          // rowsPerPageOptions={[9]}
-          // checkboxSelection
         />
       </div>
     </div>

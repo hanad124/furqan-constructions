@@ -8,7 +8,6 @@ import { useEffect, useState } from "react";
 import { employeeColumns } from "@/data/employeeColumns";
 import { getEmployees, deleteEmployee } from "../../../utils/dbOperations";
 
-import { revalidatePath } from "next/cache";
 import toast, { Toaster } from "react-hot-toast";
 
 // create a type for the data

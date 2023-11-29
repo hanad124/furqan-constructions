@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import toast, { Toaster } from "react-hot-toast";
 import { createStock } from "@/utils/db/Stocks";
+import { createEntity } from "@/utils/db/Entities";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -23,8 +24,8 @@ import { useRouter } from "next/navigation";
 
 // Define a schema for your form values.
 const formSchema = z.object({
-  stock: z.string().min(2, {
-    message: "stock must be at least 2 characters.",
+  name: z.string().min(2, {
+    message: "name must be at least 2 characters.",
   }),
   // quantity: z.number().min(1, {
   //   message: "quantity must be at least 1.",
@@ -39,37 +40,39 @@ export default function NewEmployee() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      stock: "",
+      name: "",
       // quantity: 0,
     },
   });
 
   const onSubmit = async (data: any) => {
-    setLoading(true);
-    try {
-      toast.promise(
-        createStock(data),
-        {
-          loading: "Creating stock...",
-          success: "Stock created successfully!",
-          error: "Failed to create stock. Please try again.",
-        },
-        {
-          style: {
-            minWidth: "250px",
+    const result = await createEntity(data);
+    if (result?.error) {
+      toast.error(result?.error);
+    } else {
+      try {
+        setLoading(true);
+        toast.promise(
+          createEntity(data),
+          {
+            loading: "Creating entity...",
+            success: "Entity created successfully!",
+            error: "Failed to create entity. Please try again.",
           },
-        }
-      );
+          {
+            style: {
+              minWidth: "250px",
+            },
+          }
+        );
 
-      setLoading(false);
-      // reset the form
-      form.reset();
-
-      // Redirect to the desired page
-      // router.push("/dashboard/employee");
-    } catch (error) {
-      // Handle any errors that occurred during employee creation
-      toast.error("Failed to create stock. Please try again.");
+        setLoading(false);
+        // reset the form
+        form.reset();
+      } catch (error) {
+        // Handle any errors that occurred during employee creation
+        toast.error("Failed to create entity. Please try again.");
+      }
     }
   };
 
@@ -77,7 +80,7 @@ export default function NewEmployee() {
     <>
       <div className="mx-4">
         {/* back button */}
-        <div className="flex items-center gap-x-2">
+        {/* <div className="flex items-center gap-x-2">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-4 w-4 text-slate-600 cursor-pointer"
@@ -99,8 +102,8 @@ export default function NewEmployee() {
           >
             Back
           </p>
-        </div>
-        <h1 className="text-xl text-slate-600 font-bold mt-8">New Stock</h1>
+        </div> */}
+        <h1 className="text-xl text-slate-600 font-bold mt-8">New Enetity</h1>
         <div className="my-10">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -108,12 +111,12 @@ export default function NewEmployee() {
                 {/* stock field */}
                 <FormField
                   control={form.control}
-                  name="stock"
+                  name="name"
                   render={({ field }) => (
                     <FormItem className="w-full md:w-[19rem]">
-                      <FormLabel>stock name</FormLabel>
+                      <FormLabel>Entity name</FormLabel>
                       <FormControl>
-                        <Input placeholder="stock name" {...field} />
+                        <Input placeholder="entity name" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

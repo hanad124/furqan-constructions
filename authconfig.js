@@ -42,6 +42,7 @@
 //     },
 //   },
 // } as NextAuthConfig;
+
 import { auth as userAuth } from "@/auth";
 
 export const authConfig = {

@@ -21,8 +21,7 @@ export const getStocks = async () => {
 
 // Create Stock
 export const createStock = async (formData: any) => {
-  const { stock } = formData;
-
+  const { stock, item, quantity, price, total } = formData;
   try {
     await connectToDB();
 
@@ -45,6 +44,10 @@ export const createStock = async (formData: any) => {
     const newStock = await prisma.stock.create({
       data: {
         stock,
+        item,
+        quantity,
+        price,
+        total,
         // quantity: quantityNumber,
       },
     });
@@ -61,15 +64,21 @@ export const createStock = async (formData: any) => {
 
 // Update Stock
 export const updateStock = async (formData: any) => {
-  const { id, stock, quantity } = Object.fromEntries(formData);
+  const { id, stock, item, quantity, price, total } =
+    Object.fromEntries(formData);
 
   const quantityNumber = Number(quantity);
+  const priceNumber = Number(price);
+  const totalNumber = Number(total);
 
   try {
     // Initialize the updateFields object
     const updateFields = {
       stock,
       quantity: quantityNumber,
+      item,
+      price: priceNumber,
+      total: totalNumber,
     };
 
     // remove empty fields

@@ -75,7 +75,10 @@ model Customer {
 model Stock {
   id        String    @id @default(auto()) @map("_id") @db.ObjectId
   stock      String
-  // quantity  Int
+  item String
+  quantity  Int
+  price    Float
+  total    Float
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 }
@@ -93,3 +96,14 @@ model Transfer {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 }
+
+// entitymodel
+model Entity {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+
+

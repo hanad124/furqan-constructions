@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import toast, { Toaster } from "react-hot-toast";
 import { createEmployee } from "../../../utils/dbOperations";
-import { BiLoaderAlt } from "react-icons/bi";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -104,7 +103,7 @@ export default function NewEmployee() {
         <h1 className="text-xl text-slate-600 font-bold mt-8">New Employee</h1>
         <div className="my-10">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <form onSubmit={form.handleSubmit(onSubmit)}  className="space-y-8">
               <div className="flex flex-wrap gap-x-3 gap-y-4 w-full">
                 {/* name field */}
                 <FormField

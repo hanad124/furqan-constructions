@@ -29,18 +29,53 @@ export const createTransfer = async (formData: any) => {
     await connectToDB();
 
     // Create and save the new Transfer
-    const newTransfer = await prisma.transfer.create({
-      data: {
-        to,
-        item,
-        date,
-        quantity,
-        price,
-        total,
+    // const newTransfer = await prisma.transfer.create({
+    //   data: {
+    //     to,
+    //     item,
+    //     date,
+    //     quantity,
+    //     price,
+    //     total,
+    //   },
+    // });
+
+    // save this data into stock according to "to"
+    const stockItem = await prisma.stock.findFirst({
+      where: {
+        item: item,
       },
     });
 
-    console.log("New Transfer created successfully:", newTransfer);
+    if (stockItem) {
+      console.log("item already exists");
+      // return;
+      // update the stock
+      const updateStock = await prisma.stock.update({
+        where: {
+          id: stockItem.id,
+        },
+        data: {
+          quantity: stockItem.quantity + quantity,
+          total: stockItem.total + total,
+        },
+      });
+      console.log("updated stock: ", updateStock);
+    } else {
+      // create new stock
+      const createStock = await prisma.stock.create({
+        data: {
+          stock: to,
+          item: item,
+          quantity: quantity,
+          price: price,
+          total: total,
+        },
+      });
+      console.log("created stock: ", createStock);
+    }
+
+    // console.log("New Transfer created successfully:", newTransfer);
 
     // Revalidate the path after creating the transfer
     revalidatePath("/dashboard/transfer");

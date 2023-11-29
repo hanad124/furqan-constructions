@@ -22,6 +22,7 @@ import {
   HiChartBar,
   HiCreditCard,
   HiOutlineLogout,
+  HiOutlineCube,
 } from "react-icons/hi";
 
 export const menuItems = [
@@ -77,7 +78,7 @@ export const menuItems = [
       { text: "Credit", url: "/dashboard/invoices/credit" },
     ],
   },
-  { icon: HiChartBar, text: "Stock", url: "/dashboard/stock", submenus: [] },
+  // { icon: HiChartBar, text: "Stock", url: "/dashboard/stock", submenus: [] },
   {
     icon: HiCreditCard,
     text: "Expense",
@@ -107,6 +108,12 @@ export const menuItems = [
       { text: "Stock report", url: "/dashboard/stock-report" },
     ],
   },
+  // {
+  //   icon: HiOutlineCube,
+  //   url: "/dashboard/entities",
+  //   text: "Entities",
+  //   submenus: [],
+  // },
   {
     icon: HiUsers,
     HiViewList,

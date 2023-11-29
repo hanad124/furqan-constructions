@@ -6,7 +6,6 @@ import Providers from "next-auth/providers";
 import { authConfig } from "./authconfig";
 import { connectToDB } from "./utils/database";
 
-
 // import bcrypt from "bcrypt";
 import prisma from "@/prisma";
 // import { decryptPassword } from "./providers/PasswordHassher";

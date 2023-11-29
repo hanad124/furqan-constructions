@@ -64,7 +64,11 @@ type Purchase = {
 interface Stock {
   id: string;
   stock: string;
+  item: string;
+  supplier: string;
   quantity: number;
+  price: number;
+  total: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -90,13 +94,13 @@ export default function NewPurchase() {
   useEffect(() => {
     const getStocksData = async () => {
       const stocksData: any = await getStocks();
-
+      console.log("stocksData:", stocksData);
       setStocks(stocksData);
     };
     getStocksData();
   }, []);
 
-  const filteredStocks = stocks.filter((stock) =>
+  const filteredStocks = stocks?.filter((stock) =>
     stock.stock.toLowerCase().includes(value.toLowerCase())
   );
 
@@ -178,31 +182,7 @@ export default function NewPurchase() {
   return (
     <>
       <div className="mx-4">
-        {/* back button */}
-        <div className="flex items-center gap-x-2 mt-4">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-4 w-4 text-slate-600 cursor-pointer"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            onClick={() => router.back()}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={1.5}
-              d="M10 19l-7-7m0 0l7-7m-7 7h18"
-            />
-          </svg>
-          <p
-            className="text-slate-600 font-bold text-md cursor-pointer"
-            onClick={() => router.back()}
-          >
-            Back
-          </p>
-        </div>
-        <div className="mt-14">
+        <div className="mt-20">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
               <div className="flex flex-wrap gap-x-3 gap-y-5 w-full ">
@@ -220,7 +200,7 @@ export default function NewPurchase() {
                           onChange={handleStockChange}
                         >
                           <option value="">Shop to</option>
-                          {filteredStocks.map((stock) => (
+                          {filteredStocks?.map((stock) => (
                             <option key={stock.id} value={stock.stock}>
                               {stock.stock}
                             </option>
