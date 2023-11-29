@@ -12,6 +12,7 @@ import { Stock, IStock } from "@/types/generalTypes";
 const AllStocks = forwardRef<HTMLDivElement>(
   (props, ref: Ref<HTMLDivElement>) => {
     const [stocks, setStocks] = useState<IStock[]>([]);
+    const [totalStocks, setTotalStocks] = useState<number>(0);
 
     // get stocks
     useEffect(() => {
@@ -44,6 +45,14 @@ const AllStocks = forwardRef<HTMLDivElement>(
         });
         console.log("stocksDataArray:", stocksDataArray);
         setStocks(stocksDataArray);
+
+        // get total stocks
+        let totalStocks = 0;
+        stocksDataArray.forEach((stock) => {
+          totalStocks += stock.quantity;
+        });
+
+        setTotalStocks(totalStocks);
       };
 
       getStocksData();
@@ -53,7 +62,7 @@ const AllStocks = forwardRef<HTMLDivElement>(
     return (
       <div ref={ref}>
         {/* beautiful report title with subtitle */}
-       
+
         <DataGrid
           className="datagrid dark:text-slate-200  mt-10 mx-4"
           rows={stocks}

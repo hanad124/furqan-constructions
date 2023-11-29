@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import toast, { Toaster } from "react-hot-toast";
 import { createItem } from "@/utils/db/Items";
 
 import { Button } from "@/components/ui/button";
@@ -18,6 +19,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { useRouter, usePathname } from "next/navigation";
+import { useState } from "react";
 
 // Define a schema for your form values.
 const formSchema = z.object({
@@ -32,7 +34,9 @@ const formSchema = z.object({
   }),
 });
 
-export default function NewUser() {
+export default function NewItem() {
+  const [loading, setLoading] = useState(false);
+
   const router = useRouter();
   const pathname = usePathname();
   // create a form instance with useForm
@@ -44,6 +48,36 @@ export default function NewUser() {
       description: "",
     },
   });
+
+  // handle form submission
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    const result = await createItem(values);
+    if (result?.error) {
+      toast.error(result?.error);
+    } else {
+      try {
+        setLoading(true);
+        toast.promise(
+          createItem(values),
+          {
+            loading: "Creating item...",
+            success: "Item created successfully!",
+            error: "Failed to create item. Please try again.",
+          },
+          {
+            style: {
+              minWidth: "250px",
+            },
+          }
+        );
+        form.reset();
+      } catch (error) {
+        toast.error("Failed to create item. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
 
   return (
     <>
@@ -76,8 +110,8 @@ export default function NewUser() {
         <div className="my-10">
           <Form {...form}>
             <form
-              //   onSubmit={form.handleSubmit(onSubmit)}
-              action={createItem}
+              onSubmit={form.handleSubmit(onSubmit)}
+              // action={createItem}
               className="space-y-8"
             >
               <div className="flex flex-wrap gap-x-3 gap-y-4 w-full">
@@ -89,7 +123,11 @@ export default function NewUser() {
                     <FormItem className="w-full md:w-[19rem]">
                       <FormLabel>Item name</FormLabel>
                       <FormControl>
-                        <Input placeholder="item name" {...field} />
+                        <Input
+                          placeholder="item name"
+                          {...field}
+                          className="uppercase"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -104,7 +142,11 @@ export default function NewUser() {
                     <FormItem className="w-full md:w-[19rem]">
                       <FormLabel>Modal</FormLabel>
                       <FormControl>
-                        <Input placeholder=" modal" {...field} />
+                        <Input
+                          placeholder=" modal"
+                          className="uppercase"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -120,7 +162,11 @@ export default function NewUser() {
                     <FormItem className="w-full md:w-[19rem]">
                       <FormLabel>Description</FormLabel>
                       <FormControl>
-                        <Input placeholder="description" {...field} />
+                        <Input
+                          placeholder="description"
+                          className="uppercase"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -131,14 +177,19 @@ export default function NewUser() {
               <Button
                 type="submit"
                 size={"lg"}
-                className="dark:text-white w-full md:w-[11.5rem] mb-10"
+                disabled={loading}
+                className={`dark:text-white w-full md:w-[11.5rem] mb-10
+                c
+                 ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-primary"}`}
               >
-                Submit
+                {/* {loading && <BiLoaderAlt className="animate-spin w-4 h-4" />} */}
+                <span>Submit</span>
               </Button>
             </form>
           </Form>
         </div>
       </div>
+      <Toaster />
     </>
   );
 }

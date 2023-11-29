@@ -18,7 +18,7 @@ export const getItems = async () => {
 };
 
 export const createItem = async (formData: any) => {
-  const { name, modal, description } = Object.fromEntries(formData);
+  const { name, modal, description } = formData;
 
   try {
     await connectToDB();
@@ -33,7 +33,9 @@ export const createItem = async (formData: any) => {
     if (existingItem) {
       // throw new Error('User already exists');
       console.log("Item already exists");
-      return;
+      return {
+        error: "Item already exists",
+      };
     }
 
     // Create and save the new Employee
@@ -51,13 +53,16 @@ export const createItem = async (formData: any) => {
     revalidatePath("/dashboard/item-list");
   } catch (err) {
     console.error("Error creating Item:", err);
-    throw err; // Re-throw the error to propagate it further if needed
+    return {
+      error: "Error creating Item",
+      // throw err; // Re-throw the error to propagate it further if needed
+    };
   }
 };
 
 // Update Item
 export const updateItem = async (formData: any) => {
-  const { id, name, modal, description } = Object.fromEntries(formData);
+  const { id, name, modal, description } = formData;
 
   try {
     // Initialize the updateFields object
@@ -90,7 +95,10 @@ export const updateItem = async (formData: any) => {
     revalidatePath("/dashboard/items-list");
   } catch (err) {
     console.error("Error updating item:", err);
-    throw err; // Re-throw the error to propagate it further if needed
+    return {
+      error: "Error updating item",
+      // throw err; // Re-throw the error to propagate it further if needed
+    };
   }
 };
 
@@ -117,7 +125,7 @@ export const findItem = async (id: string) => {
 
 // Delete Item
 export const deleteItem = async (formData: any) => {
-  const { id } = Object.fromEntries(formData);
+  const { id } = formData;
 
   try {
     await connectToDB();
@@ -135,6 +143,9 @@ export const deleteItem = async (formData: any) => {
     revalidatePath("/dashboard/items-list");
   } catch (err) {
     console.error("Error deleting item:", err);
-    throw err; // Re-throw the error to propagate it further if needed
+    return {
+      error: "Error deleting item",
+      // throw err; // Re-throw the error to propagate it further if needed
+    };
   }
 };

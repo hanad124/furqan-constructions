@@ -2,12 +2,10 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import {
-  findEmployeeById,
-  updateEmployee,
-} from "../../../../../utils/dbOperations";
 
 import { findItem, updateItem } from "@/utils/db/Items";
+
+import toast, { Toaster } from "react-hot-toast";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -33,9 +31,16 @@ const formSchema = z.object({
   modal: z.string().min(1, {
     message: "modal must be at least 1 characters.",
   }),
+
+  description: z.string().min(2, {
+    message: "Description must be at least 2 characters.",
+  }),
+  id: z.string().optional(), // Add the id property
 });
 
 export default function UpdateUser({ params }: any) {
+  const [loading, setLoading] = useState(false);
+
   const { id } = params;
   const router = useRouter();
   // create a form instance with useForm
@@ -44,6 +49,7 @@ export default function UpdateUser({ params }: any) {
     defaultValues: {
       name: "",
       modal: "",
+      description: "",
     },
   });
 
@@ -54,9 +60,43 @@ export default function UpdateUser({ params }: any) {
 
       form.setValue("name", item?.name ?? "");
       form.setValue("modal", item?.modal ?? "");
+      form.setValue("description", item?.description ?? "");
     };
     fetchItems();
   }, []);
+
+  // handle submit
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    // add the id to the data object
+    values.id = id;
+    //
+    const result = await updateItem(values);
+    if (result?.error) {
+      toast.error(result?.error);
+    } else {
+      try {
+        setLoading(true);
+        toast.promise(
+          updateItem(values),
+          {
+            loading: "Updating item...",
+            success: "Item updated successfully!",
+            error: "Failed to update item. Please try again.",
+          },
+          {
+            style: {
+              minWidth: "250px",
+            },
+          }
+        );
+        form.reset();
+      } catch (error) {
+        toast.error("Failed to update item. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
 
   return (
     <>
@@ -95,8 +135,8 @@ export default function UpdateUser({ params }: any) {
         <div className="my-10">
           <Form {...form}>
             <form
-              // onSubmit={form.handleSubmit(onSubmit)}
-              action={updateItem}
+              onSubmit={form.handleSubmit(onSubmit)}
+              // action={updateItem}
               className="space-y-8"
             >
               <input type="hidden" name="id" value={id} />
@@ -109,7 +149,7 @@ export default function UpdateUser({ params }: any) {
                     <FormItem className="w-full md:w-[19rem]">
                       <FormLabel>name</FormLabel>
                       <FormControl>
-                        <Input placeholder="shadcn" {...field} />
+                        <Input placeholder="" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -130,19 +170,39 @@ export default function UpdateUser({ params }: any) {
                     </FormItem>
                   )}
                 />
+
+                {/* description field */}
+                <FormField
+                  control={form.control}
+                  name="description"
+                  render={({ field }) => (
+                    <FormItem className="w-full md:w-[19rem]">
+                      <FormLabel>description</FormLabel>
+                      <FormControl>
+                        <Input placeholder=" " {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
 
               <Button
                 type="submit"
                 size={"lg"}
-                className="dark:text-white w-full md:w-[11.5rem] mb-10"
+                disabled={loading}
+                className={`dark:text-white w-full md:w-[11.5rem] mb-10
+                c
+                 ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-primary"}`}
               >
-                Submit
+                {/* {loading && <BiLoaderAlt className="animate-spin w-4 h-4" />} */}
+                <span>Submit</span>
               </Button>
             </form>
           </Form>
         </div>
       </div>
+      <Toaster />
     </>
   );
 }
