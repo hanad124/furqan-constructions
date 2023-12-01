@@ -3,6 +3,7 @@
 import prisma from "@/prisma";
 import { connectToDB } from "../database";
 import { revalidatePath } from "next/cache";
+import { updatePurchaseStatus } from "./Purchase";
 
 // ############################## Transfer Operations ##############################
 
@@ -21,24 +22,12 @@ export const getTransfers = async () => {
 
 // Create Transfer
 export const createTransfer = async (formData: any) => {
-  const { to, item, date, quantity, price, total } = formData;
+  const { id, to, item, date, quantity, price, total } = formData;
 
   console.log("formData: ", formData);
 
   try {
     await connectToDB();
-
-    // Create and save the new Transfer
-    // const newTransfer = await prisma.transfer.create({
-    //   data: {
-    //     to,
-    //     item,
-    //     date,
-    //     quantity,
-    //     price,
-    //     total,
-    //   },
-    // });
 
     // save this data into stock according to "to"
     const stockItem = await prisma.stock.findFirst({
@@ -60,6 +49,9 @@ export const createTransfer = async (formData: any) => {
           total: stockItem.total + total,
         },
       });
+      // update the purchase status
+      const updatedStatus = await updatePurchaseStatus(id, "approved");
+      console.log("updated status: ", updatedStatus);
       console.log("updated stock: ", updateStock);
     } else {
       // create new stock
@@ -72,6 +64,8 @@ export const createTransfer = async (formData: any) => {
           total: total,
         },
       });
+      const createdStatus = await updatePurchaseStatus(id, "Transferred");
+      console.log("created status: ", createdStatus);
       console.log("created stock: ", createStock);
     }
 

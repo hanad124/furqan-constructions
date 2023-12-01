@@ -46,9 +46,9 @@ const formSchema = z.object({
   total: z.number().min(1, {
     message: "total must be at least 1 characters.",
   }),
-  status: z.string().min(2, {
-    message: "status must be at least 2 characters.",
-  }),
+  // status: z.string().min(2, {
+  //   message: "status must be at least 2 characters.",
+  // }),
   
 });
 
@@ -118,7 +118,6 @@ export default function NewPurchase() {
   };
 
   const router = useRouter();
-  const pathname = usePathname();
   // create a form instance with useForm
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -129,15 +128,15 @@ export default function NewPurchase() {
       price: 0,
       place: "",
       total: 0,
-      status: "",
+      // status: "",
       // date: new Date() || "",
     },
   });
 
-  const handleStatusChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    form.setValue("status", event.target.value);
-    console.log("Status:", event.target.value);
-  };
+  // const handleStatusChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  //   form.setValue("status", event.target.value);
+  //   console.log("Status:", event.target.value);
+  // };
 
   // handle place change
   const handlePlaceChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -319,7 +318,7 @@ export default function NewPurchase() {
                 />
 
                 {/* status */}
-                <FormField
+                {/* <FormField
                   control={form.control}
                   name="status"
                   render={({ field }) => (
@@ -339,7 +338,7 @@ export default function NewPurchase() {
                       <FormMessage />
                     </FormItem>
                   )}
-                />
+                /> */}
               </div>
 
               <Button

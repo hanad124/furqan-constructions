@@ -56,7 +56,7 @@ export const createPurchase = async (formData: any) => {
         price: priceNumber,
         place: place,
         total: totalNumber,
-        status: status,
+        // status: status,
       },
     });
 
@@ -91,6 +91,46 @@ export const updatePurchase = async (formData: any) => {
       price: priceNumber,
       place,
       total: totalNumber,
+      // status,
+    };
+
+    // Remove properties with undefined or null or "" values from the updateFields object
+    for (const key of Object.keys(updateFields)) {
+      if (
+        updateFields[key as keyof typeof updateFields] === undefined ||
+        updateFields[key as keyof typeof updateFields] === null ||
+        updateFields[key as keyof typeof updateFields] === ""
+      ) {
+        delete updateFields[key as keyof typeof updateFields];
+      }
+    }
+
+    // Update the Purchase
+    const updatedPurchase = await prisma.purchase.update({
+      where: { id: id },
+      data: updateFields,
+    });
+
+    console.log("Purchase updated successfully:", updatedPurchase);
+
+    // Revalidate the path after updating the Purchase
+    revalidatePath("/dashboard/purchase");
+  } catch (err) {
+    console.error("Error updating Purchase:", err);
+    throw err; // Re-throw the error to propagate it further if needed
+  }
+};
+
+// update purchase status
+export const updatePurchaseStatus = async (id: string, status: any) => {
+  console.log("id:", id, "status:", status);
+  // const { id, status } = Object.fromEntries(formData);
+
+  try {
+    await connectToDB();
+
+    // Initialize the updateFields object
+    const updateFields = {
       status,
     };
 

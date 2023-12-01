@@ -79,6 +79,7 @@ export default function Newtransfer() {
   const [purchases, setPurchases] = useState<Purchase[]>([]);
   const [stocks, setStocks] = useState<Stock[]>([]);
   const [loading, setLoading] = useState(false);
+  const [purchID, setPurchID] = useState("");
 
   // get purchases
   useEffect(() => {
@@ -95,7 +96,7 @@ export default function Newtransfer() {
     const getStocksData = async () => {
       const stocksData: any = await getStocks();
 
-      // just remove duplicate stocks don't add their quantity
+      // remove duplicate stocks
       const stocksDataMap = new Map<string, number>();
 
       stocksData.forEach((stock: Stock) => {
@@ -122,7 +123,6 @@ export default function Newtransfer() {
         });
       });
 
-      console.log("stocksData:", stocksDataArray);
       setStocks(stocksDataArray);
     };
     getStocksData();
@@ -132,10 +132,19 @@ export default function Newtransfer() {
     stock.stock.toLowerCase().includes(value.toLowerCase())
   );
 
-  const filteredPurchases = purchases.filter((purchase) =>
-    (purchase.item + " - " + purchase.quantity)
-      .toLowerCase()
-      .includes(value2.toLowerCase())
+  const filteredPurchases = purchases.filter(
+    (purchase) => {
+      // just fetch purchases that are not transfered yet
+      if (purchase.status === "approved") {
+        return false;
+      }
+      return (purchase.item + " - " + purchase.quantity)
+        .toLowerCase()
+        .includes(value2.toLowerCase());
+    }
+    // (purchase.item + " - " + purchase.quantity)
+    //   .toLowerCase()
+    //   .includes(value2.toLowerCase())
   );
 
   // handle stock change
@@ -152,8 +161,6 @@ export default function Newtransfer() {
     console.log("Item:", event.target.value);
   };
 
-  const router = useRouter();
-  const pathname = usePathname();
   // create a form instance with useForm
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -181,14 +188,17 @@ export default function Newtransfer() {
 
   // handle submit
   const onSubmit = async (data: any) => {
+    // add purchase id to the data
+    data.id = purchID;
+    console.log("dataID:", data.id);
     setLoading(true);
     try {
       toast.promise(
         createTransfer(data),
         {
-          loading: "Creating transfer...",
-          success: "transfer created successfully!",
-          error: "Failed to create transfer. Please try again.",
+          loading: "Transferring transection...",
+          success: "Transection transferred successfully!",
+          error: "Failed to transfer. Please try again.",
         },
         {
           style: {
@@ -199,11 +209,9 @@ export default function Newtransfer() {
       setLoading(false);
       // reset the form
       form.reset();
-      // Redirect to the desired page
-      // router.push("/dashboard/employee");
     } catch (error) {
       // Handle any errors that occurred during employee creation
-      toast.error("Failed to create transfer. Please try again.");
+      toast.error("Failed to transfer. Please try again.");
     }
   };
 
@@ -214,6 +222,7 @@ export default function Newtransfer() {
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
               <div className="flex flex-wrap gap-x-3 gap-y-5 w-full ">
+                <input type="text" hidden name="id" value={purchID} />
                 {/* stock field */}
                 <FormField
                   control={form.control}
@@ -253,14 +262,19 @@ export default function Newtransfer() {
                           onChange={handlePurchaseChange}
                         >
                           <option value="">Select item 2 transfer</option>
-                          {filteredPurchases.map((purchase) => (
-                            <option
-                              key={purchase.id}
-                              value={purchase.item + " - " + purchase.quantity}
-                            >
-                              {purchase.item + " - " + purchase.quantity}
-                            </option>
-                          ))}
+                          {filteredPurchases.map((purchase) => {
+                            setPurchID(purchase.id);
+                            return (
+                              <option
+                                key={purchase.id}
+                                value={
+                                  purchase.item + " - " + purchase.quantity
+                                }
+                              >
+                                {purchase.item + " - " + purchase.quantity}
+                              </option>
+                            );
+                          })}
                         </select>
                       </FormControl>
                       <FormMessage />
