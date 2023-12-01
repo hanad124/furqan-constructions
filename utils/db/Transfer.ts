@@ -50,9 +50,8 @@ export const createTransfer = async (formData: any) => {
         },
       });
       // update the purchase status
-      const updatedStatus = await updatePurchaseStatus(id, "approved");
+      const updatedStatus = await updatePurchaseStatus(id, "Transferred");
       console.log("updated status: ", updatedStatus);
-      console.log("updated stock: ", updateStock);
     } else {
       // create new stock
       const createStock = await prisma.stock.create({
@@ -64,7 +63,7 @@ export const createTransfer = async (formData: any) => {
           total: total,
         },
       });
-      const createdStatus = await updatePurchaseStatus(id, "Transferred");
+      await updatePurchaseStatus(id, "Transferred");
       console.log("created stock: ", createStock);
     }
 

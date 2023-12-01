@@ -133,7 +133,7 @@ export default function Newtransfer() {
 
   const filteredPurchases = purchases.filter((purchase) => {
     // just fetch purchases that are not transfered yet
-    if (purchase.status === "approved") {
+    if (purchase.status.toLocaleLowerCase() === "transferred") {
       return false;
     }
     return (purchase.item + " - " + purchase.quantity)

@@ -1,8 +1,6 @@
 "use client";
 
 import React, { forwardRef, Ref } from "react";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { DataGrid } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import { stockColumns, allStocksColumns } from "@/data/stockColumns";
@@ -63,7 +61,6 @@ const AllStocks = forwardRef<HTMLDivElement>(
     return (
       <div ref={ref}>
         {/* beautiful report title with subtitle */}
-
         <DataGrid
           className="datagrid dark:text-slate-200  mt-10 mx-4"
           rows={stocks}
@@ -77,7 +74,7 @@ const AllStocks = forwardRef<HTMLDivElement>(
           disableColumnFilter
           disableColumnSelector
         />
-        {/* buautiful banner or card that displays total quantity of the stock */}
+
         <div className="flex flex-col items-start ml-56 justify-start mt-5">
           <p className="text-xl  text-slate-700">
             {loading ? "" : `${totalStocks}`}
