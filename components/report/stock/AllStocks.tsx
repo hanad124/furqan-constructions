@@ -71,6 +71,11 @@ const AllStocks = forwardRef<HTMLDivElement>(
           components={{
             Pagination: NoPagination, // Hide the default pagination component
           }}
+          hideFooterPagination={true}
+          disableRowSelectionOnClick
+          disableColumnMenu
+          disableColumnFilter
+          disableColumnSelector
         />
         {/* buautiful banner or card that displays total quantity of the stock */}
         <div className="flex flex-col items-start ml-56 justify-start mt-5">

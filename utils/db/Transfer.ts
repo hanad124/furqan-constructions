@@ -65,7 +65,6 @@ export const createTransfer = async (formData: any) => {
         },
       });
       const createdStatus = await updatePurchaseStatus(id, "Transferred");
-      console.log("created status: ", createdStatus);
       console.log("created stock: ", createStock);
     }
 

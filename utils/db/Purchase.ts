@@ -124,7 +124,6 @@ export const updatePurchase = async (formData: any) => {
 // update purchase status
 export const updatePurchaseStatus = async (id: string, status: any) => {
   console.log("id:", id, "status:", status);
-  // const { id, status } = Object.fromEntries(formData);
 
   try {
     await connectToDB();

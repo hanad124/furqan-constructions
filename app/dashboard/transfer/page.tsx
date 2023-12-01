@@ -35,7 +35,6 @@ const formSchema = z.object({
   item: z.string().min(2, {
     message: "item must be at least 2 characters.",
   }),
-  // [qauntity:number, , price:float, place:string, total:float, status:string, date:date]
   quantity: z.number().min(1, {
     message: "quantity must be at least 1 characters.",
   }),
@@ -132,20 +131,15 @@ export default function Newtransfer() {
     stock.stock.toLowerCase().includes(value.toLowerCase())
   );
 
-  const filteredPurchases = purchases.filter(
-    (purchase) => {
-      // just fetch purchases that are not transfered yet
-      if (purchase.status === "approved") {
-        return false;
-      }
-      return (purchase.item + " - " + purchase.quantity)
-        .toLowerCase()
-        .includes(value2.toLowerCase());
+  const filteredPurchases = purchases.filter((purchase) => {
+    // just fetch purchases that are not transfered yet
+    if (purchase.status === "approved") {
+      return false;
     }
-    // (purchase.item + " - " + purchase.quantity)
-    //   .toLowerCase()
-    //   .includes(value2.toLowerCase())
-  );
+    return (purchase.item + " - " + purchase.quantity)
+      .toLowerCase()
+      .includes(value2.toLowerCase());
+  });
 
   // handle stock change
   const handleStockChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
