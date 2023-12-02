@@ -131,7 +131,7 @@ export default function Newtransfer() {
     stock.stock.toLowerCase().includes(value.toLowerCase())
   );
 
-  const filteredPurchases = purchases.filter((purchase) => {
+  const filteredPurchases = purchases?.filter((purchase) => {
     // just fetch purchases that are not transfered yet
     if (purchase.status.toLocaleLowerCase() === "transferred") {
       return false;

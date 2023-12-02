@@ -117,7 +117,7 @@ export const findCustomerById = async (id: string) => {
 
 // delete customer
 export const deleteCustomer = async (formData: any) => {
-  const { id } = Object.fromEntries(formData);
+  const id = formData;
 
   try {
     await connectToDB();

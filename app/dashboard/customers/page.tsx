@@ -9,7 +9,7 @@ import { customerColumns } from "@/data/customerColumns";
 import { getEmployees, deleteEmployee } from "../../../utils/dbOperations";
 import { getCustomers, deleteCustomer } from "@/utils/db/Customer";
 
-import { revalidatePath } from "next/cache";
+import toast, { Toaster } from "react-hot-toast";
 
 // create a type for the data
 interface Customer {
@@ -22,6 +22,8 @@ interface Customer {
 
 const page = () => {
   const [data, setData] = useState<readonly Customer[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+
   const fetchCustomers = async () => {
     try {
       const customers = await getCustomers();
@@ -50,6 +52,32 @@ const page = () => {
     return () => {};
   }, []);
 
+  // handle form submit
+  const handleDelete = async (id: string) => {
+    setLoading(true);
+    // add id
+    try {
+      toast.promise(
+        deleteCustomer(id),
+        {
+          loading: "Deleting customer...",
+          success: "customer deleted successfully!",
+          error: "Failed to delete customer. Please try again.",
+        },
+        {
+          style: {
+            minWidth: "250px",
+          },
+        }
+      );
+      fetchCustomers();
+      setLoading(false);
+    } catch (error) {
+      // Handle any errors that occurred during customer creation
+      toast.error("Failed to delete curtomer. Please try again.");
+    }
+  };
+
   const actionColumn = [
     {
       field: "action",
@@ -57,34 +85,36 @@ const page = () => {
       width: 230,
       renderCell: (params: any) => {
         return (
-          <div className="cellAction flex gap-3">
-            {/* <Link
-              href={`/users/${params.row.id}`}
-              style={{ textDecoration: "none" }}
-            >
-              <div className="viewButton px-3 py-1 border border-green-500 text-green-500 rounded-md border-dotted">
-                View
-              </div>
-            </Link> */}
-            <Link href={`/dashboard/customers/edit-customer/${params.row.id}`}>
-              <div className="editButton px-3 py-1 border border-yellow-500 text-yellow-500 rounded-md border-dotted">
-                Edit
-              </div>
-            </Link>
+          <>
+            <div className="cellAction flex gap-3">
+              <Link
+                href={`/dashboard/customers/edit-customer/${params.row.id}`}
+              >
+                <div className="editButton px-3 py-1 border border-yellow-500 text-yellow-500 rounded-md border-dotted">
+                  Edit
+                </div>
+              </Link>
 
-            <form action={deleteCustomer}>
-              <input type="hidden" name="id" value={params.row.id} />
-              <button
-                type="submit"
-                className="deleteButton px-3 py-1 border border-red-500 text-red-500 rounded-md border-dotted cursor-pointer"
-                onClick={() => {
-                  fetchCustomers();
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  handleDelete(params.row.id);
                 }}
               >
-                Delete
-              </button>
-            </form>
-          </div>
+                <input type="hidden" name="id" value={params.row.id} />
+                <button
+                  type="submit"
+                  className="deleteButton px-3 py-1 border border-red-500 text-red-500 rounded-md border-dotted cursor-pointer"
+                  onClick={() => {
+                    fetchCustomers();
+                  }}
+                >
+                  Delete
+                </button>
+              </form>
+            </div>
+            <Toaster />
+          </>
         );
       },
     },

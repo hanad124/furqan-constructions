@@ -29,7 +29,7 @@ interface Purchase {
 const page = () => {
   const [data, setData] = useState<readonly Purchase[]>([]);
   const [salesStatus, setSalesStatus] = useState<string[]>([]);
-  const [loading, setLoading] = useState<Boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const fetchPurchases = async () => {
     try {
