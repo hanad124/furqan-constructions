@@ -6,6 +6,8 @@ import { createPurchase } from "@/utils/db/Purchase";
 import { getSuppliers } from "@/utils/db/Suppliers";
 import { getItems } from "@/utils/db/Items";
 
+import toast, { Toaster } from "react-hot-toast";
+
 import { Button } from "@/components/ui/button";
 
 import {
@@ -49,7 +51,6 @@ const formSchema = z.object({
   // status: z.string().min(2, {
   //   message: "status must be at least 2 characters.",
   // }),
-  
 });
 
 type Suppliers = {
@@ -70,6 +71,7 @@ interface Item {
 }
 
 export default function NewPurchase() {
+  const [loading, setLoading] = useState(false);
   const [value, setValue] = React.useState("");
   const [value2, setValue2] = React.useState("");
   const [suppliers, setSuppliers] = useState<Suppliers[]>([]);
@@ -152,6 +154,38 @@ export default function NewPurchase() {
     form.setValue("total", total);
   };
 
+  // handle form submit
+  const onSubmit = async (data: any) => {
+    // const result = await createPurchase(data);
+    // if (result?.error) {
+    //   toast.error(result?.error);
+    // } else {
+    setLoading(true);
+    try {
+      toast.promise(
+        createPurchase(data),
+        {
+          loading: "Creating purchase...",
+          success: "purchase created successfully!",
+          error: "Failed to create purchase. Please try again.",
+        },
+        {
+          style: {
+            minWidth: "250px",
+          },
+        }
+      );
+
+      setLoading(false);
+      // reset the form
+      form.reset();
+    } catch (error) {
+      // Handle any errors that occurred during purchase creation
+      toast.error("Failed to create purchase. Please try again.");
+    }
+    // }
+  };
+
   useEffect(() => {
     calculateTotal();
   }, [form.watch("quantity"), form.watch("price")]);
@@ -187,8 +221,8 @@ export default function NewPurchase() {
         <div className="my-10">
           <Form {...form}>
             <form
-              // onSubmit={form.handleSubmit(onSubmit)}
-              action={createPurchase}
+              onSubmit={form.handleSubmit(onSubmit)}
+              // action={createPurchase}
               className="space-y-8"
             >
               <div className="flex flex-wrap gap-x-3 gap-y-5 w-full ">
@@ -255,6 +289,10 @@ export default function NewPurchase() {
                           placeholder="Quantity"
                           {...field}
                           type="number"
+                          onChange={(e) => {
+                            const value = Number(e.target.value);
+                            field.onChange(value);
+                          }}
                         />
                       </FormControl>
                       <FormMessage />
@@ -269,7 +307,15 @@ export default function NewPurchase() {
                     <FormItem className="w-full md:w-[14rem] ">
                       <FormLabel>Price</FormLabel>
                       <FormControl>
-                        <Input placeholder="Price" {...field} type="number" />
+                        <Input
+                          placeholder="Price"
+                          {...field}
+                          type="number"
+                          onChange={(e) => {
+                            const value = Number(e.target.value);
+                            field.onChange(value);
+                          }}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -344,14 +390,20 @@ export default function NewPurchase() {
               <Button
                 type="submit"
                 size={"lg"}
-                className="dark:text-white w-full md:w-[11.5rem] mb-10"
+                disabled={loading}
+                className={`dark:text-white w-full mb-10
+                 ${
+                   loading ? "bg-primary/60 cursor-not-allowed" : "bg-primary"
+                 }`}
               >
-                Submit
+                {/* {loading && <BiLoaderAlt className="animate-spin w-4 h-4" />} */}
+                <span>Submit</span>
               </Button>
             </form>
           </Form>
         </div>
       </div>
+      <Toaster />{" "}
     </>
   );
 }

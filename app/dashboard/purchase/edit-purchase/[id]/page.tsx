@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { getSuppliers } from "@/utils/db/Suppliers";
 import { getItems } from "@/utils/db/Items";
+import toast, { Toaster } from "react-hot-toast";
 
 import { getPurchaseById, updatePurchase } from "@/utils/db/Purchase";
 
@@ -61,12 +62,13 @@ const formSchema = z.object({
   total: z.number().min(1, {
     message: "total must be at least 1 characters.",
   }),
-  status: z.string().min(2, {
-    message: "status must be at least 2 characters.",
-  }),
+  // status: z.string().min(2, {
+  //   message: "status must be at least 2 characters.",
+  // }),
 });
 
-export default function UpdateUser({ params }: any) {
+export default function updatePurchases({ params }: any) {
+  const [loading, setLoading] = useState(false);
   const [value, setValue] = useState("");
   const [value2, setValue2] = useState("");
   const [suppliers, setSuppliers] = useState<Suppliers[]>([]);
@@ -116,7 +118,6 @@ export default function UpdateUser({ params }: any) {
 
   const { id } = params;
   const router = useRouter();
-  const pathname = usePathname();
   // create a form instance with useForm
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -127,7 +128,7 @@ export default function UpdateUser({ params }: any) {
       price: 0,
       place: "",
       total: 0,
-      status: "",
+      // status: "",
       // date: new Date() || "",
     },
   });
@@ -143,15 +144,15 @@ export default function UpdateUser({ params }: any) {
       form.setValue("price", purchase?.price ?? 0);
       form.setValue("place", purchase?.place ?? "");
       form.setValue("total", purchase?.total ?? 0);
-      form.setValue("status", purchase?.status ?? "");
+      // form.setValue("status", purchase?.status ?? "");
     };
     fetchPurchase();
   }, []);
 
-  const handleStatusChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    form.setValue("status", event.target.value);
-    console.log("Status:", event.target.value);
-  };
+  // const handleStatusChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  //   form.setValue("status", event.target.value);
+  //   console.log("Status:", event.target.value);
+  // };
 
   // handle place change
   const handlePlaceChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -170,6 +171,35 @@ export default function UpdateUser({ params }: any) {
   useEffect(() => {
     calculateTotal();
   }, [form.watch("quantity"), form.watch("price")]);
+
+  // submit handler
+  const onSubmit = async (data: any) => {
+    // add the id to the data object
+    data.id = id;
+    setLoading(true);
+    try {
+      toast.promise(
+        updatePurchase(data),
+        {
+          loading: "Updating purchase...",
+          success: "purchase updated successfully!",
+          error: "Failed to update purchase. Please try again.",
+        },
+        {
+          style: {
+            minWidth: "250px",
+          },
+        }
+      );
+
+      setLoading(false);
+      // reset the form
+      form.reset();
+    } catch (error) {
+      console.log(error);
+    }
+    router.replace("/dashboard/purchase");
+  };
 
   return (
     <>
@@ -208,8 +238,8 @@ export default function UpdateUser({ params }: any) {
         <div className="my-10">
           <Form {...form}>
             <form
-              // onSubmit={form.handleSubmit(onSubmit)}
-              action={updatePurchase}
+              onSubmit={form.handleSubmit(onSubmit)}
+              // action={updatePurchase}
               className="space-y-8"
             >
               <input type="text" hidden name="id" value={id} />
@@ -277,6 +307,10 @@ export default function UpdateUser({ params }: any) {
                           placeholder="Quantity"
                           {...field}
                           type="number"
+                          onChange={(e) => {
+                            const value = Number(e.target.value);
+                            field.onChange(value);
+                          }}
                         />
                       </FormControl>
                       <FormMessage />
@@ -291,7 +325,15 @@ export default function UpdateUser({ params }: any) {
                     <FormItem className="w-full md:w-[14rem] ">
                       <FormLabel>Price</FormLabel>
                       <FormControl>
-                        <Input placeholder="Price" {...field} type="number" />
+                        <Input
+                          placeholder="Price"
+                          {...field}
+                          type="number"
+                          onChange={(e) => {
+                            const value = Number(e.target.value);
+                            field.onChange(value);
+                          }}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -340,7 +382,7 @@ export default function UpdateUser({ params }: any) {
                 />
 
                 {/* status */}
-                <FormField
+                {/* <FormField
                   control={form.control}
                   name="status"
                   render={({ field }) => (
@@ -360,20 +402,27 @@ export default function UpdateUser({ params }: any) {
                       <FormMessage />
                     </FormItem>
                   )}
-                />
+                /> */}
               </div>
 
               <Button
                 type="submit"
                 size={"lg"}
-                className="dark:text-white w-full md:w-[11.5rem] mb-10"
+                disabled={loading}
+                className={`dark:text-white w-full md:w-[11.5rem] mb-10
+                c
+                 ${
+                   loading ? "bg-primary/60 cursor-not-allowed" : "bg-primary"
+                 }`}
               >
-                Submit
+                {/* {loading && <BiLoaderAlt className="animate-spin w-4 h-4" />} */}
+                <span>Submit</span>
               </Button>
             </form>
           </Form>
         </div>
       </div>
+      <Toaster />
     </>
   );
 }

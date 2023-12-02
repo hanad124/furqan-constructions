@@ -84,8 +84,9 @@ const page = () => {
       width: 230,
       renderCell: (params: any) => {
         return (
-          <div className="cellAction flex gap-3">
-            {/* <Link
+          <>
+            <div className="cellAction flex gap-3">
+              {/* <Link
               href={`/users/${params.row.id}`}
               style={{ textDecoration: "none" }}
             >
@@ -93,34 +94,35 @@ const page = () => {
                 View
               </div>
             </Link> */}
-            <Link href={`/dashboard/employee/edit-employee/${params.row.id}`}>
-              <div className="editButton px-3 py-1 border border-yellow-500 text-yellow-500 rounded-md border-dotted">
-                Edit
-              </div>
-            </Link>
+              <Link href={`/dashboard/employee/edit-employee/${params.row.id}`}>
+                <div className="editButton px-3 py-1 border border-yellow-500 text-yellow-500 rounded-md border-dotted">
+                  Edit
+                </div>
+              </Link>
 
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                handleDelete(params.row.id);
-              }}
-            >
-              <input type="hidden" name="id" value={params.row.id} />
-              <button
-                type="submit"
-                disabled={loading}
-                className={`deleteButton px-3 py-1 border border-red-500 text-red-500 rounded-md border-dotted cursor-pointer ${
-                  loading ? "opacity-50 cursor-not-allowed" : ""
-                }`}
-                onClick={() => {
-                  fetchEmployees();
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  handleDelete(params.row.id);
                 }}
               >
-                Delete
-              </button>
-            </form>
+                <input type="hidden" name="id" value={params.row.id} />
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className={`deleteButton px-3 py-1 border border-red-500 text-red-500 rounded-md border-dotted cursor-pointer ${
+                    loading ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
+                  onClick={() => {
+                    fetchEmployees();
+                  }}
+                >
+                  Delete
+                </button>
+              </form>
+            </div>
             <Toaster />
-          </div>
+          </>
         );
       },
     },

@@ -6,7 +6,7 @@ import { BiPlus } from "react-icons/bi";
 import { DataGrid } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 
-import { revalidatePath } from "next/cache";
+import toast, { Toaster } from "react-hot-toast";
 
 import { deletePurchase, getPurchases } from "@/utils/db/Purchase";
 import { purchaseColumns } from "@/data/purchaseColumns";
@@ -29,6 +29,8 @@ interface Purchase {
 const page = () => {
   const [data, setData] = useState<readonly Purchase[]>([]);
   const [salesStatus, setSalesStatus] = useState<string[]>([]);
+  const [loading, setLoading] = useState<Boolean>(false);
+
   const fetchPurchases = async () => {
     try {
       const purchases = await getPurchases();
@@ -55,6 +57,32 @@ const page = () => {
     return () => {};
   }, []);
 
+  // handle form submit
+  const handleDelete = async (id: string) => {
+    setLoading(true);
+    // add id
+    try {
+      toast.promise(
+        deletePurchase(id),
+        {
+          loading: "Deleting purchase...",
+          success: "purchase deleted successfully!",
+          error: "Failed to delete purchase. Please try again.",
+        },
+        {
+          style: {
+            minWidth: "250px",
+          },
+        }
+      );
+      fetchPurchases();
+      setLoading(false);
+    } catch (error) {
+      // Handle any errors that occurred during purchase creation
+      toast.error("Failed to delete purchase. Please try again.");
+    }
+  };
+
   const actionColumn = [
     {
       field: "action",
@@ -62,26 +90,37 @@ const page = () => {
       width: 160,
       renderCell: (params: any) => {
         return (
-          <div className="cellAction flex gap-3">
-            <Link href={`/dashboard/purchase/edit-purchase/${params.row.id}`}>
-              <div className="editButton px-3 py-1 border border-yellow-500 text-yellow-500 rounded-md border-dotted">
-                Edit
-              </div>
-            </Link>
+          <>
+            <div className="cellAction flex gap-3">
+              <Link href={`/dashboard/purchase/edit-purchase/${params.row.id}`}>
+                <div className="editButton px-3 py-1 border border-yellow-500 text-yellow-500 rounded-md border-dotted">
+                  Edit
+                </div>
+              </Link>
 
-            <form action={deletePurchase}>
-              <input type="hidden" name="id" value={params.row.id} />
-              <button
-                type="submit"
-                className="deleteButton px-3 py-1 border border-red-500 text-red-500 rounded-md border-dotted cursor-pointer"
-                onClick={() => {
-                  fetchPurchases();
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  handleDelete(params.row.id);
                 }}
               >
-                Delete
-              </button>
-            </form>
-          </div>
+                <input type="hidden" name="id" value={params.row.id} />
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className={`deleteButton px-3 py-1 border border-red-500 text-red-500 rounded-md border-dotted cursor-pointer ${
+                    loading ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
+                  onClick={() => {
+                    fetchPurchases();
+                  }}
+                >
+                  Delete
+                </button>
+              </form>
+            </div>
+            <Toaster />
+          </>
         );
       },
     },

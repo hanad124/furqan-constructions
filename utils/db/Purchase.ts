@@ -36,8 +36,7 @@ export const getPurchaseById = async (id: string) => {
 
 // create purchase
 export const createPurchase = async (formData: any) => {
-  const { supplier, item, quantity, price, place, total, status } =
-    Object.fromEntries(formData);
+  const { supplier, item, quantity, price, place, total, status } = formData;
 
   // change [price, quantity, total] to number
   const priceNumber = Number(price);
@@ -66,14 +65,16 @@ export const createPurchase = async (formData: any) => {
     revalidatePath("/dashboard/purchase");
   } catch (err) {
     console.error("Error creating Purchase:", err);
-    throw err; // Re-throw the error to propagate it further if needed
+    return {
+      error: "Error creating Purchase",
+    };
   }
 };
 
 // update purchase
 export const updatePurchase = async (formData: any) => {
-  const { id, supplier, item, quantity, price, place, total, status } =
-    Object.fromEntries(formData);
+  const { id, supplier, item, quantity, price, place, total } =
+    formData;
 
   // change [price, quantity, total] to number
   const priceNumber = Number(price);
@@ -117,7 +118,9 @@ export const updatePurchase = async (formData: any) => {
     revalidatePath("/dashboard/purchase");
   } catch (err) {
     console.error("Error updating Purchase:", err);
-    throw err; // Re-throw the error to propagate it further if needed
+    return {
+      error: "Error updating Purchase",
+    };
   }
 };
 
@@ -156,13 +159,17 @@ export const updatePurchaseStatus = async (id: string, status: any) => {
     revalidatePath("/dashboard/purchase");
   } catch (err) {
     console.error("Error updating Purchase:", err);
-    throw err; // Re-throw the error to propagate it further if needed
+    return {
+      error: "Error updating Purchase",
+    };
   }
 };
 
 // delete purchase
 export const deletePurchase = async (formData: any) => {
-  const { id } = Object.fromEntries(formData);
+  const id = formData;
+
+  console.log("purchaseID:", id);
 
   try {
     await connectToDB();
@@ -178,6 +185,8 @@ export const deletePurchase = async (formData: any) => {
     revalidatePath("/dashboard/purchase");
   } catch (err) {
     console.error("Error deleting Purchase:", err);
-    throw err; // Re-throw the error to propagate it further if needed
+    return {
+      error: "Error deleting Purchase",
+    };
   }
 };
