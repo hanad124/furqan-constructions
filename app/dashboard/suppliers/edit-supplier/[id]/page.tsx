@@ -3,6 +3,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
+import toast, { Toaster } from "react-hot-toast";
+
 import { findSupplier, updateSupplier } from "@/utils/db/Suppliers";
 
 import { Button } from "@/components/ui/button";
@@ -33,6 +35,7 @@ const formSchema = z.object({
 });
 
 export default function UpdateSupplier({ params }: any) {
+  const [loading, setLoading] = useState(false);
   const { id } = params;
 
   console.log("ID:", id);
@@ -56,6 +59,35 @@ export default function UpdateSupplier({ params }: any) {
     };
     fetchSupplier();
   }, []);
+
+  // submit handler
+  const onSubmit = async (data: any) => {
+    // add the id to the data object
+    data.id = id;
+    setLoading(true);
+    try {
+      toast.promise(
+        updateSupplier(data),
+        {
+          loading: "Updating supplier...",
+          success: "supplier updated successfully!",
+          error: "Failed to update supplier. Please try again.",
+        },
+        {
+          style: {
+            minWidth: "250px",
+          },
+        }
+      );
+
+      setLoading(false);
+      // reset the form
+      form.reset();
+      router.replace("/dashboard/suppliers");
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <>
@@ -94,8 +126,8 @@ export default function UpdateSupplier({ params }: any) {
         <div className="my-10">
           <Form {...form}>
             <form
-              // onSubmit={form.handleSubmit(onSubmit)}
-              action={updateSupplier}
+              onSubmit={form.handleSubmit(onSubmit)}
+              // action={updateSupplier}
               className="space-y-8"
             >
               <input type="hidden" name="id" value={id} />
@@ -134,9 +166,13 @@ export default function UpdateSupplier({ params }: any) {
               <Button
                 type="submit"
                 size={"lg"}
-                className="dark:text-white w-full md:w-[11.5rem] mb-10"
+                disabled={loading}
+                className={`dark:text-white w-full md:w-[11.5rem] mb-10
+                c
+                 ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-primary"}`}
               >
-                Submit
+                {/* {loading && <BiLoaderAlt className="animate-spin w-4 h-4" />} */}
+                <span>Submit</span>
               </Button>
             </form>
           </Form>

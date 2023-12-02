@@ -21,9 +21,7 @@ export const getSuppliers = async () => {
 
 // create supplier
 export const createSupplier = async (formData: any) => {
-  const { name, phone } = Object.fromEntries(formData);
-
-  console.log("Supplier Data:", name, phone);
+  const { name, phone } = formData;
 
   try {
     await connectToDB();
@@ -38,7 +36,9 @@ export const createSupplier = async (formData: any) => {
     if (existingSupplier) {
       // throw new Error('User already exists');
       console.log("Supplier already exists");
-      return;
+      return {
+        error: "Supplier already exists",
+      };
     }
 
     // Create and save the new Employee
@@ -55,13 +55,15 @@ export const createSupplier = async (formData: any) => {
     revalidatePath("/dashboard/suppliers");
   } catch (err) {
     console.error("Error creating Supplier:", err);
-    throw err; // Re-throw the error to propagate it further if needed
+    return {
+      error: "Error creating Supplier",
+    };
   }
 };
 
 // update supplier
 export const updateSupplier = async (formData: any) => {
-  const { id, name, phone } = Object.fromEntries(formData);
+  const { id, name, phone } = formData;
 
   try {
     // Initialize the updateFields object
@@ -93,7 +95,9 @@ export const updateSupplier = async (formData: any) => {
     revalidatePath("/dashboard/suppliers");
   } catch (err) {
     console.error("Error updating Supplier:", err);
-    throw err; // Re-throw the error to propagate it further if needed
+    return {
+      error: "Error updating Supplier",
+    };
   }
 };
 
@@ -121,18 +125,20 @@ export const findSupplier = async (id: string) => {
 
 // delete supplier
 export const deleteSupplier = async (formData: any) => {
-  const { id } = Object.fromEntries(formData);
+  const id = formData;
+  console.log(id);
   try {
     await connectToDB();
-    const supplier = await prisma.supplier.delete({
+    await prisma.supplier.delete({
       where: {
         id: id,
       },
     });
-    return supplier;
   } catch (err) {
-    console.error(err);
-  } finally {
-    await prisma.$disconnect(); // Disconnect the Prisma client after the operation
+    console.error("Error deleting supplier:", err);
+    return {
+      error: "Error deleting supplier",
+      // throw err; // Re-throw the error to propagate it further if needed
+    };
   }
 };

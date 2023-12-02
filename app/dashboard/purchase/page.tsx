@@ -90,7 +90,7 @@ const page = () => {
     {
       field: "status",
       headerName: "Status",
-      width: 100,
+      width: 130,
       renderCell: (params: any) => {
         const index = data.findIndex((item) => item.id === params.row.id);
         const status = salesStatus[index];

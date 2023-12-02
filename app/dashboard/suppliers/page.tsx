@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { supplierColumns } from "@/data/supplierColumns";
 import { getSuppliers, deleteSupplier } from "@/utils/db/Suppliers";
 
-import { revalidatePath } from "next/cache";
+import toast, { Toaster } from "react-hot-toast";
 
 // create a type for the data
 interface Supplier {
@@ -20,6 +20,7 @@ interface Supplier {
 }
 
 const page = () => {
+  const [loading, setLoading] = useState<boolean>(false);
   const [data, setData] = useState<readonly Supplier[]>([]);
   const fetchSuppliers = async () => {
     try {
@@ -49,6 +50,36 @@ const page = () => {
     return () => {};
   }, []);
 
+  // handle delete
+  const handleDelete = async (id: string) => {
+    // const result = await deleteSupplier(id);
+
+    // if (result?.error) {
+    //   toast.error(result?.error);
+    // } else {
+    setLoading(true);
+    try {
+      toast.promise(
+        deleteSupplier(id),
+        {
+          loading: "Deleting supplier...",
+          success: "supplier deleted successfully!",
+          error: "Failed to delete supplier. Please try again.",
+        },
+        {
+          style: {
+            minWidth: "250px",
+          },
+        }
+      );
+      fetchSuppliers();
+      setLoading(false);
+    } catch (error) {
+      toast.error("Failed to delete supplier. Please try again.");
+    }
+    // }
+  };
+
   const actionColumn = [
     {
       field: "action",
@@ -56,26 +87,39 @@ const page = () => {
       width: 230,
       renderCell: (params: any) => {
         return (
-          <div className="cellAction flex gap-3">
-            <Link href={`/dashboard/suppliers/edit-supplier/${params.row.id}`}>
-              <div className="editButton px-3 py-1 border border-yellow-500 text-yellow-500 rounded-md border-dotted">
-                Edit
-              </div>
-            </Link>
+          <>
+            <div className="cellAction flex gap-3">
+              <Link
+                href={`/dashboard/suppliers/edit-supplier/${params.row.id}`}
+              >
+                <div className="editButton px-3 py-1 border border-yellow-500 text-yellow-500 rounded-md border-dotted">
+                  Edit
+                </div>
+              </Link>
 
-            <form action={deleteSupplier}>
-              <input type="hidden" name="id" value={params.row.id} />
-              <button
-                type="submit"
-                className="deleteButton px-3 py-1 border border-red-500 text-red-500 rounded-md border-dotted cursor-pointer"
-                onClick={() => {
-                  fetchSuppliers();
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  handleDelete(params.row.id);
                 }}
               >
-                Delete
-              </button>
-            </form>
-          </div>
+                <input type="hidden" name="id" value={params.row.id} />
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className={`deleteButton px-3 py-1 border border-red-500 text-red-500 rounded-md border-dotted cursor-pointer ${
+                    loading ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
+                  onClick={() => {
+                    fetchSuppliers();
+                  }}
+                >
+                  Delete
+                </button>
+              </form>
+            </div>
+            <Toaster />
+          </>
         );
       },
     },

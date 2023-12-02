@@ -2,8 +2,8 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { createEmployee } from "../../../utils/dbOperations";
 import { createSupplier } from "@/utils/db/Suppliers";
+import toast, { Toaster } from "react-hot-toast";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -19,6 +19,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { useRouter, usePathname } from "next/navigation";
+import { useState } from "react";
 
 // Define a schema for your form values.
 const formSchema = z.object({
@@ -30,7 +31,9 @@ const formSchema = z.object({
   }),
 });
 
-export default function NewUser() {
+export default function NewSupplier() {
+  const [loading, setLoading] = useState(false);
+
   const router = useRouter();
   // create a form instance with useForm
   const form = useForm<z.infer<typeof formSchema>>({
@@ -40,6 +43,36 @@ export default function NewUser() {
       phone: "",
     },
   });
+
+  // handle form submission
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    const result = await createSupplier(values);
+    if (result?.error) {
+      toast.error(result?.error);
+    } else {
+      try {
+        setLoading(true);
+        toast.promise(
+          createSupplier(values),
+          {
+            loading: "Creating supplier...",
+            success: "supplier created successfully!",
+            error: "Failed to create supplier. Please try again.",
+          },
+          {
+            style: {
+              minWidth: "250px",
+            },
+          }
+        );
+        form.reset();
+      } catch (error) {
+        toast.error("Failed to create supplier. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
 
   return (
     <>
@@ -72,8 +105,8 @@ export default function NewUser() {
         <div className="my-10">
           <Form {...form}>
             <form
-              //   onSubmit={form.handleSubmit(onSubmit)}
-              action={createSupplier}
+              onSubmit={form.handleSubmit(onSubmit)}
+              // action={createSupplier}
               className="space-y-8"
             >
               <div className="flex flex-wrap gap-x-3 gap-y-4 w-full">
@@ -111,14 +144,21 @@ export default function NewUser() {
               <Button
                 type="submit"
                 size={"lg"}
-                className="dark:text-white w-full md:w-[11.5rem] mb-10"
+                disabled={loading}
+                className={`dark:text-white w-full md:w-[11.5rem] mb-10
+                c
+                 ${
+                   loading ? "bg-primary/60 cursor-not-allowed" : "bg-primary"
+                 }`}
               >
-                Submit
+                {/* {loading && <BiLoaderAlt className="animate-spin w-4 h-4" />} */}
+                <span>Submit</span>
               </Button>
             </form>
           </Form>
         </div>
       </div>
+      <Toaster />
     </>
   );
 }
