@@ -7,6 +7,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 
 import { revalidatePath } from "next/cache";
+
 import { deletePurchase, getPurchases } from "@/utils/db/Purchase";
 import { purchaseColumns } from "@/data/purchaseColumns";
 
@@ -58,7 +59,7 @@ const page = () => {
     {
       field: "action",
       headerName: "Action",
-      width: 180,
+      width: 160,
       renderCell: (params: any) => {
         return (
           <div className="cellAction flex gap-3">
@@ -90,7 +91,7 @@ const page = () => {
     {
       field: "status",
       headerName: "Status",
-      width: 130,
+      width: 120,
       renderCell: (params: any) => {
         const index = data.findIndex((item) => item.id === params.row.id);
         const status = salesStatus[index];

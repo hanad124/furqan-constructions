@@ -2,12 +2,12 @@ export const purchaseColumns = [
   {
     field: "supplier",
     headerName: "Supplier Name",
-    width: 200,
+    width: 170,
   },
   {
     field: "item",
     headerName: "item",
-    width: 100,
+    width: 150,
   },
   {
     field: "quantity",
@@ -17,7 +17,7 @@ export const purchaseColumns = [
   {
     field: "price",
     headerName: "price",
-    width: 80,
+    width: 50,
   },
   {
     field: "total",
@@ -32,6 +32,6 @@ export const purchaseColumns = [
   {
     field: "date",
     headerName: "Date",
-    width: 120,
+    width: 110,
   },
 ];
