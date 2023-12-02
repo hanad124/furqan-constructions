@@ -3,6 +3,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
+import toast, { Toaster } from "react-hot-toast";
+
 import { Button } from "@/components/ui/button";
 import { useFormStatus } from "react-dom";
 import {
@@ -33,6 +35,8 @@ const formSchema = z.object({
 
 export default function NewCustomer() {
   const { pending } = useFormStatus();
+  const [loading, setLoading] = useState(false);
+
   const router = useRouter();
   const pathname = usePathname();
   // create a form instance with useForm
@@ -43,6 +47,38 @@ export default function NewCustomer() {
       phone: "",
     },
   });
+
+  const onSubmit = async (data: any) => {
+    // const result = await createCustomer(data);
+    // if (result?.error) {
+    //   toast.error(result?.error);
+    // } else {
+    setLoading(true);
+    try {
+      toast.promise(
+        createCustomer(data),
+        {
+          loading: "Creating customer...",
+          success: "customer created successfully!",
+          error: "Failed to create customer. Please try again.",
+        },
+        {
+          style: {
+            minWidth: "250px",
+            border: "1px solid #DFE4EA",
+          },
+        }
+      );
+
+      setLoading(false);
+      // reset the form
+      form.reset();
+    } catch (error) {
+      // Handle any errors that occurred during customer creation
+      toast.error("Failed to create customer. Please try again.");
+    }
+    // }
+  };
 
   return (
     <>
@@ -75,8 +111,8 @@ export default function NewCustomer() {
         <div className="my-10">
           <Form {...form}>
             <form
-              //   onSubmit={form.handleSubmit(onSubmit)}
-              action={createCustomer}
+              onSubmit={form.handleSubmit(onSubmit)}
+              // action={createCustomer}
               className="space-y-8"
             >
               <div className="flex flex-wrap gap-x-3 gap-y-4 w-full">
@@ -114,9 +150,9 @@ export default function NewCustomer() {
               <Button
                 type="submit"
                 size={"lg"}
-                arai-disabled={pending}
-                className={`dark:text-white w-full md:w-[11.5rem] mb-10${
-                  pending ? " opacity-50 cursor-not-allowed" : ""
+                arai-disabled={loading}
+                className={`dark:text-white w-full mb-10${
+                  loading ? " opacity-50 cursor-not-allowed" : ""
                 }`}
               >
                 Submit
@@ -125,6 +161,7 @@ export default function NewCustomer() {
           </Form>
         </div>
       </div>
+      <Toaster />
     </>
   );
 }

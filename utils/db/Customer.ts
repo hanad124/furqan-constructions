@@ -21,7 +21,7 @@ export const getCustomers = async () => {
 
 // Create new customer
 export const createCustomer = async (formData: any) => {
-  const { name, phone } = Object.fromEntries(formData);
+  const { name, phone } = formData;
 
   try {
     await connectToDB();
@@ -36,7 +36,9 @@ export const createCustomer = async (formData: any) => {
     if (existingCustomer) {
       // throw new Error('User already exists');
       console.log("Customer already exists");
-      return;
+      return {
+        error: "Customer already exists",
+      };
     }
 
     // Create and save the new Employee
@@ -53,13 +55,15 @@ export const createCustomer = async (formData: any) => {
     revalidatePath("/dashboard/customers");
   } catch (err) {
     console.error("Error creating Customer:", err);
-    throw err; // Re-throw the error to propagate it further if needed
+    return {
+      error: "Error creating customer",
+    };
   }
 };
 
 // Update Customer
 export const updateCustomer = async (formData: any) => {
-  const { id, name, phone } = Object.fromEntries(formData);
+  const { id, name, phone } = formData;
 
   try {
     await connectToDB();
@@ -93,7 +97,9 @@ export const updateCustomer = async (formData: any) => {
     revalidatePath("/dashboard/customers");
   } catch (err) {
     console.error("Error updating customer:", err);
-    throw err; // Re-throw the error to propagate it further if needed
+    return {
+      error: "Error updating customer",
+    }; // Re-throw the error to propagate it further if needed
   }
 };
 
@@ -133,5 +139,8 @@ export const deleteCustomer = async (formData: any) => {
     revalidatePath("/dashboard/customers");
   } catch (error) {
     console.log("error deleting customer", error);
+    return {
+      error: "error deleting customer",
+    };
   }
 };

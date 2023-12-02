@@ -2,14 +2,14 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import {
-  findEmployeeById,
-  updateEmployee,
-} from "../../../../../utils/dbOperations";
+
+import toast, { Toaster } from "react-hot-toast";
 
 import { findCustomerById, updateCustomer } from "@/utils/db/Customer";
 
 import { Button } from "@/components/ui/button";
+import { BiLoaderAlt } from "react-icons/bi";
+
 import {
   Form,
   FormControl,
@@ -37,6 +37,8 @@ const formSchema = z.object({
 });
 
 export default function UpdateCustomer({ params }: any) {
+  const [loading, setLoading] = useState<boolean>(false);
+
   const { id } = params;
   const router = useRouter();
   // create a form instance with useForm
@@ -58,6 +60,40 @@ export default function UpdateCustomer({ params }: any) {
     };
     fetchCustomer();
   }, []);
+
+  const onSubmit = async (data: any) => {
+    // const result = await updateCustomer(data);
+    // if (result?.error) {
+    //   toast.error(result?.error);
+    // } else {
+    data.id = id;
+
+    setLoading(true);
+    try {
+      toast.promise(
+        updateCustomer(data),
+        {
+          loading: "Updating customer...",
+          success: "customer updated successfully!",
+          error: "Failed to update customer. Please try again.",
+        },
+        {
+          style: {
+            minWidth: "250px",
+            border: "1px solid #DFE4EA",
+          },
+        }
+      );
+
+      setLoading(false);
+      // reset the form
+      form.reset();
+    } catch (error) {
+      // Handle any errors that occurred during customer creation
+      toast.error("Failed to create customer. Please try again.");
+    }
+    // }
+  };
 
   return (
     <>
@@ -96,8 +132,8 @@ export default function UpdateCustomer({ params }: any) {
         <div className="my-10">
           <Form {...form}>
             <form
-              // onSubmit={form.handleSubmit(onSubmit)}
-              action={updateCustomer}
+              onSubmit={form.handleSubmit(onSubmit)}
+              // action={updateCustomer}
               className="space-y-8"
             >
               <input type="hidden" name="id" value={id} />
@@ -136,14 +172,19 @@ export default function UpdateCustomer({ params }: any) {
               <Button
                 type="submit"
                 size={"lg"}
-                className="dark:text-white w-full md:w-[11.5rem] mb-10"
+                disabled={loading}
+                className={`dark:text-white w-full mb-10${
+                  loading ? " opacity-50 cursor-not-allowed" : ""
+                }`}
               >
-                Submit
+                {loading && <BiLoaderAlt className="animate-spin w-4 h-4" />}
+                <span>Submit</span>
               </Button>
             </form>
           </Form>
         </div>
       </div>
+      <Toaster />
     </>
   );
 }
