@@ -69,11 +69,17 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="login bg-white">
+    <div className="h-screen relative bg-white">
       <div className="login-container">
         <div className="login-cols flex justify-center items-center h-screen w-full">
-          <div className="login-cols-2 bg-white w-full mx-3 md:max-0  px-7 py-10 md:w-[23rem] rounded-lg">
-            <div className="flex items-center  gap-3">
+          <div
+            className=" bg-white w-full mx-3 md:max-0  px-7 py-10 md:w-[23rem] rounded-lg"
+            style={{
+              boxShadow: `rgba(0, 0, 0, 0.16) 0px 10px 36px 0px,
+rgba(0, 0, 0, 0.06) 0px 0px 0px 1px`,
+            }}
+          >
+            <div className="flex items-center justify-center gap-5">
               <Image
                 src={logo}
                 width={500}
@@ -81,17 +87,25 @@ export default function LoginPage() {
                 alt="logo"
                 className="w-8"
               />
-              <h1 className="text-2xl font-semibold text-[#27255F] uppercase">
+              <h1 className="text-2xl font-semibold text-[#27255F] uppercase tracking-widest">
                 Furqan
               </h1>
             </div>
 
-            <h2 className="text-left mt-[2rem]  text-[1.2rem] font-medium text-[#27255F]">
-              Login to your account
+            <h2 className=" text-left mt-[2rem]  text-[1.2rem] font-normal text-[#5d596c]">
+              Welcome to Furqan! 👋
             </h2>
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="form">
-                <p className="email">Username</p>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="mt-[3rem]"
+              >
+                <p
+                  className=" text-[#5d596c] text-sm font-light mb-1 ml-1 tracking-wide"
+                  style={{ fontSize: "13px", fontWeight: 400 }}
+                >
+                  Username
+                </p>
                 <FormField
                   control={form.control}
                   name="username"
@@ -110,7 +124,12 @@ export default function LoginPage() {
                     </FormItem>
                   )}
                 />
-                <p className="password">Password</p>
+                <p
+                  className=" text-[#5d596c] text-sm font-light mt-5 tracking-wide  mb-1 ml-1"
+                  style={{ fontSize: "13px", fontWeight: 400 }}
+                >
+                  Password
+                </p>
                 <FormField
                   control={form.control}
                   name="password"
@@ -119,8 +138,8 @@ export default function LoginPage() {
                       <FormControl>
                         <Input
                           type="password"
-                          placeholder="******* "
-                          className="shadow-none"
+                          placeholder="* * * * * * * "
+                          className="shadow-none "
                           {...field}
                         />
                       </FormControl>
@@ -140,7 +159,7 @@ export default function LoginPage() {
                    loading ? "bg-primary/60 cursor-not-allowed" : "bg-primary"
                  }`}
                 >
-                  <span>Submit</span>
+                  <span>Login</span>
                 </Button>
               </form>
             </Form>
