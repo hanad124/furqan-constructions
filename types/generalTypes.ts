@@ -15,3 +15,13 @@ export interface IStock {
   stock: string;
   quantity: number;
 }
+
+
+export interface Item {
+  id: string;
+  name: string;
+  modal: string | null;
+  description: string;
+  createdAt: Date;
+  updatedAt: Date;
+}

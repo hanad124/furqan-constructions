@@ -7,6 +7,8 @@ import Image from "next/image";
 import { format } from "date-fns";
 import toast, { Toaster } from "react-hot-toast";
 import ItemForm from "@/components/ItemForm";
+import { getItems } from "@/utils/db/Items";
+import { Item } from "@/types/generalTypes";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -41,8 +43,8 @@ import { CalendarIcon } from "@radix-ui/react-icons";
 
 // Define a schema for your form values.
 const formSchema = z.object({
-  itemname: z.string().min(4, {
-    message: "Item name must be at least 4 characters.",
+  item: z.string().min(4, {
+    message: "Item must be at least 4 characters.",
   }),
   modal: z.string().min(4, {
     message: "Modal must be at least 4 characters.",
@@ -78,6 +80,19 @@ const formSchema = z.object({
 
 export default function CreateInvoice() {
   const [itemCount, setItemCount] = useState(1);
+  const [items, setItems] = useState<Item[]>([]);
+
+  // get items
+  useEffect(() => {
+    const getItemsData = async () => {
+      const itemsData: any = await getItems();
+
+      setItems(itemsData);
+    };
+    getItemsData();
+  }, []);
+
+  const filteredItems = items.filter((item) => item.description.toLowerCase());
 
   const addItem = () => {
     setItemCount(itemCount + 1);
@@ -99,8 +114,15 @@ export default function CreateInvoice() {
       dueDate: temDob,
       invoiceNumber: "",
       customername: "",
+      item: "",
     },
   });
+
+  // handle item change
+  const handleItemChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    form.setValue("item", event.target.value);
+    console.log("Item:", event.target.value);
+  };
 
   function onSubmit(data: z.infer<typeof formSchema>) {
     toast.success("Successfully submitted!");
@@ -108,39 +130,38 @@ export default function CreateInvoice() {
 
   return (
     <>
-      <div className="mx-4">
-        <h1 className="text-xl text-slate-600 font-bold mt-8">
+      <div className="mx-4 md:mx-16">
+        {/* <h1 className="text-xl text-slate-600 font-bold mt-8">
           Create Invoice
-        </h1>
-        <div className="flex  justify-between  flex-wrap md mt-10 gap-y-10">
-          <div className="ml-3">
+        </h1> */}
+        <div className="flex justify-between flex-wrap mt-10 gap-y-10">
+          <div className="ml-1 flex items-center gap-4">
             <Image
               src={logo}
               alt="logo"
-              className="w-24 h-24"
+              className="w-7 md:w-10 h-7 md:h-10"
               width={100}
               height={100}
             />
-            <h1 className="uppercase font-bold text-slate-700 dark:text-slate-200 mt-1 text-lg">
-              Furqan <br /> Constructions
+            <h1 className="uppercase font-bold text-slate-600 dark:text-slate-200 mt-1 text-xl md:text-2xl">
+              Furqan
             </h1>
           </div>
           <div className="flex flex-col gap-4 justify-end">
-            <p className="text-lg uppercase text-end font-bold text-slate-700 dark:text-slate-200">
+            <p className="text-2xl uppercase  text-start md:text-end font-bold text-slate-700 dark:text-slate-200 ">
               invoice
             </p>
-            <p className="text-lg text-right justify-start uppercase font-bold text-slate-700 dark:text-slate-200">
-              Furqan Constructions
+            <p className="text-xl  text-start md:text-end justify-start uppercase font-bold text-slate-700 dark:text-slate-200">
+              sales order{" "}
             </p>
-            <p className="text-slate-700 dark:text-slate-200 text-end">
-              finance@furqan.co | +252 61 448 81 01
+            <p className="text-slate-700 dark:text-slate-200 text-start md:text-end text-sm font-medium">
+              sales@furqan.so | +252 61 448 81 01
             </p>
             <div className="flex  gap-8 mt-6">
-              <div className="flex flex-col gap-5 uppercase text-slate-700 dark:text-slate-200">
-                <p>bill to:</p>
-                <p>invoice number:</p>
-                <p>invoice date:</p>
-                <p>due:</p>
+              <div className="flex flex-col gap-6 uppercase text-slate-700 dark:text-slate-200 mt-2 text-sm">
+                <p>bill to :</p>
+                <p>invoice number :</p>
+                <p>invoice date :</p>
               </div>
               <div className="flex flex-col gap-2 text-end uppercase text-slate-700 dark:text-slate-200">
                 <Form {...form}>
@@ -156,7 +177,11 @@ export default function CreateInvoice() {
                         render={({ field }) => (
                           <FormItem className="w-full md:w-[15rem]">
                             <FormControl>
-                              <Input placeholder="customer name" {...field} />
+                              <Input
+                                placeholder="customer name"
+                                className="shadow-none"
+                                {...field}
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -170,7 +195,11 @@ export default function CreateInvoice() {
                         render={({ field }) => (
                           <FormItem className="w-full md:w-[15rem]">
                             <FormControl>
-                              <Input placeholder="INV-0002 " {...field} />
+                              <Input
+                                placeholder="INV-0002 "
+                                className="shadow-none"
+                                {...field}
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -188,8 +217,9 @@ export default function CreateInvoice() {
                                   <Button
                                     variant={"outline"}
                                     className={cn(
-                                      "w-[240px] pl-3 text-left font-normal",
-                                      !field.value && "text-muted-foreground"
+                                      "w-[240px] pl-3 text-left font-normal  shadow-none",
+                                      !field.value &&
+                                        " shadow-none text-muted-foreground"
                                     )}
                                   >
                                     {field.value ? (
@@ -197,52 +227,7 @@ export default function CreateInvoice() {
                                     ) : (
                                       <span>Pick a date</span>
                                     )}
-                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                  </Button>
-                                </FormControl>
-                              </PopoverTrigger>
-                              <PopoverContent
-                                className="w-auto p-0"
-                                align="start"
-                              >
-                                <Calendar
-                                  mode="single"
-                                  selected={field.value}
-                                  onSelect={field.onChange}
-                                  disabled={(date) =>
-                                    date > new Date() ||
-                                    date < new Date("1900-01-01")
-                                  }
-                                  initialFocus
-                                />
-                              </PopoverContent>
-                            </Popover>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      {/* due field */}
-                      <FormField
-                        control={form.control}
-                        name="dueDate"
-                        render={({ field }) => (
-                          <FormItem className="w-full md:w-[15rem]">
-                            <Popover>
-                              <PopoverTrigger asChild>
-                                <FormControl>
-                                  <Button
-                                    variant={"outline"}
-                                    className={cn(
-                                      "w-[240px] pl-3 text-left font-normal",
-                                      !field.value && "text-muted-foreground"
-                                    )}
-                                  >
-                                    {field.value ? (
-                                      format(field.value, "PPP")
-                                    ) : (
-                                      <span>Pick a date</span>
-                                    )}
-                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50 shadow-none" />
                                   </Button>
                                 </FormControl>
                               </PopoverTrigger>
@@ -288,38 +273,28 @@ export default function CreateInvoice() {
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
-                className="relative space-y-8 border border-slate-200 dark:border-slate-700 p-8 rounded-lg w-full flex lg:w-5/6"
+                className="relative border border-slate-200 dark:border-slate-700 rounded-lg w-full flex lg:w-5/6 mt-5"
               >
-                <div className="flex flex-wrap gap-5 w-full flex-1">
-                  {/* item name field */}
+                <div className="flex flex-wrap gap-5 w-full p-8 border-r-[1px] border-r-slate-200">
+                  {/* item field */}
                   <FormField
                     control={form.control}
-                    name="itemname"
+                    name="item"
                     render={({ field }) => (
-                      <FormItem className="w-full md:w-[15rem]">
+                      <FormItem className="w-full md:w-[15rem]  ">
                         <FormControl>
-                          <Input
-                            placeholder="item name"
-                            className="p-5"
+                          <select
+                            className="w-full md:w-[15rem] h-[38px] border rounded-md px-2   py-1 focus:outline-none focus:ring-1 focus:ring-primary focus:border-transparent bg-transparent dark:text-white"
                             {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  {/* modal field */}
-                  <FormField
-                    control={form.control}
-                    name="modal"
-                    render={({ field }) => (
-                      <FormItem className="w-full md:w-[15rem]">
-                        <FormControl>
-                          <Input
-                            placeholder="modal "
-                            className="p-5"
-                            {...field}
-                          />
+                            onChange={handleItemChange}
+                          >
+                            <option value="">Select item</option>
+                            {filteredItems.map((item) => (
+                              <option key={item.name} value={item.description}>
+                                {item.description}
+                              </option>
+                            ))}
+                          </select>
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -334,7 +309,7 @@ export default function CreateInvoice() {
                         <FormControl>
                           <Input
                             placeholder="quantity"
-                            className="p-5"
+                            className="p-5 shadow-none"
                             type="number"
                             {...field}
                           />
@@ -352,7 +327,7 @@ export default function CreateInvoice() {
                         <FormControl>
                           <Input
                             placeholder="price"
-                            className="p-5"
+                            className="p-5 shadow-none"
                             type="number"
                             {...field}
                           />
@@ -371,7 +346,7 @@ export default function CreateInvoice() {
                         <FormControl>
                           <Input
                             placeholder="total"
-                            className="p-5"
+                            className="p-5 shadow-none"
                             type="number"
                             {...field}
                           />
@@ -381,12 +356,9 @@ export default function CreateInvoice() {
                     )}
                   />
                 </div>
-                <div className="h-full">
+                <div className="relative flex justify-center items-center w-10 ">
                   {/* close icon */}
-                  <button
-                    onClick={removeItem}
-                    className="absolute right-5 top-5"
-                  >
+                  <button onClick={removeItem} className="relative">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       className="h-6 w-6 text-slate-700 dark:text-slate-200"
@@ -398,26 +370,49 @@ export default function CreateInvoice() {
                     </svg>
                   </button>
                 </div>
-                {/* <Button
-                  type="submit"
-                  size={"lg"}
-                  className="dark:text-white w-full md:w-[11.5rem] mb-10"
-                >
-                  Submit
-                </Button>
-                <Toaster /> */}
               </form>
             </Form>
           ))}
         </div>
-      </div>
+        <button
+          onClick={addItem}
+          className="bg-primary dark:bg-slate-200 text-white dark:text-slate-700 px-8 py-2 rounded-lg my-4"
+        >
+          Add Item
+        </button>
 
-      <button
-        onClick={addItem}
-        className="bg-primary dark:bg-slate-200 text-white dark:text-slate-700 px-8 py-2 rounded-lg m-4"
-      >
-        Add Item
-      </button>
+        <div className="w-full border-b-[1px] border-b-slate-200 my-5"></div>
+        <div className="flex justify-end w-full">
+          <div
+            className="
+         border-[1px] w-56 mx-w-76 rounded-10 border-b-slate-200 p-5 rounded-lg bg-slate-200/10 "
+          >
+            <div className="flex justify-between">
+              <div className="flex flex-col gap-2 text-slate-500">
+                <p>Subtotal : </p>
+                <p>Discount : </p>
+              </div>
+              <div className="flex flex-col gap-2 text-slate-500">
+                <p>$0.00</p>
+                <p>$0.00</p>
+              </div>
+            </div>
+            <div className="border-b-[1px] border-b-slate-200 w-full my-4"></div>
+            <div className="flex justify-between">
+              <div className="flex flex-col gap-2 text-slate-500">
+                <p>Total : </p>
+              </div>
+              <div className="flex flex-col gap-2 text-slate-500">
+                <p>$0.00</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="w-full border-b-[1px] border-b-slate-200 my-10"></div>
+        <Button className="bg-primary w-full text-white mb-10 " size={"lg"}>
+          Create Invoice
+        </Button>
+      </div>
     </>
   );
 }
