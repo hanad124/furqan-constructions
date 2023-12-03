@@ -29,23 +29,22 @@ const formSchema = z.object({
   modal: z.string().min(1, {
     message: "modal must be at least 1 characters.",
   }),
-  description: z.string().min(5, {
-    message: "description must be at least 5 characters.",
-  }),
+  // description: z.string().min(5, {
+  //   message: "description must be at least 5 characters.",
+  // }),
 });
 
 export default function NewItem() {
   const [loading, setLoading] = useState(false);
 
   const router = useRouter();
-  const pathname = usePathname();
   // create a form instance with useForm
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
       modal: "",
-      description: "",
+      // description: "",
     },
   });
 
@@ -154,7 +153,7 @@ export default function NewItem() {
                 />
 
                 {/* description field */}
-                <FormField
+                {/* <FormField
                   control={form.control}
                   name="description"
                   // disabled
@@ -171,7 +170,7 @@ export default function NewItem() {
                       <FormMessage />
                     </FormItem>
                   )}
-                />
+                /> */}
               </div>
 
               <Button

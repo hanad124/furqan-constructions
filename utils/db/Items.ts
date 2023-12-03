@@ -18,7 +18,7 @@ export const getItems = async () => {
 };
 
 export const createItem = async (formData: any) => {
-  const { name, modal, description } = formData;
+  const { name, modal } = formData;
 
   try {
     await connectToDB();
@@ -43,7 +43,7 @@ export const createItem = async (formData: any) => {
       data: {
         name,
         modal,
-        description,
+        description: name + " - " + modal,
       },
     });
 
@@ -62,14 +62,14 @@ export const createItem = async (formData: any) => {
 
 // Update Item
 export const updateItem = async (formData: any) => {
-  const { id, name, modal, description } = formData;
+  const { id, name, modal } = formData;
 
   try {
     // Initialize the updateFields object
     const updateFields = {
       name,
       modal,
-      description,
+      description: name + " - " + modal,
     };
 
     // Remove properties with undefined or null or "" values from the updateFields object
