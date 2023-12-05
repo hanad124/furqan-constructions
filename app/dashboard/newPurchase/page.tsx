@@ -153,7 +153,9 @@ export default function NewPurchase() {
     const total = Number(quantity) * Number(price);
     form.setValue("total", total);
   };
-
+  useEffect(() => {
+    calculateTotal();
+  }, [form.watch("quantity"), form.watch("price")]);
   // handle form submit
   const onSubmit = async (data: any) => {
     // const result = await createPurchase(data);
@@ -185,10 +187,6 @@ export default function NewPurchase() {
     }
     // }
   };
-
-  useEffect(() => {
-    calculateTotal();
-  }, [form.watch("quantity"), form.watch("price")]);
 
   return (
     <>

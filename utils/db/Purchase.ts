@@ -73,8 +73,7 @@ export const createPurchase = async (formData: any) => {
 
 // update purchase
 export const updatePurchase = async (formData: any) => {
-  const { id, supplier, item, quantity, price, place, total } =
-    formData;
+  const { id, supplier, item, quantity, price, place, total } = formData;
 
   // change [price, quantity, total] to number
   const priceNumber = Number(price);

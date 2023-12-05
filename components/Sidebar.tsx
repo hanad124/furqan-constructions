@@ -144,7 +144,7 @@ const Sidebar = ({ user }: any) => {
                       isActive
                         ? "bg-primary text-white hover:bg-primary cursor-pointer"
                         : "text-slate-600 dark:text-[#949bbd] hover:bg-primary/10 cursor-pointer"
-                    } flex items-center w-full py-[7px] px-4 rounded-md cursor-pointer`}
+                    } flex items-center w-full py-[7px] px-4 font-light rounded-md cursor-pointer`}
                   >
                     <item.icon className="mr-4 text-lg" />
                     <span>{item.text}</span>
@@ -180,7 +180,7 @@ const Sidebar = ({ user }: any) => {
                           <div className="flex items-center">
                             <BiCircle className="w-3" />
                             <Link href={submenu.url}>
-                              <p className="block py-2 text-sm px-4">
+                              <p className="block py-2 text-sm font-light px-4">
                                 {submenu.text}
                               </p>
                             </Link>

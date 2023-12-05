@@ -16,11 +16,19 @@ export interface IStock {
   quantity: number;
 }
 
-
 export interface Item {
   id: string;
   name: string;
   modal: string | null;
+  description: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface Customer {
+  id: string;
+  name: string;
+  phone: string | null;
   description: string;
   createdAt: Date;
   updatedAt: Date;
