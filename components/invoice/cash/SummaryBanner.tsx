@@ -22,7 +22,7 @@ const SummaryBanner = ({ summaryTotal }: { summaryTotal: number }) => {
               <p>Total : </p>
             </div>
             <div className="flex flex-col gap-2 text-slate-500">
-              <p>$0.00</p>
+              <p>${summaryTotal}</p>
             </div>
           </div>
         </div>

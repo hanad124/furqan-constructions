@@ -105,5 +105,35 @@ model Entity {
   updatedAt DateTime  @updatedAt
 }
 
+// Cash Invoice model
+model CashInvoice {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  invoice_number Int 
+  customer  String
+  
+  invoice_date      DateTime
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  items CashInvoiceItem[]
+  
+}
+
+
+// cash invoice item model
+model CashInvoiceItem {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  invoice_id String @db.ObjectId
+
+  item      String 
+  quantity  Int
+  price     Float
+  total     Float
+
+  invoice CashInvoice @relation(fields: [invoice_id], references: [id])
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
 
 

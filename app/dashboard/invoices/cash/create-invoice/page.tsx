@@ -9,8 +9,10 @@ import { Button } from "@/components/ui/button";
 import InvoiceTitle from "@/components/invoice/cash/InvoiceTitle";
 import SummaryBanner from "@/components/invoice/cash/SummaryBanner";
 
+import { createCashInvoice, getCashInvoices } from "@/utils/db/CashInvoice";
+
 interface FormField {
-  invoice_number: number;
+  // invoice_number: number;
   customer: string;
   invoice_date: Date;
   item: string;
@@ -27,7 +29,7 @@ export default function CreateInvoice() {
       item: "",
       total: 0,
       customer: "",
-      invoice_number: 0,
+      // invoice_number: 0,
       invoice_date: new Date(),
     },
   ]);
@@ -35,7 +37,7 @@ export default function CreateInvoice() {
   const [customersData, setCustomersData] = useState<Customer[]>([]);
   const [cumulativeTotal, setCumulativeTotal] = useState<number>(0);
   const [selectedCustomer, setSelectedCustomer] = useState<string>("");
-  const [invoiceNumber, setInvoiceNumber] = useState<number>(0);
+  const [invoiceNumber, setInvoiceNumber] = useState<string>("");
   const [invoiceData, setInvoiceDate] = useState<Date>(new Date());
 
   // get items
@@ -85,23 +87,23 @@ export default function CreateInvoice() {
     });
   };
 
-  // handle invoice change
-  const handleInvoiceNumberChane = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const invoiNum = Number(event.target.value);
+  // get last invoice number and increment it by 1
+  useEffect(() => {
+    const getInvoiceNumber = async () => {
+      try {
+        const invoiceData: any = await getCashInvoices();
 
-    setInvoiceNumber(invoiNum);
+        const invoiceNumber =
+          invoiceData[invoiceData.length - 1].invoice_number;
 
-    // Update invoice number for all form fields
-    setFormFields((prevFields) => {
-      const updatedFields = prevFields.map((field) => ({
-        ...field,
-        invoice_number: invoiNum,
-      }));
-      return updatedFields;
-    });
-  };
+        const exectInvNum = `INV-${invoiceNumber + 1}`;
+        setInvoiceNumber(exectInvNum);
+      } catch (error) {
+        console.error("Error retrieving invoice number:", error);
+      }
+    };
+    getInvoiceNumber();
+  }, []);
 
   // handle invoice date change
   const handleInvoiceDateChange = (
@@ -151,6 +153,9 @@ export default function CreateInvoice() {
 
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    // Create the invoice
+    await createCashInvoice(formFields);
     console.log(formFields);
   };
 
@@ -163,7 +168,6 @@ export default function CreateInvoice() {
         item: "",
         total: 0,
         customer: selectedCustomer,
-        invoice_number: invoiceNumber,
         invoice_date: invoiceData,
       },
     ]);
@@ -190,36 +194,63 @@ export default function CreateInvoice() {
       <InvoiceTitle />
 
       <form onSubmit={submit}>
-        <div className="">
-          {/* item field */}
-          <select
-            className="w-full lg:w-[10rem] shadow-none h-[38px] border rounded-md px-2   py-1 focus:outline-none focus:ring-1 focus:ring-primary focus:border-transparent bg-transparent dark:text-white"
-            name="customer"
-            onChange={handleCustomerChange}
+        <div className="flex  gap-3 mt-5 w-4/5 md:w-3/5 lg:w-2/5">
+          <div
+            className="
+            flex flex-col gap-6 mt-1
+            "
           >
-            <option value="">Select Customer</option>
-            {filteredCustomers?.map((customer) => (
-              <option key={customer.name} value={customer.name}>
-                {customer.name}
-              </option>
-            ))}
-          </select>
-          {/* invoice number field */}
-          <Input
-            name="invoice_number"
-            type="number"
-            placeholder="Invoice number"
-            className="w-full lg:w-[10rem] shadow-none"
-            onChange={handleInvoiceNumberChane}
-          />
-          {/* date field */}
-          <Input
-            type="date"
-            name="date"
-            className="w-full lg:w-[10rem] shadow-none"
-            onChange={handleInvoiceDateChange}
-          />
+            <p className="font-normal text-slate-600 text-sm text-left flex-shrink-0">
+              Invoice Number
+            </p>
+            <p className="font-normal text-slate-600 text-sm text-left flex-shrink-0">
+              Customer Name
+            </p>
+            <p className="font-normal text-slate-600 text-sm text-left flex-shrink-0">
+              Invoice Date
+            </p>
+          </div>
+          <div className="flex flex-col gap-1">
+            {" "}
+            {/* invoice number field */}
+            <div className="">
+              <Input
+                readOnly
+                name="invoice_number"
+                type="text"
+                placeholder="INV-000"
+                value={invoiceNumber}
+                className="text-slate-400 w-full lg:w-[10rem] shadow-none justify-end relative right-0"
+                // onChange={handleInvoiceNumberChane}
+              />
+            </div>
+            {/* item field */}
+            <div className="">
+              <select
+                className="w-full lg:w-[10rem] shadow-none h-[38px] border rounded-md px-2 py-1 focus:outline-none focus:ring-1 focus:ring-primary focus:border-transparent text-slate-600 bg-transparent dark:text-white text-sm"
+                name="customer"
+                onChange={handleCustomerChange}
+              >
+                <option value="">Select Customer</option>
+                {filteredCustomers?.map((customer) => (
+                  <option key={customer.name} value={customer.name}>
+                    {customer.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            {/* date field */}
+            <div className="">
+              <Input
+                type="date"
+                name="date"
+                className="w-full lg:w-[10rem] shadow-none text-slate-600"
+                onChange={handleInvoiceDateChange}
+              />
+            </div>
+          </div>
         </div>
+
         <div className="w-full border-b-[1px] border-b-slate-200 my-5"></div>
         {formFields.map((form, index) => (
           <div
@@ -250,7 +281,7 @@ export default function CreateInvoice() {
                   name="quantity"
                   type="number"
                   placeholder="quantity"
-                  className="w-full lg:w-[10rem] shadow-none"
+                  className="w-full lg:w-[8rem] shadow-none"
                   onChange={(event) => {
                     handleFormChange(event, index);
                   }}
@@ -262,7 +293,7 @@ export default function CreateInvoice() {
                 <Input
                   name="price"
                   type="number"
-                  className="w-full lg:w-[10rem] shadow-none"
+                  className="w-full lg:w-[8rem] shadow-none"
                   placeholder="price"
                   onChange={(event) => {
                     handleFormChange(event, index);
@@ -278,7 +309,7 @@ export default function CreateInvoice() {
                   type="number"
                   readOnly
                   placeholder="total"
-                  className="w-full lg:w-[7rem] shadow-none focus:outline-none"
+                  className="w-full lg:w-[5rem] shadow-none focus:outline-none"
                   onChange={(event) => {
                     handleFormChange(event, index);
                   }}
@@ -304,6 +335,7 @@ export default function CreateInvoice() {
         ))}
         <button
           onClick={addFields}
+          type="button"
           className="bg-primary dark:bg-slate-200 text-white dark:text-slate-700 px-8 py-2 rounded-lg my-4"
         >
           Add Item
