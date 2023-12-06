@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import {
   Card,
@@ -15,8 +17,59 @@ import {
   BiFile,
 } from "react-icons/bi";
 import { FiXCircle } from "react-icons/fi";
+import { useState, useEffect } from "react";
+
+import { getCustomers } from "@/utils/db/Customer";
+import { getCashInvoices, getCashInvoiceItem } from "@/utils/db/CashInvoice";
 
 const InvoiceCards = () => {
+  const [customers, setCustomers] = useState<number>(0);
+  const [invoices, setInvoices] = useState<number>(0);
+  const [totalAmount, setTotalAmount] = useState<number>(0);
+
+  // get customers by counting its length
+  useEffect(() => {
+    const getCustomersCount = async () => {
+      const customers = await getCustomers();
+      // setCustomers(customers);
+
+      const customersCount = customers?.length;
+
+      setCustomers(customersCount!);
+
+      console.log(customers?.length);
+    };
+    getCustomersCount();
+
+    return () => {};
+  }, []);
+
+  // get invoices by counting its length
+  useEffect(() => {
+    const getInvoicesCount = async () => {
+      const invoices = await getCashInvoices();
+      // setCustomers(customers);
+
+      const invoicesCount = invoices?.length;
+
+      setInvoices(invoicesCount!);
+
+      const invoiceItems = await getCashInvoiceItem();
+
+      // calculate total amount
+      let total = 0;
+      invoiceItems?.map((item) => {
+        console.log(item.total);
+        total += item.total;
+      });
+      console.log(total);
+      setTotalAmount(total);
+    };
+    getInvoicesCount();
+
+    return () => {};
+  }, []);
+
   return (
     <div className="my-10 mx-4">
       <div className="flex flex-wrap items-center gap-x-2 gap-y-4 w-full">
@@ -28,7 +81,7 @@ const InvoiceCards = () => {
               </CardTitle>
               <CardDescription className="">
                 <p className="text-2xl mt-2 text-slate-600 dark:text-slate-200 font-semibold">
-                  45
+                  {customers}
                 </p>
                 {/* <p className="text-green-500 mt-1 font-semibold">+2.5%</p> */}
               </CardDescription>
@@ -46,7 +99,7 @@ const InvoiceCards = () => {
               </CardTitle>
               <CardDescription>
                 <p className="text-2xl text-slate-600 mt-2 dark:text-slate-200 font-semibold">
-                  170
+                  {invoices}
                 </p>
                 {/* <p className="text-green-500 mt-1 font-semibold">+2.5%</p> */}
               </CardDescription>
@@ -64,7 +117,7 @@ const InvoiceCards = () => {
               </CardTitle>
               <CardDescription>
                 <p className="text-2xl mt-2 text-slate-600 dark:text-slate-200 font-semibold">
-                  $4805
+                  ${totalAmount}
                 </p>
                 {/* <p className="text-green-500 mt-1 font-semibold">+2.5%</p> */}
               </CardDescription>
@@ -82,7 +135,7 @@ const InvoiceCards = () => {
               </CardTitle>
               <CardDescription>
                 <p className="text-2xl text-slate-600 mt-2 dark:text-slate-200 font-semibold">
-                  $1205
+                  $00
                 </p>
                 {/* <p className="text-red-500 mt-1 font-semibold">+2.5%</p> */}
               </CardDescription>

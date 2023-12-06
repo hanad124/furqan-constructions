@@ -14,12 +14,26 @@ interface FormData {
 }
 
 // ######################## Cash Invoice Operations ###########################
-
+//  get Cash Invoice
 export const getCashInvoices = async () => {
   try {
     await connectToDB();
     const cashInvoices = await prisma.cashInvoice.findMany();
     return cashInvoices;
+  } catch (err) {
+    console.error(err);
+  } finally {
+    await prisma.$disconnect(); // Disconnect the Prisma client after the operation
+  }
+};
+
+// get Cash Invoice Item
+export const getCashInvoiceItem = async () => {
+  try {
+    await connectToDB();
+    const cashInvoiceItem = await prisma.cashInvoiceItem.findMany();
+
+    return cashInvoiceItem;
   } catch (err) {
     console.error(err);
   } finally {
