@@ -70,10 +70,6 @@ const Invoices = () => {
     return [newRow];
   });
 
-  console.log(rows);
-
-  console.log(invoices);
-
   // console.log(invoices);
   const actionColumn = [
     {

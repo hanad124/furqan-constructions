@@ -33,6 +33,9 @@ export default function CreateInvoice() {
       invoice_date: new Date(),
     },
   ]);
+
+  //
+
   const [itemsData, setItemsData] = useState<Item[]>([]);
   const [customersData, setCustomersData] = useState<Customer[]>([]);
   const [cumulativeTotal, setCumulativeTotal] = useState<number>(0);
@@ -69,15 +72,10 @@ export default function CreateInvoice() {
   );
 
   // handle customer change
-  const handleCustomerChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
+  const handleCustomerChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const customer = event.target.value;
 
-    // Update selected customer
-    setSelectedCustomer(customer);
-
-    // Update customer name for all form fields
+    // Update customer for all form fields
     setFormFields((prevFields) => {
       const updatedFields = prevFields.map((field) => ({
         ...field,
@@ -167,7 +165,7 @@ export default function CreateInvoice() {
         price: 0,
         item: "",
         total: 0,
-        customer: selectedCustomer,
+        customer: "",
         invoice_date: invoiceData,
       },
     ]);
@@ -221,23 +219,20 @@ export default function CreateInvoice() {
                 placeholder="INV-000"
                 value={invoiceNumber}
                 className="text-slate-400 w-full lg:w-[10rem] shadow-none justify-end relative right-0"
-                // onChange={handleInvoiceNumberChane}
+                // onChange={(event) => {
+                //   handleFormChange(event, index);
+                // }}
               />
             </div>
-            {/* item field */}
+            {/* customer field */}
             <div className="">
-              <select
-                className="w-full lg:w-[10rem] shadow-none h-[38px] border rounded-md px-2 py-1 focus:outline-none focus:ring-1 focus:ring-primary focus:border-transparent text-slate-600 bg-transparent dark:text-white text-sm"
+              <Input
+                type="text"
                 name="customer"
+                placeholder="customer"
+                className="w-full lg:w-[10rem] shadow-none text-slate-600"
                 onChange={handleCustomerChange}
-              >
-                <option value="">Select Customer</option>
-                {filteredCustomers?.map((customer) => (
-                  <option key={customer.name} value={customer.name}>
-                    {customer.name}
-                  </option>
-                ))}
-              </select>
+              />
             </div>
             {/* date field */}
             <div className="">
