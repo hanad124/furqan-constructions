@@ -5,12 +5,12 @@ import { connectToDB } from "../database";
 import { revalidatePath } from "next/cache";
 
 interface FormData {
-  quantity: string;
-  price: string;
-  item: string;
-  total: number;
   customer: string;
   invoice_date: Date;
+  item: string;
+  quantity: number;
+  price: number;
+  total: number;
 }
 
 // ######################## Cash Invoice Operations ###########################

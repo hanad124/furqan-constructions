@@ -1,5 +1,5 @@
-import InvoiceCards from "@/components/InvoiceCards";
-import Invoices from "@/components/Invoices";
+import InvoiceCards from "@/components/invoice/cash/InvoiceCards";
+import Invoices from "@/components/invoice/cash/Invoices";
 
 const page = async () => {
   return (

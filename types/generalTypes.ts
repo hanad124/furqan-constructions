@@ -33,3 +33,24 @@ export interface Customer {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface Invoice {
+  id: string;
+  invoice_number: number;
+  customer: string;
+  invoice_date: Date;
+  createdAt: Date;
+  updatedAt: Date;
+  invoiceItem?: InvoiceItem[];
+}
+
+export interface InvoiceItem {
+  id: string;
+  invoice_id: string;
+  item: string;
+  quantity: number;
+  price: number;
+  total: number;
+  createdAt: Date;
+  updatedAt: Date;
+}

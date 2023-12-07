@@ -1,11 +1,17 @@
 "use client";
 
 import Table from "@mui/material/Table";
-import { rows, columns } from "../data/invoices";
+import { columns } from "../../../data/invoices";
 import { DataGrid } from "@mui/x-data-grid";
 import Link from "next/link";
 import { FiEye, FiMoreVertical, FiPlusCircle } from "react-icons/fi";
 import { Button } from "@/components/ui/button";
+
+import { Invoice } from "@/types/generalTypes";
+
+import { useState, useEffect } from "react";
+
+import { getCashInvoiceItem, getCashInvoices } from "@/utils/db/CashInvoice";
 
 import {
   DropdownMenu,
@@ -23,6 +29,52 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 const Invoices = () => {
+  const [invoices, setInvoices] = useState<Invoice[]>([]);
+
+  useEffect(() => {
+    const getInvoices = async () => {
+      const invoices = await getCashInvoices();
+      // setInvoices(invoices);
+
+      // merge invoice items & invoices
+      const invoiceItems = await getCashInvoiceItem();
+
+      const merged = invoices?.map((invoice) => {
+        const invoiceItem = invoiceItems?.filter(
+          (item) => item.invoice_id === invoice.id
+        );
+        return { ...invoice, invoiceItem };
+      });
+
+      setInvoices(merged || []);
+    };
+
+    getInvoices();
+  }, []);
+
+  const rows = invoices.flatMap((invoice) => {
+    const invoiceItems = invoice.invoiceItem || [];
+
+    // Calculate the total of all items
+    const total = invoiceItems.reduce((acc, item) => acc + item.total, 0);
+
+    // Create a new row with the desired properties
+    const newRow = {
+      id: invoice.id,
+      invoice_number: `INV - ${invoice.invoice_number}`,
+      customer: invoice.customer,
+      invoice_date: invoice.invoice_date.toString().slice(4, 16),
+      total: `$ ${total}`,
+    };
+
+    return [newRow];
+  });
+
+  console.log(rows);
+
+  console.log(invoices);
+
+  // console.log(invoices);
   const actionColumn = [
     {
       field: "action",

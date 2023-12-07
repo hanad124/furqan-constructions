@@ -147,17 +147,6 @@ export default function CreateInvoice() {
       );
       setCumulativeTotal(summaryTotal);
 
-      //  validate the form
-      if (formFields[index].item === "") {
-        alert("Please select an item");
-      }
-      if (formFields[index].quantity === 0) {
-        alert("Please enter quantity");
-      }
-      if (formFields[index].price === 0) {
-        alert("Please enter price");
-      }
-
       return updatedFields;
     });
   };
