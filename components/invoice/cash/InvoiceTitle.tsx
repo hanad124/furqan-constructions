@@ -8,7 +8,7 @@ const InvoiceTitle = () => {
   return (
     <div>
       {" "}
-      <div className="flex justify-between flex-wrap mt-10 gap-y-10">
+      <div className="flex justify-between flex-wrap mt-5 gap-y-10">
         <div className="ml-1 flex items-center gap-4">
           <Image
             src={logo}
@@ -29,7 +29,7 @@ const InvoiceTitle = () => {
             sales order{" "}
           </p>
           <p className="text-slate-700 dark:text-slate-200 text-start md:text-end text-sm font-medium">
-            sales@furqan.so | +252 61 448 81 01
+            sales@furqan.so | +252 61 488 00 00
           </p>
         </div>
       </div>
