@@ -41,6 +41,23 @@ export const getCashInvoiceItem = async () => {
   }
 };
 
+// get Cash Invoice by ID
+export const getCashInvoiceById = async (id: string) => {
+  try {
+    await connectToDB();
+    const cashInvoice = await prisma.cashInvoice.findUnique({
+      where: {
+        id: id,
+      },
+    });
+    return cashInvoice;
+  } catch (err) {
+    console.error(err);
+  } finally {
+    await prisma.$disconnect(); // Disconnect the Prisma client after the operation
+  }
+};
+
 // create Cash Invoice
 export const createCashInvoice = async (formData: FormData[]) => {
   try {

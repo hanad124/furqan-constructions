@@ -25,7 +25,7 @@
     --ring: 221.2 83.2% 53.3%;
     --radius: 0.5rem;
   }
- 
+
   .dark {
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
@@ -48,7 +48,6 @@
     --ring: 224.3 76.3% 48%;
   }
 }
-
 
 @layer base {
   * {
@@ -84,4 +83,8 @@
   border-radius: 10px;
   /* -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3); */
   background-color: #e3e3e3;
+}
+
+.header-cell {
+  background-color: #f2f2f2;
 }

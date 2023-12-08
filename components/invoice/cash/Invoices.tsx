@@ -70,48 +70,53 @@ const Invoices = () => {
     return [newRow];
   });
 
-  // console.log(invoices);
   const actionColumn = [
     {
       field: "action",
-      headerName: "ACTIONS",
-      width: 180,
+      headerName: "Action",
+      width: 230,
       renderCell: (params: any) => {
         return (
-          <div className="flex items-center gap-5">
-            <Link href="/customers/edit-customer">
-              <div
-                className="editButton"
-                // onClick={() => editUserBtn(params.row.id)}
-              >
-                <FiEye className="text-lg text-slate-500" />
-              </div>
-            </Link>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
+          <>
+            <div className="cellAction flex gap-3">
+              <Link href={`/dashboard/invoices/cash/preview/${params.row.id}`}>
                 <div
-                  className="cursor-pointer"
-                  //   onClick={() => handleDelete(params.row.id)}
+                  className="editButton"
+                  onClick={() => {
+                    console.log(params.row.id);
+                  }}
+                  // onClick={() => editUserBtn(params.row.id)}
                 >
-                  <FiMoreVertical className="text-lg text-slate-500" />
+                  <FiEye className="text-lg text-slate-500" />{" "}
                 </div>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56">
-                <DropdownMenuGroup>
+              </Link>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <div
+                    className="cursor-pointer"
+                    //   onClick={() => handleDelete(params.row.id)}
+                  >
+                    <FiMoreVertical className="text-lg text-slate-500" />
+                  </div>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56">
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem className="cursor-pointer">
+                      Download
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="cursor-pointer">
+                      Edit
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                  <DropdownMenuSeparator />
                   <DropdownMenuItem className="cursor-pointer">
-                    Download
+                    <span className="text-red-500">Delete</span>
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="cursor-pointer">
-                    Edit
-                  </DropdownMenuItem>
-                </DropdownMenuGroup>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem className="cursor-pointer">
-                  <span className="text-red-500">Delete</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+            {/* <Toaster /> */}
+          </>
         );
       },
     },

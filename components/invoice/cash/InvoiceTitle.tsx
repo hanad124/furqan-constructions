@@ -3,15 +3,6 @@
 import React from "react";
 import logo from "@/public/assets/logo-light.svg";
 import Image from "next/image";
-import { format } from "date-fns";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
 
 const InvoiceTitle = () => {
   return (
@@ -31,10 +22,10 @@ const InvoiceTitle = () => {
           </h1>
         </div>
         <div className="flex flex-col gap-4 justify-end">
-          <p className="text-2xl uppercase  text-start md:text-end font-bold text-slate-700 dark:text-slate-200 ">
+          <p className="text-2xl uppercase  text-start md:text-end  text-slate-700 dark:text-slate-200 font-extrabold">
             invoice
           </p>
-          <p className="text-xl  text-start md:text-end justify-start uppercase font-bold text-slate-700 dark:text-slate-200">
+          <p className="text-xl  text-start md:text-end justify-start uppercase font-extrabold text-slate-700 dark:text-slate-200">
             sales order{" "}
           </p>
           <p className="text-slate-700 dark:text-slate-200 text-start md:text-end text-sm font-medium">
