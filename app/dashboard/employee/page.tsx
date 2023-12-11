@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { BiPlus } from "react-icons/bi";
+import { BiPlus, BiSearch } from "react-icons/bi";
 import { DataGrid } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import { employeeColumns } from "@/data/employeeColumns";
@@ -23,6 +23,8 @@ const page = () => {
   const [data, setData] = useState<readonly Employee[]>([]);
   const [loading, setLoading] = useState(false);
   const [emID, setEmID] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+
   const fetchEmployees = async () => {
     try {
       const employees = await getEmployees();
@@ -75,6 +77,18 @@ const page = () => {
       // Handle any errors that occurred during employee creation
       toast.error("Failed to delete employee. Please try again.");
     }
+  };
+
+  // filter employee
+  const filterredEmployee = data.filter(
+    (employee) =>
+      employee.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      employee.phone?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // search employee
+  const handleSearch = (e: any) => {
+    setSearchTerm(e.target.value);
   };
 
   const actionColumn = [
@@ -139,11 +153,37 @@ const page = () => {
           </Button>
         </Link>
       </div>
-      <div className="datatable mt-10">
+      <div className=" mt-10 border rounded">
+        <div className="flex justify-between items-center p-4 border-b w-full ">
+          <div
+            className="flex items-center gap-2 w-full border border-slate-200 rounded-md p-2 py-3 
+          focus-within:border-blue-500
+          focus-within:border-1 text-slate-600
+          "
+          >
+            <BiSearch className="text-slate-400 text-lg" />
+            <input
+              type="text"
+              placeholder="Search employee"
+              className="flex-1 focus:none text-sm 
+              // remove default input focus
+              outline-none
+              "
+              onChange={handleSearch}
+            />
+          </div>
+        </div>
         <DataGrid
           className="datagrid dark:text-slate-200"
-          rows={data}
+          rows={filterredEmployee}
           columns={employeeColumns.concat(actionColumn)}
+          sx={{
+            border: "none",
+            // borderColor: "red",
+          }}
+          // pageSize={9}
+          // rowsPerPageOptions={[9]}
+          // checkboxSelection
         />
       </div>
     </div>
