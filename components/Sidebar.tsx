@@ -7,7 +7,7 @@ import Image from "next/image";
 import Avator from "./Avator";
 
 import { FiChevronRight, FiChevronDown } from "react-icons/fi";
-import { BiCircle } from "react-icons/bi";
+import { BiRadioCircle, BiRadioCircleMarked } from "react-icons/bi";
 import Link from "next/link";
 import logo from "@/public/assets/logo-light.svg";
 import { menuItems } from "@/data/menuItems";
@@ -178,9 +178,19 @@ const Sidebar = ({ user }: any) => {
                           }`}
                         >
                           <div className="flex items-center">
-                            <BiCircle className="w-3" />
+                            {isSubmenuActive ? (
+                              <BiRadioCircleMarked className="w-4 text-primary" />
+                            ) : (
+                              <BiRadioCircle className="w-3" />
+                            )}
                             <Link href={submenu.url}>
-                              <p className="block py-2 text-sm font-light px-4">
+                              <p
+                                className={`block py-2 text-sm font-light px-4 ${
+                                  isSubmenuActive
+                                    ? "text-primary"
+                                    : "text-slate-600 dark:text-[#949bbd]"
+                                }`}
+                              >
                                 {submenu.text}
                               </p>
                             </Link>
@@ -280,7 +290,7 @@ const Sidebar = ({ user }: any) => {
                               className="pl-2 hover:bg-primary/5 rounded-md "
                             >
                               <div className="flex items-center">
-                                <BiCircle className="w-3" />
+                                <BiRadioCircle className="w-3" />
                                 <Link href={submenu.url}>
                                   <p className="block py-2 text-sm px-4">
                                     {submenu.text}
