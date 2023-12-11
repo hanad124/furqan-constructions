@@ -9,7 +9,10 @@ import { Button } from "@/components/ui/button";
 import InvoiceTitle from "@/components/invoice/cash/InvoiceTitle";
 import SummaryBanner from "@/components/invoice/cash/SummaryBanner";
 
+import { useRouter } from "next/navigation";
+
 import { createCashInvoice, getCashInvoices } from "@/utils/db/CashInvoice";
+import { BiArrowBack } from "react-icons/bi";
 
 interface FormField {
   // invoice_number: number;
@@ -22,6 +25,7 @@ interface FormField {
 }
 
 export default function CreateInvoice() {
+  const router = useRouter();
   const [formFields, setFormFields] = useState<FormField[]>([
     {
       quantity: 0,
@@ -189,6 +193,18 @@ export default function CreateInvoice() {
 
   return (
     <div className="mx-4 md:mx-16">
+      {/* back button with icon */}
+      <div className="flex items-center gap-2 mt-10">
+        <button
+          className="flex items-center gap-2"
+          onClick={() => {
+            router.push("/dashboard/invoices/cash");
+          }}
+        >
+          <BiArrowBack className="text-slate-700 dark:text-slate-200 text-lg" />
+          <span className="font-medium text-slate-700">Back to invoices</span>
+        </button>
+      </div>
       <InvoiceTitle />
 
       <form onSubmit={submit}>

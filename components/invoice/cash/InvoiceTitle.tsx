@@ -8,7 +8,7 @@ const InvoiceTitle = () => {
   return (
     <div>
       {" "}
-      <div className="flex justify-between flex-wrap mt-5 gap-y-10">
+      <div className="flex justify-between flex-wrap mt-0 gap-y-10">
         <div className="ml-1 flex items-center gap-4">
           <Image
             src={logo}

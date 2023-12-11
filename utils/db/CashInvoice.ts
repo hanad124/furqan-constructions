@@ -82,7 +82,9 @@ export const createCashInvoice = async (formData: FormData[]) => {
     // Create and save the new Cash Invoice
     const newCashInvoice = await prisma.cashInvoice.create({
       data: {
-        invoice_number: lastInvoiceNumber + 1,
+        invoice_number: Number(
+          (lastInvoiceNumber + 1).toString().padStart(3, "0")
+        ),
         customer: customerSet.values().next().value,
         invoice_date: invoiceDateSet.values().next().value,
         items: {
