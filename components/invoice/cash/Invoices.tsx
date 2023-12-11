@@ -7,7 +7,10 @@ import Link from "next/link";
 import { FiEye, FiMoreVertical, FiPlusCircle } from "react-icons/fi";
 import { Button } from "@/components/ui/button";
 
+import toast, { Toaster } from "react-hot-toast";
+
 import { Invoice } from "@/types/generalTypes";
+import { deleteCashInvoice } from "@/utils/db/CashInvoice";
 
 import { useState, useEffect } from "react";
 
@@ -30,6 +33,7 @@ import {
 
 const Invoices = () => {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const getInvoices = async () => {
@@ -70,6 +74,37 @@ const Invoices = () => {
     return [newRow];
   });
 
+  // delete invoice
+  const handleDelete = async (id: string) => {
+    console.log(id);
+    // const result = await deleteSupplier(id);
+
+    // if (result?.error) {
+    //   toast.error(result?.error);
+    // } else {
+    setLoading(true);
+    try {
+      toast.promise(
+        deleteCashInvoice(id),
+        {
+          loading: "Deleting invoice...",
+          success: "invoice deleted successfully!",
+          error: "Failed to delete invoice. Please try again.",
+        },
+        {
+          style: {
+            minWidth: "250px",
+          },
+        }
+      );
+      // fetchinvoices();
+      setLoading(false);
+    } catch (error) {
+      toast.error("Failed to delete invoice. Please try again.");
+    }
+    // }
+  };
+
   const actionColumn = [
     {
       field: "action",
@@ -92,10 +127,7 @@ const Invoices = () => {
               </Link>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <div
-                    className="cursor-pointer"
-                    //   onClick={() => handleDelete(params.row.id)}
-                  >
+                  <div className="cursor-pointer">
                     <FiMoreVertical className="text-lg text-slate-500" />
                   </div>
                 </DropdownMenuTrigger>
@@ -109,13 +141,16 @@ const Invoices = () => {
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem className="cursor-pointer">
+                  <DropdownMenuItem
+                    className="cursor-pointer"
+                    onClick={() => handleDelete(params.row.id)}
+                  >
                     <span className="text-red-500">Delete</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
-            {/* <Toaster /> */}
+            <Toaster />
           </>
         );
       },

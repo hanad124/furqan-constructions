@@ -86,6 +86,8 @@ const InvoicePreview = (props: any) => {
           <DataGrid
             className="datagrid dark:text-slate-200  mt-10"
             rows={invoiceItems}
+            rowHeight={35}
+            columnHeaderHeight={40}
             columns={cashInvoiceColumns}
             components={{
               Pagination: NoPagination, // Hide the default pagination component
@@ -95,13 +97,19 @@ const InvoicePreview = (props: any) => {
               "& .MuiDataGrid-columnHeader": {
                 backgroundColor: "#D54F33",
                 color: "white",
-                fontWeight: "bold",
+                height: "15px",
+                fontWeight: "700",
               },
               //   change row hieght
               "& .MuiDataGrid-root .MuiDataGrid-row": {
                 height: "20px" /* Adjust the height as needed */,
               },
             }}
+            hideFooter
+            // disable sorting
+            
+
+
             hideFooterPagination={true}
             disableRowSelectionOnClick
             disableColumnMenu
