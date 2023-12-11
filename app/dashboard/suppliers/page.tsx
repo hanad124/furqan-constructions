@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { BiPlus } from "react-icons/bi";
+import { BiPlus, BiSearch } from "react-icons/bi";
 import { DataGrid } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import { supplierColumns } from "@/data/supplierColumns";
@@ -22,6 +22,8 @@ interface Supplier {
 const page = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [data, setData] = useState<readonly Supplier[]>([]);
+  const [searchTearm, setSearchTerm] = useState<string>("");
+
   const fetchSuppliers = async () => {
     try {
       const suppliers = await getSuppliers();
@@ -80,6 +82,16 @@ const page = () => {
     // }
   };
 
+  // filter suppliers
+  const filteredSuppliers = data.filter((supplier: Supplier) => {
+    return supplier.name.toLowerCase().includes(searchTearm.toLowerCase());
+  });
+
+  // handle search
+  const handleSearch = (e: any) => {
+    setSearchTerm(e.target.value);
+  };
+
   const actionColumn = [
     {
       field: "action",
@@ -136,11 +148,34 @@ const page = () => {
           </Button>
         </Link>
       </div>
-      <div className="datatable mt-10">
+      <div className=" mt-10 border rounded">
+        <div className="flex justify-between items-center p-4 border-b w-full ">
+          <div
+            className="flex items-center gap-2 w-full border border-slate-200 rounded-md p-2 py-3 
+          focus-within:border-blue-500
+          focus-within:border-1 text-slate-600
+          "
+          >
+            <BiSearch className="text-slate-400 text-lg" />
+            <input
+              type="text"
+              placeholder="Search supplier"
+              className="flex-1 focus:none text-sm 
+              // remove default input focus
+              outline-none
+              "
+              onChange={handleSearch}
+            />
+          </div>
+        </div>
         <DataGrid
           className="datagrid dark:text-slate-200"
-          rows={data}
+          rows={filteredSuppliers}
           columns={supplierColumns.concat(actionColumn)}
+          sx={{
+            border: "none",
+            // borderColor: "red",
+          }}
           // pageSize={9}
           // rowsPerPageOptions={[9]}
           // checkboxSelection
