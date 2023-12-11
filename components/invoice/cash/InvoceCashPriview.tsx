@@ -52,6 +52,17 @@ const InvoiceCashPreview = React.forwardRef((props: any, ref: any) => {
   //   calcalute total
   const total = invoiceItems.reduce((acc, item) => acc + item.total, 0);
 
+  //   made the rows data custom and specific columns
+  const rows = invoiceItems.map((item) => {
+    return {
+      id: item.id,
+      item: item.item,
+      quantity: item.quantity,
+      price: `$ ${item.price}`,
+      total: `$ ${item.total}`,
+    };
+  });
+
   const NoPagination = () => null;
 
   return (
@@ -68,16 +79,16 @@ const InvoiceCashPreview = React.forwardRef((props: any, ref: any) => {
               alt="qr code"
               className="w-28"
             />
-            <div className="flex ">
+            <div className="flex gap-2">
               <div className="flex flex-col gap-3 uppercase text-sm font-bold ml-4">
                 <p className="text-start">CUSTOMER: </p>
                 <p className="text-start">INVOICE NUMBER: </p>
                 <p className="text-start">DATE: </p>
               </div>
-              <div className="flex flex-col gap-3 uppercase text-sm font-bold">
-                <p className="text-end">{invoice?.customer}</p>
-                <p className="text-end">INV - {invoice?.invoice_number}</p>
-                <p className="text-end">
+              <div className="flex flex-col gap-3 uppercase text-sm font-medium">
+                <p className="text-start">{invoice?.customer}</p>
+                <p className="text-start">INV - {invoice?.invoice_number}</p>
+                <p className="text-start">
                   {invoice?.invoice_date.toString().slice(4, 16)}
                 </p>
               </div>
@@ -86,7 +97,7 @@ const InvoiceCashPreview = React.forwardRef((props: any, ref: any) => {
           {/* items table */}
           <DataGrid
             className="datagrid dark:text-slate-200  mt-10"
-            rows={invoiceItems}
+            rows={rows}
             rowHeight={35}
             columnHeaderHeight={40}
             columns={cashInvoiceColumns}
