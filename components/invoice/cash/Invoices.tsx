@@ -4,7 +4,7 @@ import Table from "@mui/material/Table";
 import { columns } from "../../../data/invoices";
 import { DataGrid } from "@mui/x-data-grid";
 import Link from "next/link";
-import { FiEye, FiMoreVertical, FiPlusCircle } from "react-icons/fi";
+import { FiEye, FiMoreVertical, FiPlusCircle, FiSearch } from "react-icons/fi";
 import { Button } from "@/components/ui/button";
 
 import toast, { Toaster } from "react-hot-toast";
@@ -34,6 +34,7 @@ import {
 const Invoices = () => {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     const getInvoices = async () => {
@@ -73,6 +74,18 @@ const Invoices = () => {
 
     return [newRow];
   });
+
+  // filtered rows
+  const filteredRows = rows.filter(
+    (row) =>
+      row.customer.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      row.invoice_number.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // handle search
+  const handleSearch = (e: any) => {
+    setSearchTerm(e.target.value);
+  };
 
   // delete invoice
   const handleDelete = async (id: string) => {
@@ -173,10 +186,30 @@ const Invoices = () => {
           </Button>
         </Link>
       </div>
-      <div style={{ height: 400, width: "100%", marginTop: "20px" }}>
+      <div
+        style={{ height: 400, width: "100%" }}
+        className="border rounded mt-7"
+      >
+        <div className="flex justify-between items-center p-4 border-b w-full ">
+          <div
+            className="flex items-center gap-2 w-full border border-slate-200 rounded-md p-2 py-3 
+          focus-within:border-blue-500
+          focus-within:border-1 text-slate-600
+          "
+          >
+            <FiSearch className="text-slate-400 text-lg" />
+            <input
+              type="text"
+              placeholder="Search invoice"
+              className="flex-1 focus:none text-sm 
+              outline-none"
+              onChange={handleSearch}
+            />
+          </div>
+        </div>
         <DataGrid
           className="datagrid"
-          rows={rows}
+          rows={filteredRows}
           columns={columns.concat(actionColumn)}
           initialState={{
             pagination: {
@@ -184,6 +217,10 @@ const Invoices = () => {
             },
           }}
           pageSizeOptions={[5, 10]}
+          sx={{
+            border: "none",
+            // borderColor: "red",
+          }}
           //   checkboxSelection
         />
       </div>
