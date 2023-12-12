@@ -257,7 +257,9 @@ export default function Newtransfer() {
                         >
                           <option value="">Select item 2 transfer</option>
                           {filteredPurchases.map((purchase) => {
+                            console.log(purchase);
                             setPurchID(purchase.id);
+                            console.log("purchID:", purchID);
                             return (
                               <option
                                 key={purchase.id}

@@ -51,7 +51,7 @@ export const createTransfer = async (formData: any) => {
       });
       console.log("updated stock: ", updateStock);
       // update the purchase status
-      const updatedStatus = await updatePurchaseStatus(id, "Transferred");
+      const updatedStatus = await updatePurchaseStatus(id, "transferred");
       console.log("updated status: ", updatedStatus);
     } else {
       // create new stock
@@ -66,7 +66,7 @@ export const createTransfer = async (formData: any) => {
       });
       await updatePurchaseStatus(id, "Transferred");
       console.log("created stock: ", createStock);
-    }
+    }  
 
     // Revalidate the path after creating the transfer
     revalidatePath("/dashboard/transfer");

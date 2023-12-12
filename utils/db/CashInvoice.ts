@@ -98,6 +98,33 @@ export const createCashInvoice = async (formData: FormData[]) => {
       },
     });
 
+    // Subtract quantity and total from the stock
+    await Promise.all(
+      otherFields.map(async (item) => {
+        const existingStock = await prisma.stock.findFirst({
+          where: {
+            item: item.item,
+          },
+        });
+
+        if (existingStock) {
+          const updatedQuantity =
+            existingStock.quantity - Number(item.quantity);
+          const updatedTotal = existingStock.total - Number(item.total);
+
+          // Update the stock record
+          await prisma.stock.update({
+            where: {
+              id: existingStock.id,
+            },
+            data: {
+              quantity: updatedQuantity,
+              total: updatedTotal,
+            },
+          });
+        }
+      })
+    );
     console.log("New Cash Invoice created successfully:", newCashInvoice);
 
     // Revalidate the path after creating the user
