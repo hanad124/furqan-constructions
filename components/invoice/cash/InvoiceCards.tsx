@@ -70,6 +70,17 @@ const InvoiceCards = () => {
     return () => {};
   }, []);
 
+  // format cards numbers like if its 1000 then it will be 1k and if its 1000000 then it will be 1m
+  const formatNumber = (num: number) => {
+    if (num > 999 && num < 1000000) {
+      return (num / 1000).toFixed(1) + "k"; // convert to K for number from > 1000 < 1 million
+    } else if (num > 1000000) {
+      return (num / 1000000).toFixed(1) + "m"; // convert to M for number from > 1 million
+    } else if (num < 900) {
+      return num; // if value < 1000, nothing to do
+    }
+  };
+
   return (
     <div className="my-10 mx-4">
       <div className="flex flex-wrap items-center gap-x-2 gap-y-4 w-full">
@@ -81,7 +92,7 @@ const InvoiceCards = () => {
               </CardTitle>
               <CardDescription className="">
                 <p className="text-2xl mt-2 text-slate-600 dark:text-slate-200 font-semibold">
-                  {customers}
+                  {formatNumber(customers)}
                 </p>
                 {/* <p className="text-green-500 mt-1 font-semibold">+2.5%</p> */}
               </CardDescription>
@@ -99,7 +110,7 @@ const InvoiceCards = () => {
               </CardTitle>
               <CardDescription>
                 <p className="text-2xl text-slate-600 mt-2 dark:text-slate-200 font-semibold">
-                  {invoices}
+                  {formatNumber(invoices)}
                 </p>
                 {/* <p className="text-green-500 mt-1 font-semibold">+2.5%</p> */}
               </CardDescription>
@@ -117,7 +128,7 @@ const InvoiceCards = () => {
               </CardTitle>
               <CardDescription>
                 <p className="text-2xl mt-2 text-slate-600 dark:text-slate-200 font-semibold">
-                  ${totalAmount}
+                  ${formatNumber(totalAmount)}
                 </p>
                 {/* <p className="text-green-500 mt-1 font-semibold">+2.5%</p> */}
               </CardDescription>
@@ -135,7 +146,7 @@ const InvoiceCards = () => {
               </CardTitle>
               <CardDescription>
                 <p className="text-2xl text-slate-600 mt-2 dark:text-slate-200 font-semibold">
-                  $00
+                  ${formatNumber(0)}
                 </p>
                 {/* <p className="text-red-500 mt-1 font-semibold">+2.5%</p> */}
               </CardDescription>
