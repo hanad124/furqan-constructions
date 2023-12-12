@@ -21,6 +21,7 @@ import { useState, useEffect } from "react";
 
 import { getCustomers } from "@/utils/db/Customer";
 import { getCashInvoices, getCashInvoiceItem } from "@/utils/db/CashInvoice";
+import formatNumber from "@/providers/numberFormatProvider";
 
 const InvoiceCards = () => {
   const [customers, setCustomers] = useState<number>(0);
@@ -69,17 +70,6 @@ const InvoiceCards = () => {
 
     return () => {};
   }, []);
-
-  // format cards numbers like if its 1000 then it will be 1k and if its 1000000 then it will be 1m
-  const formatNumber = (num: number) => {
-    if (num > 999 && num < 1000000) {
-      return (num / 1000).toFixed(1) + "k"; // convert to K for number from > 1000 < 1 million
-    } else if (num > 1000000) {
-      return (num / 1000000).toFixed(1) + "m"; // convert to M for number from > 1 million
-    } else if (num < 900) {
-      return num; // if value < 1000, nothing to do
-    }
-  };
 
   return (
     <div className="my-10 mx-4">

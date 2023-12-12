@@ -11,6 +11,7 @@ import toast, { Toaster } from "react-hot-toast";
 
 import { Invoice } from "@/types/generalTypes";
 import { deleteCashInvoice } from "@/utils/db/CashInvoice";
+import formatNumber from "@/providers/numberFormatProvider";
 
 import { useState, useEffect } from "react";
 
@@ -69,7 +70,7 @@ const Invoices = () => {
       invoice_number: `INV - ${invoice.invoice_number}`,
       customer: invoice.customer,
       invoice_date: invoice.invoice_date.toString().slice(4, 16),
-      total: `$ ${total}`,
+      total: `$ ${total.toString().length > 3 ? formatNumber(total) : total}`,
     };
 
     return [newRow];

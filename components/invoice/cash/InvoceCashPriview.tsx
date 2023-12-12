@@ -13,6 +13,7 @@ import { BiPrinter } from "react-icons/bi";
 
 import qrCode from "@/public/assets/furqan-qrcode.svg";
 import InvoiceFooter from "@/components/invoice/cash/InvoiceFooter";
+import formatNumber from "@/providers/numberFormatProvider";
 
 const InvoiceCashPreview = React.forwardRef((props: any, ref: any) => {
   const id = props.id;
@@ -58,8 +59,12 @@ const InvoiceCashPreview = React.forwardRef((props: any, ref: any) => {
       id: item.id,
       item: item.item,
       quantity: item.quantity,
-      price: `$ ${item.price}`,
-      total: `$ ${item.total}`,
+      price: `$ ${
+        item.price.toString().length > 3 ? formatNumber(item.price) : item.price
+      }`,
+      total: `$ ${
+        item.total.toString().length > 3 ? formatNumber(item.total) : item.total
+      }`,
     };
   });
 
