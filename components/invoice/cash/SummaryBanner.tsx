@@ -1,3 +1,5 @@
+import formatNumber from "@/providers/numberFormatProvider";
+
 const SummaryBanner = ({ summaryTotal }: { summaryTotal: number }) => {
   return (
     <div>
@@ -12,7 +14,7 @@ const SummaryBanner = ({ summaryTotal }: { summaryTotal: number }) => {
               <p>Discount : </p>
             </div>
             <div className="flex flex-col gap-2 text-slate-500">
-              <p>${summaryTotal}</p>
+              <p>${formatNumber(summaryTotal)}</p>
               <p>$0.00</p>
             </div>
           </div>
@@ -22,7 +24,7 @@ const SummaryBanner = ({ summaryTotal }: { summaryTotal: number }) => {
               <p>Total : </p>
             </div>
             <div className="flex flex-col gap-2 text-slate-500">
-              <p>${summaryTotal}</p>
+              <p>${formatNumber(summaryTotal)}</p>
             </div>
           </div>
         </div>

@@ -92,7 +92,14 @@ const InvoiceCashPreview = React.forwardRef((props: any, ref: any) => {
               </div>
               <div className="flex flex-col gap-3 uppercase text-sm font-medium">
                 <p className="text-start">{invoice?.customer}</p>
-                <p className="text-start">INV - {invoice?.invoice_number}</p>
+                <p className="text-start">
+                  INV -{" "}
+                  {invoice?.invoice_number.toString().length > 2
+                    ? invoice?.invoice_number
+                    : invoice?.invoice_number.toString().length === 1
+                    ? `00${invoice?.invoice_number}`
+                    : `0${invoice?.invoice_number}`}
+                </p>
                 <p className="text-start">
                   {invoice?.invoice_date.toString().slice(4, 16)}
                 </p>

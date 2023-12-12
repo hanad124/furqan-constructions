@@ -9,6 +9,8 @@ import { getStocks } from "@/utils/db/Stocks";
 import { createTransfer } from "@/utils/db/Transfer";
 
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
+import { BiArrowBack } from "react-icons/bi";
 
 import {
   Form,
@@ -22,7 +24,6 @@ import {
 
 import { Input } from "@/components/ui/input";
 import { useForm, FormProvider } from "react-hook-form";
-import { useRouter, usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 
 import React from "react";
@@ -73,6 +74,8 @@ interface Stock {
 }
 
 export default function Newtransfer() {
+  const router = useRouter();
+
   const [value, setValue] = React.useState("");
   const [value2, setValue2] = React.useState("");
   const [purchases, setPurchases] = useState<Purchase[]>([]);
@@ -144,7 +147,6 @@ export default function Newtransfer() {
   // handle stock change
   const handleStockChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     form.setValue("to", event.target.value);
-    console.log("shop to:", event.target.value);
   };
 
   // handle purchase change
@@ -152,7 +154,6 @@ export default function Newtransfer() {
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
     form.setValue("item", event.target.value);
-    console.log("Item:", event.target.value);
   };
 
   // create a form instance with useForm
@@ -184,7 +185,6 @@ export default function Newtransfer() {
   const onSubmit = async (data: any) => {
     // add purchase id to the data
     data.id = purchID;
-    console.log("dataID:", data.id);
     setLoading(true);
     try {
       toast.promise(
@@ -212,168 +212,205 @@ export default function Newtransfer() {
   return (
     <>
       <div className="mx-4">
-        <div className="mt-20">
+        {/* back button */}
+        <div className="flex items-center gap-2 mt-10">
+          <button
+            className="flex items-center gap-2"
+            onClick={() => {
+              router.push("/dashboard/purchase");
+            }}
+          >
+            <BiArrowBack className="text-slate-700 dark:text-slate-200 " />
+            <span className="font-medium text-slate-700 text-sm">
+              Back to purchases
+            </span>
+          </button>
+        </div>
+
+        {/* title */}
+        <h1 className="mt-10 text-xl text-slate-700 font-black">
+          Create New Transfer
+        </h1>
+
+        <div className="mt-10">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
               <div className="flex flex-wrap gap-x-3 gap-y-5 w-full ">
                 <input type="text" hidden name="id" value={purchID} />
-                {/* stock field */}
-                <FormField
-                  control={form.control}
-                  name="to"
-                  render={({ field }) => (
-                    <FormItem className="w-full md:w-[13rem] ">
-                      <FormLabel> Shop to</FormLabel>
-                      <FormControl>
-                        <select
-                          className="w-full md:w-[13rem] h-[38px] border rounded-md px-2   py-1 focus:outline-none focus:ring-1 focus:ring-primary focus:border-transparent bg-transparent dark:text-white"
-                          {...field}
-                          onChange={handleStockChange}
-                        >
-                          <option value="">Shop to</option>
-                          {filteredStocks?.map((stock) => (
-                            <option key={stock.id} value={stock.stock}>
-                              {stock.stock}
-                            </option>
-                          ))}
-                        </select>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                {/* item to stranfer field */}
-                <FormField
-                  control={form.control}
-                  name="item"
-                  render={({ field }) => (
-                    <FormItem className="w-full md:w-[13rem]  ">
-                      <FormLabel> Item 2 transfer</FormLabel>
-                      <FormControl>
-                        <select
-                          className="w-full md:w-[13rem] h-[38px] border rounded-md px-2   py-1 focus:outline-none focus:ring-1 focus:ring-primary focus:border-transparent bg-transparent dark:text-white"
-                          {...field}
-                          onChange={handlePurchaseChange}
-                        >
-                          <option value="">Select item 2 transfer</option>
-                          {filteredPurchases.map((purchase) => {
-                            console.log(purchase);
-                            setPurchID(purchase.id);
-                            console.log("purchID:", purchID);
-                            return (
-                              <option
-                                key={purchase.id}
-                                value={
-                                  purchase.item + " - " + purchase.quantity
-                                }
-                              >
-                                {purchase.item + " - " + purchase.quantity}
-                              </option>
-                            );
-                          })}
-                        </select>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                <div className="flex gap-5 w-full">
+                  <div className="flex flex-col gap-5 flex-1">
+                    {/* stock field */}
+                    <FormField
+                      control={form.control}
+                      name="to"
+                      render={({ field }) => (
+                        <FormItem className="w-full ">
+                          <FormLabel className="text-sm text-slate-600 ml-2">
+                            {" "}
+                            Shop to
+                          </FormLabel>
+                          <FormControl>
+                            <select
+                              className="w-full h-[38px] border rounded-md px-2   py-1 focus:outline-none focus:ring-1 focus:ring-primary focus:border-transparent bg-transparent dark:text-white"
+                              {...field}
+                              onChange={handleStockChange}
+                            >
+                              <option value="">Shop to</option>
+                              {filteredStocks?.map((stock) => (
+                                <option key={stock.id} value={stock.stock}>
+                                  {stock.stock}
+                                </option>
+                              ))}
+                            </select>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    {/* item to stranfer field */}
+                    <FormField
+                      control={form.control}
+                      name="item"
+                      render={({ field }) => (
+                        <FormItem className="w-full  ">
+                          <FormLabel className="text-sm text-slate-600 ml-2">
+                            {" "}
+                            Item 2 transfer
+                          </FormLabel>
+                          <FormControl>
+                            <select
+                              className="w-full h-[38px] border rounded-md px-2   py-1 focus:outline-none focus:ring-1 focus:ring-primary focus:border-transparent bg-transparent dark:text-white"
+                              {...field}
+                              onChange={handlePurchaseChange}
+                            >
+                              <option value="">Select item 2 transfer</option>
+                              {filteredPurchases.map((purchase) => {
+                                setPurchID(purchase.id);
+                                return (
+                                  <option
+                                    key={purchase.id}
+                                    value={
+                                      purchase.item + " - " + purchase.quantity
+                                    }
+                                  >
+                                    {purchase.item + " - " + purchase.quantity}
+                                  </option>
+                                );
+                              })}
+                            </select>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-                {/* date */}
-                <FormField
-                  control={form.control}
-                  name="date"
-                  render={({ field }) => (
-                    <FormItem className="w-full md:w-[14rem]">
-                      <FormLabel>Date</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="Date"
-                          type="date"
-                          {...field}
-                          value={
-                            field.value instanceof Date
-                              ? field.value.toISOString().split("T")[0]
-                              : field.value
-                          }
-                          onChange={(e) => {
-                            const value = new Date(e.target.value);
-                            field.onChange(value);
-                          }}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                    {/* date */}
+                    <FormField
+                      control={form.control}
+                      name="date"
+                      render={({ field }) => (
+                        <FormItem className="w-full">
+                          <FormLabel className="text-sm text-slate-600 ml-2">
+                            Date
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="Date"
+                              type="date"
+                              {...field}
+                              value={
+                                field.value instanceof Date
+                                  ? field.value.toISOString().split("T")[0]
+                                  : field.value
+                              }
+                              onChange={(e) => {
+                                const value = new Date(e.target.value);
+                                field.onChange(value);
+                              }}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <div className="flex flex-col gap-5 flex-1">
+                    {/* quantity */}
+                    <FormField
+                      control={form.control}
+                      name="quantity"
+                      render={({ field }) => (
+                        <FormItem className="w-full ">
+                          <FormLabel className="text-sm text-slate-600 ml-2">
+                            Quantity
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="Quantity"
+                              {...field}
+                              type="number"
+                              onChange={(e) => {
+                                const value = Number(e.target.value);
+                                field.onChange(value);
+                              }}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    {/* price */}
+                    <FormField
+                      control={form.control}
+                      name="price"
+                      render={({ field }) => (
+                        <FormItem className="w-full ">
+                          <FormLabel className="text-sm text-slate-600 ml-2">
+                            Price
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="Price"
+                              {...field}
+                              type="number"
+                              onChange={(e) => {
+                                const value = Number(e.target.value);
+                                field.onChange(value);
+                              }}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-                {/* quantity */}
-                <FormField
-                  control={form.control}
-                  name="quantity"
-                  render={({ field }) => (
-                    <FormItem className="w-full md:w-[14rem] ">
-                      <FormLabel>Quantity</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="Quantity"
-                          {...field}
-                          type="number"
-                          onChange={(e) => {
-                            const value = Number(e.target.value);
-                            field.onChange(value);
-                          }}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                {/* price */}
-                <FormField
-                  control={form.control}
-                  name="price"
-                  render={({ field }) => (
-                    <FormItem className="w-full md:w-[14rem] ">
-                      <FormLabel>Price</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="Price"
-                          {...field}
-                          type="number"
-                          onChange={(e) => {
-                            const value = Number(e.target.value);
-                            field.onChange(value);
-                          }}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                {/* total */}
-                <FormField
-                  control={form.control}
-                  name="total"
-                  render={({ field }) => (
-                    <FormItem className="w-full md:w-[14rem] ">
-                      <FormLabel>Total</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="Total"
-                          type="number"
-                          readOnly
-                          {...field}
-                          onChange={(e) => {
-                            const value = Number(e.target.value);
-                            field.onChange(value);
-                          }}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                    {/* total */}
+                    <FormField
+                      control={form.control}
+                      name="total"
+                      render={({ field }) => (
+                        <FormItem className="w-full ">
+                          <FormLabel className="text-sm text-slate-600 ml-2">
+                            Total
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="Total"
+                              type="number"
+                              readOnly
+                              {...field}
+                              onChange={(e) => {
+                                const value = Number(e.target.value);
+                                field.onChange(value);
+                              }}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
               </div>
 
               <Button

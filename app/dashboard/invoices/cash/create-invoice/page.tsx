@@ -98,14 +98,24 @@ export default function CreateInvoice() {
         const invoiceNumber =
           invoiceData[invoiceData.length - 1].invoice_number;
 
-        const exectInvNum = `INV-${invoiceNumber + 1}`;
-        setInvoiceNumber(exectInvNum);
+        const execInvNum =
+          invoiceNumber.toString().length > 2
+            ? invoiceNumber
+            : invoiceNumber.toString().length === 1
+            ? `00${invoiceNumber}`
+            : `0${invoiceNumber}`;
+
+        console.log(execInvNum);
+
+        setInvoiceNumber(execInvNum);
       } catch (error) {
         console.error("Error retrieving invoice number:", error);
       }
     };
     getInvoiceNumber();
   }, []);
+
+  console.log(invoiceNumber);
 
   // handle invoice date change
   const handleInvoiceDateChange = (
@@ -233,7 +243,7 @@ export default function CreateInvoice() {
                 name="invoice_number"
                 type="text"
                 placeholder="INV-000"
-                value={invoiceNumber}
+                value={`INV-${invoiceNumber}`}
                 className="text-slate-400 w-full lg:w-[10rem] shadow-none justify-end relative right-0"
                 // onChange={(event) => {
                 //   handleFormChange(event, index);

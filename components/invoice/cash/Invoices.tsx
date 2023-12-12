@@ -67,7 +67,14 @@ const Invoices = () => {
     // Create a new row with the desired properties
     const newRow = {
       id: invoice.id,
-      invoice_number: `INV - ${invoice.invoice_number}`,
+      invoice_number: `INV - ${
+        // make 3 digits if its 1 or 2 digits
+        invoice.invoice_number.toString().length > 2
+          ? invoice.invoice_number
+          : invoice.invoice_number.toString().length === 1
+          ? `00${invoice.invoice_number}`
+          : `0${invoice.invoice_number}`
+      }`,
       customer: invoice.customer,
       invoice_date: invoice.invoice_date.toString().slice(4, 16),
       total: `$ ${total.toString().length > 3 ? formatNumber(total) : total}`,
