@@ -67,7 +67,7 @@ const formSchema = z.object({
   // }),
 });
 
-export default function updatePurchases({ params }: any) {
+export default function UpdatePurchases({ params }: any) {
   const [loading, setLoading] = useState(false);
   const [value, setValue] = useState("");
   const [value2, setValue2] = useState("");

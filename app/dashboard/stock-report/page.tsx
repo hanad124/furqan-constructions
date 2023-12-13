@@ -8,7 +8,7 @@ import Link from "next/link";
 import { BiPrinter } from "react-icons/bi";
 import { Button } from "@/components/ui/button";
 
-const page = () => {
+const StockReportPage = () => {
   const componentRef = useRef(null);
   const handlePrint = useReactToPrint({
     content: () => componentRef?.current,
@@ -27,4 +27,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default StockReportPage;

@@ -19,7 +19,7 @@ interface Employee {
   updatedAt: Date;
 }
 
-const page = () => {
+const EmployeePage = () => {
   const [data, setData] = useState<readonly Employee[]>([]);
   const [loading, setLoading] = useState(false);
   const [emID, setEmID] = useState("");
@@ -190,4 +190,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default EmployeePage;

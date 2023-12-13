@@ -19,7 +19,7 @@ interface Supplier {
   updatedAt: Date;
 }
 
-const page = () => {
+const SuppliersPage = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [data, setData] = useState<readonly Supplier[]>([]);
   const [searchTearm, setSearchTerm] = useState<string>("");
@@ -185,4 +185,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default SuppliersPage;

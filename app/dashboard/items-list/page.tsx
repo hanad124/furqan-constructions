@@ -21,7 +21,7 @@ interface Item {
   updatedAt: Date;
 }
 
-const page = () => {
+const ItemsListPage = () => {
   const [data, setData] = useState<readonly Item[]>([]);
   const [loading, setLoading] = useState(false);
   const fetchItems = async () => {
@@ -148,4 +148,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default ItemsListPage;

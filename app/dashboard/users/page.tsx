@@ -21,7 +21,7 @@ interface User {
   date?: string;
 }
 
-const page = () => {
+const UsersPage = () => {
   const [data, setData] = useState<readonly User[]>([]);
   const fetchUsers = async () => {
     try {
@@ -109,4 +109,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default UsersPage;

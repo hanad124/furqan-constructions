@@ -19,7 +19,7 @@ interface Customer {
   updatedAt: Date;
 }
 
-const page = () => {
+const CustomerPage = () => {
   const [data, setData] = useState<readonly Customer[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -181,4 +181,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default CustomerPage;

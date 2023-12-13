@@ -26,7 +26,7 @@ interface Purchase {
   date?: string;
 }
 
-const page = () => {
+const PurchasePage = () => {
   const [data, setData] = useState<readonly Purchase[]>([]);
   const [salesStatus, setSalesStatus] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -192,4 +192,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default PurchasePage;
