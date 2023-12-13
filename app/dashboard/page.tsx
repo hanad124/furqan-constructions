@@ -3,8 +3,8 @@ import Sidebar from "@/components/Sidebar";
 import Navbar from "@/components/Navbar";
 import Dashboard from "@/components/Dashboard";
 
-const App = () => {
+const AppComponent = () => {
   return <Dashboard />;
 };
 
-export default App;
+export default AppComponent;
