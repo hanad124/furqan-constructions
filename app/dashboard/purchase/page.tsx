@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { BiPlus } from "react-icons/bi";
+import { BiPlusCircle } from "react-icons/bi";
 import { DataGrid } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 
@@ -175,9 +175,9 @@ const page = () => {
       <div className="flex justify-between items-center">
         <h1 className="text-xl text-slate-600 font-bold">Purchases</h1>
         <Link href="/dashboard/newPurchase">
-          <Button className="text-white">
-            <BiPlus className="text-lg mr-2" />
-            <span className="">Add new Purchase</span>
+          <Button className="text-white py-5">
+            <BiPlusCircle className=" mr-2" />
+            <span className="">new Purchase</span>
           </Button>
         </Link>
       </div>

@@ -423,7 +423,7 @@ export default function Newtransfer() {
                  }`}
               >
                 {/* {loading && <BiLoaderAlt className="animate-spin w-4 h-4" />} */}
-                <span>Submit</span>
+                <span>Create transfer</span>
               </Button>
             </form>
           </Form>
