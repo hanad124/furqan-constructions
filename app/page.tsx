@@ -2,7 +2,7 @@
 import { useRouter } from "next/navigation";
 import { useLayoutEffect } from "react";
 
-const page = () => {
+const Page = () => {
   const Router = useRouter();
 
   // redirect to the dashboard
@@ -12,4 +12,4 @@ const page = () => {
   return <div></div>;
 };
 
-export default page;
+export default Page;
