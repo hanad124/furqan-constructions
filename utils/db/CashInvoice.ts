@@ -160,6 +160,7 @@ export const updateCashInvoice = async (formData: FormData[], id: string) => {
       data: {
         customer: customerSet.values().next().value,
         invoice_date: invoiceDateSet.values().next().value,
+        
         items: {
           create: otherFields.map((item) => ({
             item: item.item || "", // Provide a default value for item if undefined

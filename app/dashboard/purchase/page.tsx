@@ -62,7 +62,8 @@ const Page = () => {
   const filteredData = data.filter((purchase) => {
     return (
       purchase.item.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      purchase.supplier.toLowerCase().includes(searchTerm.toLowerCase())
+      purchase.supplier.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      purchase.status.toLowerCase().includes(searchTerm.toLowerCase())
     );
   });
 

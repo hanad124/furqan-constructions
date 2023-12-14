@@ -55,10 +55,12 @@ const InvoiceCashPreview = React.forwardRef((props: any, ref: any) => {
   //   calcalute total
   const total = invoiceItems.reduce((acc, item) => acc + item.total, 0);
 
+  // add id to invoice items to count the rows
+
   //   made the rows data custom and specific columns
   const rows = invoiceItems.map((item) => {
     return {
-      id: item.id,
+      id: invoiceItems.indexOf(item) + 1,
       item: item.item,
       quantity: item.quantity,
       price: `$ ${
