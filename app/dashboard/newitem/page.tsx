@@ -50,13 +50,16 @@ export default function NewItem() {
 
   // handle form submission
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    const result = await createItem(values);
-    if (result?.error) {
-      toast.error(result?.error);
-    } else {
-      try {
-        setLoading(true);
-        toast.promise(
+    // const result = await createItem(values);
+    // if (result?.error) {
+    //   toast.error(result?.error);
+    // } else {
+
+    // set loading to true when form is submitting and set loading to false when promise is resolved
+    setLoading(true);
+    try {
+      toast
+        .promise(
           createItem(values),
           {
             loading: "Creating item...",
@@ -68,13 +71,13 @@ export default function NewItem() {
               minWidth: "250px",
             },
           }
-        );
-        form.reset();
-      } catch (error) {
-        toast.error("Failed to create item. Please try again.");
-      } finally {
-        setLoading(false);
-      }
+        )
+        .then(() => {
+          setLoading(false); // Set loading to false when the promise is resolved or ended
+        });
+      form.reset();
+    } catch (error) {
+      toast.error("Failed to create item. Please try again.");
     }
   };
 

@@ -9,11 +9,11 @@ const InvoiceTitle = () => {
     <div>
       {" "}
       <div className="flex justify-between flex-wrap mt-0 gap-y-10">
-        <div className="ml-1 flex items-center gap-4">
+        <div className="ml-1 flex flex-col items-center gap-1">
           <Image
             src={logo}
             alt="logo"
-            className="w-7 md:w-10 h-7 md:h-10"
+            className="w-14 md:w-24 h-14 md:h-24"
             width={100}
             height={100}
           />
@@ -21,15 +21,18 @@ const InvoiceTitle = () => {
             Furqan
           </h1>
         </div>
-        <div className="flex flex-col gap-4 justify-end">
-          <p className="text-2xl uppercase  text-start md:text-end  text-slate-700 dark:text-slate-200 font-extrabold">
+        <div className="flex flex-col gap-2 justify-start mx-4 ">
+          <p className="text-2xl uppercase  text-start   text-slate-700 dark:text-slate-200 font-extrabold">
             invoice
           </p>
-          <p className="text-xl  text-start md:text-end justify-start uppercase font-extrabold text-slate-700 dark:text-slate-200">
+          <p className="text-xl  text-start justify-start uppercase font-extrabold text-slate-700 dark:text-slate-200">
             sales order{" "}
           </p>
-          <p className="text-slate-700 dark:text-slate-200 text-start md:text-end text-sm font-medium">
+          <p className="text-slate-700 dark:text-slate-200 text-start text-sm font-medium">
             sales@furqan.so | +252 61 488 00 00
+          </p>
+          <p className="text-slate-700 dark:text-slate-200 text-start text-sm font-medium">
+            Bakaaro, 21ka NOV, DAARTA STN
           </p>
         </div>
       </div>

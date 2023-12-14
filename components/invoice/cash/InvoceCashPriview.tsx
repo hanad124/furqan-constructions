@@ -9,7 +9,7 @@ import Image from "next/image";
 
 import { cashInvoiceColumns } from "@/data/cashInvoiceColumns";
 import { DataGrid } from "@mui/x-data-grid";
-import { BiPrinter } from "react-icons/bi";
+import { BiPrinter, BiLoaderAlt } from "react-icons/bi";
 
 import qrCode from "@/public/assets/furqan-qrcode.svg";
 import InvoiceFooter from "@/components/invoice/cash/InvoiceFooter";
@@ -28,6 +28,7 @@ const InvoiceCashPreview = React.forwardRef((props: any, ref: any) => {
     updatedAt: new Date(),
   });
   const [invoiceItems, setInvoiceItems] = useState<InvoiceItem[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const getInvoices = async () => {
@@ -39,16 +40,17 @@ const InvoiceCashPreview = React.forwardRef((props: any, ref: any) => {
         (item) => item.invoice_id === id
       );
 
-      console.log(singleInvoice.customer);
-
       setInvoice(singleInvoice);
       setInvoiceItems(invoiceItem!);
     };
 
     getInvoices();
-  }, []);
 
-  console.log(invoiceItems);
+    // set loading to false after data is fetched
+    if (invoice && invoiceItems) {
+      setLoading(false);
+    }
+  }, []);
 
   //   calcalute total
   const total = invoiceItems.reduce((acc, item) => acc + item.total, 0);
@@ -69,6 +71,16 @@ const InvoiceCashPreview = React.forwardRef((props: any, ref: any) => {
   });
 
   const NoPagination = () => null;
+
+  //  if loading show loader
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen w-full">
+        <BiLoaderAlt className="animate-spin text-4xl" />
+      </div>
+    );
+  }
 
   return (
     <>
@@ -127,6 +139,13 @@ const InvoiceCashPreview = React.forwardRef((props: any, ref: any) => {
               //   change row hieght
               "& .MuiDataGrid-root .MuiDataGrid-row": {
                 height: "20px" /* Adjust the height as needed */,
+                fontSize: "35px",
+
+                // changt font size
+                "& .MuiDataGrid-cell": {
+                  fontSize: "145px",
+                  fontWeight: "700",
+                },
               },
             }}
             hideFooter
@@ -144,21 +163,21 @@ const InvoiceCashPreview = React.forwardRef((props: any, ref: any) => {
         border-[1px] w-56 mx-w-76 rounded-10 border-b-slate-200 p-5 rounded-lg bg-slate-200/10 "
             >
               <div className="flex justify-between">
-                <div className="flex flex-col gap-2 text-slate-600">
+                <div className="flex flex-col gap-2 text-slate-800 font-medium">
                   <p>Subtotal : </p>
                   <p>Discount : </p>
                 </div>
-                <div className="flex flex-col gap-2 text-slate-600">
+                <div className="flex flex-col gap-2 text-slate-800 font-medium">
                   <p>${total}</p>
                   <p>$0.00</p>
                 </div>
               </div>
               <div className="border-b-[1px] border-b-slate-200 w-full my-4"></div>
               <div className="flex justify-between">
-                <div className="flex flex-col gap-2 text-slate-600">
+                <div className="flex flex-col gap-2 text-slate-800 font-medium">
                   <p>Total : </p>
                 </div>
-                <div className="flex flex-col gap-2 text-slate-600">
+                <div className="flex flex-col gap-2 text-slate-800 font-medium">
                   <p>${total}</p>
                 </div>
               </div>
@@ -167,7 +186,7 @@ const InvoiceCashPreview = React.forwardRef((props: any, ref: any) => {
         </div>
 
         {/* invoice footer */}
-        <InvoiceFooter />
+        {/* <InvoiceFooter /> */}
       </div>
     </>
   );

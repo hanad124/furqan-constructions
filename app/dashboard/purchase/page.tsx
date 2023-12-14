@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { BiPlusCircle } from "react-icons/bi";
+import { BiPlusCircle, BiSearch } from "react-icons/bi";
 import { DataGrid } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 
@@ -30,6 +30,7 @@ const Page = () => {
   const [data, setData] = useState<readonly Purchase[]>([]);
   const [salesStatus, setSalesStatus] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const fetchPurchases = async () => {
     try {
@@ -56,6 +57,19 @@ const Page = () => {
     // cleanup function
     return () => {};
   }, []);
+
+  // filtered data
+  const filteredData = data.filter((purchase) => {
+    return (
+      purchase.item.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      purchase.supplier.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  });
+
+  // handle search
+  const handleSearch = (e: any) => {
+    setSearchTerm(e.target.value);
+  };
 
   // handle form submit
   const handleDelete = async (id: string) => {
@@ -181,11 +195,38 @@ const Page = () => {
           </Button>
         </Link>
       </div>
-      <div className="datatable mt-10">
+      <div className="border rounded mt-7">
+        <div className="flex justify-between items-center p-4 border-b w-full ">
+          <div
+            className="flex items-center gap-2 w-full border border-slate-200 rounded-md p-2 py-3 
+          focus-within:border-blue-500
+          focus-within:border-1 text-slate-600
+          "
+          >
+            <BiSearch className="text-slate-400 text-lg" />
+            <input
+              type="text"
+              placeholder="Search purchase"
+              className="flex-1 focus:none text-sm 
+              outline-none"
+              onChange={handleSearch}
+            />
+          </div>
+        </div>
         <DataGrid
           className="datagrid dark:text-slate-200"
-          rows={data}
+          rows={filteredData}
           columns={columns.concat(actionColumn)}
+          initialState={{
+            pagination: {
+              paginationModel: { page: 0, pageSize: 5 },
+            },
+          }}
+          pageSizeOptions={[5, 10]}
+          sx={{
+            border: "none",
+            // borderColor: "red",
+          }}
         />
       </div>
     </div>

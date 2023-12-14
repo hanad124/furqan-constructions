@@ -9,22 +9,22 @@ const SummaryBanner = ({ summaryTotal }: { summaryTotal: number }) => {
         border-[1px] w-56 mx-w-76 rounded-10 border-b-slate-200 p-5 rounded-lg bg-slate-200/10 "
         >
           <div className="flex justify-between">
-            <div className="flex flex-col gap-2 text-slate-500">
+            <div className="flex flex-col gap-2 text-slate-700">
               <p>Subtotal : </p>
               <p>Discount : </p>
             </div>
-            <div className="flex flex-col gap-2 text-slate-500">
-              <p>${formatNumber(summaryTotal)}</p>
+            <div className="flex flex-col gap-2 text-slate-700">
+              <p>${summaryTotal}</p>
               <p>$0.00</p>
             </div>
           </div>
           <div className="border-b-[1px] border-b-slate-200 w-full my-4"></div>
           <div className="flex justify-between">
-            <div className="flex flex-col gap-2 text-slate-500">
+            <div className="flex flex-col gap-2 text-slate-700">
               <p>Total : </p>
             </div>
-            <div className="flex flex-col gap-2 text-slate-500">
-              <p>${formatNumber(summaryTotal)}</p>
+            <div className="flex flex-col gap-2 text-slate-700">
+              <p>${summaryTotal}</p>
             </div>
           </div>
         </div>
