@@ -98,18 +98,15 @@ const Invoices = () => {
   // delete invoice
   const handleDelete = async (id: string) => {
     console.log(id);
-    // const result = await deleteSupplier(id);
 
-    // if (result?.error) {
-    //   toast.error(result?.error);
-    // } else {
     setLoading(true);
+
     try {
-      toast.promise(
+      await toast.promise(
         deleteCashInvoice(id),
         {
           loading: "Deleting invoice...",
-          success: "invoice deleted successfully!",
+          success: "Invoice deleted successfully!",
           error: "Failed to delete invoice. Please try again.",
         },
         {
@@ -118,12 +115,18 @@ const Invoices = () => {
           },
         }
       );
+
+      // Fetch invoices if needed
       // fetchinvoices();
-      setLoading(false);
+
+      // Update the state when the promise is resolved
+      const newInvoices = invoices.filter((invoice) => invoice.id !== id);
+      setInvoices(newInvoices);
     } catch (error) {
       toast.error("Failed to delete invoice. Please try again.");
+    } finally {
+      setLoading(false);
     }
-    // }
   };
 
   const actionColumn = [
@@ -171,68 +174,70 @@ const Invoices = () => {
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
-            <Toaster />
           </>
         );
       },
     },
   ];
   return (
-    <div className="my-10 mx-4">
-      {/* create invoice button with icon */}
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-semibold text-slate-900">Invoices</h1>
-        <Link href="/dashboard/invoices/cash/create-invoice">
-          <Button
-            className="flex items-center gap-2 p-6"
-            variant="default"
-            color="primary"
-            size={"lg"}
-          >
-            <FiPlusCircle className="text-lg" />
-            <span>Create Invoice</span>
-          </Button>
-        </Link>
-      </div>
-      <div
-        style={{ height: 400, width: "100%" }}
-        className="border rounded mt-7"
-      >
-        <div className="flex justify-between items-center p-4 border-b w-full ">
-          <div
-            className="flex items-center gap-2 w-full border border-slate-200 rounded-md p-2 py-3 
+    <>
+      <div className="my-10 mx-4">
+        {/* create invoice button with icon */}
+        <div className="flex justify-between items-center">
+          <h1 className="text-2xl font-semibold text-slate-900">Invoices</h1>
+          <Link href="/dashboard/invoices/cash/create-invoice">
+            <Button
+              className="flex items-center gap-2 p-6"
+              variant="default"
+              color="primary"
+              size={"lg"}
+            >
+              <FiPlusCircle className="text-lg" />
+              <span>Create Invoice</span>
+            </Button>
+          </Link>
+        </div>
+        <div
+          style={{ height: 400, width: "100%" }}
+          className="border rounded mt-7"
+        >
+          <div className="flex justify-between items-center p-4 border-b w-full ">
+            <div
+              className="flex items-center gap-2 w-full border border-slate-200 rounded-md p-2 py-3 
           focus-within:border-blue-500
           focus-within:border-1 text-slate-600
           "
-          >
-            <FiSearch className="text-slate-400 text-lg" />
-            <input
-              type="text"
-              placeholder="Search invoice"
-              className="flex-1 focus:none text-sm 
+            >
+              <FiSearch className="text-slate-400 text-lg" />
+              <input
+                type="text"
+                placeholder="Search invoice"
+                className="flex-1 focus:none text-sm 
               outline-none"
-              onChange={handleSearch}
-            />
+                onChange={handleSearch}
+              />
+            </div>
           </div>
+          <DataGrid
+            className="datagrid"
+            rows={filteredRows}
+            columns={columns.concat(actionColumn)}
+            initialState={{
+              pagination: {
+                paginationModel: { page: 0, pageSize: 5 },
+              },
+            }}
+            pageSizeOptions={[5, 10]}
+            sx={{
+              border: "none",
+              // borderColor: "red",
+            }}
+            //   checkboxSelection
+          />
         </div>
-        <DataGrid
-          className="datagrid"
-          rows={filteredRows}
-          columns={columns.concat(actionColumn)}
-          initialState={{
-            pagination: {
-              paginationModel: { page: 0, pageSize: 5 },
-            },
-          }}
-          pageSizeOptions={[5, 10]}
-          sx={{
-            border: "none",
-            // borderColor: "red",
-          }}
-          //   checkboxSelection
-        />
       </div>
-    </div>
+      <Toaster />
+    </>
   );
 };
 

@@ -99,11 +99,7 @@ export const createCashInvoice = async (formData: FormData[]) => {
             return accumulator;
           }, 0);
 
-          console.log("Total quantity:", totalQuantity);
-
           accumulatedQuantities.set(item.item, totalQuantity);
-
-          console.log("Accumulated quantities:", accumulatedQuantities);
         } else {
           // If the item is not in the stock, return an error
           throw new Error(`Item not found in stock: ${item.item}`);
@@ -235,34 +231,70 @@ export const updateCashInvoice = async (formData: FormData[], id: string) => {
   }
 };
 
-// delete cash invoice and its items
-export const deleteCashInvoice = async (id: string) => {
-  console.log("id", id);
+// Delete Cash Invoice
+export const deleteCashInvoice = async (invoiceId: string) => {
   try {
-    await connectToDB();
+    await prisma.$connect();
 
-    // delete cash invoice items
-    const deletedCashInvoiceItem = await prisma.cashInvoiceItem.delete({
+    // Find the Cash Invoice by its unique identifier (id)
+    const cashInvoiceToDelete = await prisma.cashInvoice.findUnique({
       where: {
-        id: id,
+        id: invoiceId,
+      },
+      include: {
+        items: true, // Include associated items
       },
     });
 
-    console.log(
-      "Cash Invoice Item deleted successfully:",
-      deletedCashInvoiceItem
-    );
+    if (!cashInvoiceToDelete) {
+      throw new Error(`Cash Invoice not found with id: ${invoiceId}`);
+    }
+
+    // Delete associated Cash Invoice Items first
+    await prisma.cashInvoiceItem.deleteMany({
+      where: {
+        invoice_id: invoiceId,
+      },
+    });
 
     // Delete the Cash Invoice
-    const deletedCashInvoice = await prisma.cashInvoice.delete({
+    await prisma.cashInvoice.delete({
       where: {
-        id: id,
+        id: invoiceId,
       },
     });
 
-    console.log("Cash Invoice deleted successfully:", deletedCashInvoice);
+    // Update stock quantities based on the deleted invoice
+    await Promise.all(
+      cashInvoiceToDelete.items.map(async (item) => {
+        const existingStock = await prisma.stock.findFirst({
+          where: {
+            item: item.item,
+          },
+        });
 
-    // Revalidate the path after creating the user
+        if (existingStock) {
+          const updatedQuantity = existingStock.quantity + item.quantity;
+          const updatedTotal =
+            existingStock.total + item.quantity * existingStock.price;
+
+          // Update the stock record
+          await prisma.stock.update({
+            where: {
+              id: existingStock.id,
+            },
+            data: {
+              quantity: updatedQuantity,
+              total: updatedTotal,
+            },
+          });
+        }
+      })
+    );
+
+    console.log("Cash Invoice deleted successfully:", invoiceId);
+
+    // Revalidate the path after deleting the invoice
     revalidatePath("/dashboard/cash-invoice-list");
   } catch (err) {
     console.error("Error deleting Cash Invoice:", err);
