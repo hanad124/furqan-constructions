@@ -16,6 +16,7 @@ import formatNumber from "@/providers/numberFormatProvider";
 import { useState, useEffect } from "react";
 
 import { getCashInvoiceItem, getCashInvoices } from "@/utils/db/CashInvoice";
+import InvoiceCashReport from "@/components/report/invoice/InvoiceCashReport";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -33,6 +34,15 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 const Invoices = () => {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
@@ -81,7 +91,7 @@ const Invoices = () => {
       }`,
       customer: invoice.customer,
       invoice_date: invoice.invoice_date.toString().slice(4, 16),
-      total: `$ ${total.toString().length > 3 ? formatNumber(total) : total}`,
+      total: `$ ${total.toString().length > 3 ? total : total}`,
     };
 
     return [newRow];
@@ -215,44 +225,69 @@ const Invoices = () => {
           style={{ height: 400, width: "100%" }}
           className="border rounded mt-7"
         >
-          <div className="flex justify-between items-center p-4 border-b w-full ">
-            <div className="flex gap-5 w-full">
-              {/* filter invoices  by date*/}
-              <div className="flex items-center gap-2">
-                <DatePicker
-                  selected={startDate}
-                  onChange={(date: any) => setStartDate(date)}
-                  selectsStart
-                  startDate={startDate}
-                  endDate={endDate}
-                  placeholderText="Start Date"
-                  className="border border-slate-200 rounded-md p-2"
-                />
-                <DatePicker
-                  selected={endDate}
-                  onChange={(date: any) => setEndDate(date)}
-                  selectsEnd
-                  startDate={startDate}
-                  endDate={endDate}
-                  placeholderText="End Date"
-                  className="border border-slate-200 rounded-md p-2"
-                />
+          <div className="flex justify-between items-center gap-10 p-4 border-b w-full ">
+            <div className="flex flex-wrap items-center gap-5 w-full md:flex-nowrap">
+              {/* Date pickers */}
+              <div className="flex flex-col md:flex-row gap-2">
+                <div className="mb-2 md:mb-0">
+                  <label className="text-slate-600 block mb-1 text-sm ml-1">
+                    Start Date
+                  </label>
+                  <DatePicker
+                    selected={startDate}
+                    onChange={(date: any) => setStartDate(date)}
+                    selectsStart
+                    startDate={startDate}
+                    endDate={endDate}
+                    placeholderText="Start Date"
+                    className="border border-slate-200 rounded-md p-2 text-slate-600"
+                  />
+                </div>
+                <div>
+                  <label className="text-slate-600 block mb-1 text-sm ml-1">
+                    End Date
+                  </label>
+                  <DatePicker
+                    selected={endDate}
+                    onChange={(date: any) => setEndDate(date)}
+                    selectsEnd
+                    startDate={startDate}
+                    endDate={endDate}
+                    placeholderText="End Date"
+                    className="border border-slate-200 rounded-md p-2 text-slate-600"
+                  />
+                </div>
               </div>
-              <div
-                className="flex flex-1 items-center gap-2 w-full border border-slate-200 rounded-md p-2 py-3 
-          focus-within:border-blue-500
-          focus-within:border-1 text-slate-600
-          "
-              >
-                <FiSearch className="text-slate-400 text-lg" />
-                <input
-                  type="text"
-                  placeholder="Search invoice"
-                  className="flex-1 focus:none text-sm 
-              outline-none"
-                  onChange={handleSearch}
-                />
+
+              {/* Search input */}
+              <div className="flex-shrink-0 mt-auto w-full md:w-auto flex-1">
+                <div className="flex items-center gap-2 w-full border border-slate-200 rounded-md p-2 py-3 focus-within:border-blue-500 focus-within:border-1 text-slate-600">
+                  <FiSearch className="text-slate-400 text-lg" />
+                  <input
+                    type="text"
+                    placeholder="Search invoice"
+                    className="flex-1 focus:none text-sm outline-none w-full"
+                    onChange={handleSearch}
+                  />
+                </div>
               </div>
+            </div>
+            <div className="cursor-pointer -mb-5">
+              <Dialog>
+                <DialogTrigger asChild>
+                  <button className="btn btn-sm btn-primary">
+                    <FiMoreVertical className="text-lg text-slate-500" />
+                  </button>
+                </DialogTrigger>
+                <DialogContent style={{ width: "" }} className="min-w-fit">
+                  <DialogHeader>
+                    <DialogTitle>Dialog title</DialogTitle>
+                    <DialogDescription>
+                      <InvoiceCashReport filteredRow={filteredRows} />
+                    </DialogDescription>
+                  </DialogHeader>
+                </DialogContent>
+              </Dialog>
             </div>
           </div>
           <DataGrid

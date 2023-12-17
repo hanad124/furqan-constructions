@@ -9,4 +9,15 @@ const formatNumber = (num: number) => {
   }
 };
 
+// deformate the number to its original form
+export const deformatNumber = (num: string) => {
+  if (num.includes("k")) {
+    return parseFloat(num.replace("k", "")) * 1000;
+  } else if (num.includes("m")) {
+    return parseFloat(num.replace("m", "")) * 1000000;
+  } else {
+    return parseFloat(num);
+  }
+};
+
 export default formatNumber;
