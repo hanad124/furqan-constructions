@@ -16,6 +16,8 @@ import formatNumber from "@/providers/numberFormatProvider";
 import { useState, useEffect } from "react";
 
 import { getCashInvoiceItem, getCashInvoices } from "@/utils/db/CashInvoice";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 import {
   DropdownMenu,
@@ -36,6 +38,8 @@ const Invoices = () => {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
+  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
 
   useEffect(() => {
     const getInvoices = async () => {
@@ -84,11 +88,19 @@ const Invoices = () => {
   });
 
   // filtered rows
-  const filteredRows = rows.filter(
-    (row) =>
+  const filteredRows = rows.filter((row) => {
+    const isSearchMatch =
       row.customer.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      row.invoice_number.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+      row.invoice_number.toLowerCase().includes(searchTerm.toLowerCase());
+
+    const invoiceDate = new Date(row.invoice_date);
+
+    const isDateMatch =
+      (!startDate || invoiceDate >= startDate) &&
+      (!endDate || invoiceDate <= (endDate || new Date()));
+
+    return isSearchMatch && isDateMatch;
+  });
 
   // handle search
   const handleSearch = (e: any) => {
@@ -141,9 +153,7 @@ const Invoices = () => {
               <Link href={`/dashboard/invoices/cash/preview/${params.row.id}`}>
                 <div
                   className="editButton"
-                  onClick={() => {
-                    console.log(params.row.id);
-                  }}
+                  onClick={() => {}}
                   // onClick={() => editUserBtn(params.row.id)}
                 >
                   <FiEye className="text-lg text-slate-500" />{" "}
@@ -160,9 +170,13 @@ const Invoices = () => {
                     <DropdownMenuItem className="cursor-pointer">
                       Download
                     </DropdownMenuItem>
-                    <DropdownMenuItem className="cursor-pointer">
-                      Edit
-                    </DropdownMenuItem>
+                    <Link
+                      href={`/dashboard/invoices/cash/update/${params.row.id}`}
+                    >
+                      <DropdownMenuItem className="cursor-pointer">
+                        <span>Edit</span>
+                      </DropdownMenuItem>
+                    </Link>
                   </DropdownMenuGroup>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
@@ -202,20 +216,43 @@ const Invoices = () => {
           className="border rounded mt-7"
         >
           <div className="flex justify-between items-center p-4 border-b w-full ">
-            <div
-              className="flex items-center gap-2 w-full border border-slate-200 rounded-md p-2 py-3 
+            <div className="flex gap-5 w-full">
+              {/* filter invoices  by date*/}
+              <div className="flex items-center gap-2">
+                <DatePicker
+                  selected={startDate}
+                  onChange={(date: any) => setStartDate(date)}
+                  selectsStart
+                  startDate={startDate}
+                  endDate={endDate}
+                  placeholderText="Start Date"
+                  className="border border-slate-200 rounded-md p-2"
+                />
+                <DatePicker
+                  selected={endDate}
+                  onChange={(date: any) => setEndDate(date)}
+                  selectsEnd
+                  startDate={startDate}
+                  endDate={endDate}
+                  placeholderText="End Date"
+                  className="border border-slate-200 rounded-md p-2"
+                />
+              </div>
+              <div
+                className="flex flex-1 items-center gap-2 w-full border border-slate-200 rounded-md p-2 py-3 
           focus-within:border-blue-500
           focus-within:border-1 text-slate-600
           "
-            >
-              <FiSearch className="text-slate-400 text-lg" />
-              <input
-                type="text"
-                placeholder="Search invoice"
-                className="flex-1 focus:none text-sm 
+              >
+                <FiSearch className="text-slate-400 text-lg" />
+                <input
+                  type="text"
+                  placeholder="Search invoice"
+                  className="flex-1 focus:none text-sm 
               outline-none"
-                onChange={handleSearch}
-              />
+                  onChange={handleSearch}
+                />
+              </div>
             </div>
           </div>
           <DataGrid

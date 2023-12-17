@@ -24,7 +24,7 @@ interface FormField {
   total: number;
 }
 
-export default function CreateInvoice() {
+export default function UpdateInvoice() {
   const router = useRouter();
   const [formFields, setFormFields] = useState<FormField[]>([
     {
@@ -212,13 +212,13 @@ export default function CreateInvoice() {
           }}
         >
           <BiArrowBack className="text-slate-700 dark:text-slate-200 text-lg" />
-          <span className="font-medium text-slate-700">Back to invoices</span>
+          <span className="font-medium text-slate-600">Back to invoices</span>
         </button>
       </div>
-      <h1 className="text-2xl font-extrabold text-slate-600 mt-5 mb-16">
+      <InvoiceTitle />
+      <h1 className="text-xl font-extrabold text-slate-600 mt-5">
         Create New Invoice
       </h1>
-      <InvoiceTitle />
 
       <form onSubmit={submit}>
         <div className="flex  gap-3 mt-5 w-4/5 md:w-3/5 lg:w-2/5">
