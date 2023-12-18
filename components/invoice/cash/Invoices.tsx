@@ -4,21 +4,28 @@ import Table from "@mui/material/Table";
 import { columns } from "../../../data/invoices";
 import { DataGrid } from "@mui/x-data-grid";
 import Link from "next/link";
-import { FiEye, FiMoreVertical, FiPlusCircle, FiSearch } from "react-icons/fi";
+import {
+  FiEye,
+  FiMoreVertical,
+  FiPlusCircle,
+  FiSearch,
+  FiPrinter,
+} from "react-icons/fi";
 import { Button } from "@/components/ui/button";
 
 import toast, { Toaster } from "react-hot-toast";
 
 import { Invoice } from "@/types/generalTypes";
 import { deleteCashInvoice } from "@/utils/db/CashInvoice";
-import formatNumber from "@/providers/numberFormatProvider";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 import { getCashInvoiceItem, getCashInvoices } from "@/utils/db/CashInvoice";
 import InvoiceCashReport from "@/components/report/invoice/InvoiceCashReport";
+
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { useReactToPrint } from "react-to-print";
 
 import {
   DropdownMenu,
@@ -50,6 +57,12 @@ const Invoices = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [startDate, setStartDate] = useState<Date | undefined>(undefined);
   const [endDate, setEndDate] = useState<Date | undefined>(undefined);
+  const [isVisible, setIsVisible] = useState(false);
+
+  const componentRef = useRef(null);
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
 
   useEffect(() => {
     const getInvoices = async () => {
@@ -98,19 +111,27 @@ const Invoices = () => {
   });
 
   // filtered rows
-  const filteredRows = rows.filter((row) => {
-    const isSearchMatch =
-      row.customer.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      row.invoice_number.toLowerCase().includes(searchTerm.toLowerCase());
+  const filteredRows = rows
+    .map((row) => {
+      const invoiceDate = new Date(row.invoice_date);
 
-    const invoiceDate = new Date(row.invoice_date);
+      const isSearchMatch =
+        row.customer.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        row.invoice_number.toLowerCase().includes(searchTerm.toLowerCase());
 
-    const isDateMatch =
-      (!startDate || invoiceDate >= startDate) &&
-      (!endDate || invoiceDate <= (endDate || new Date()));
+      const isDateMatch =
+        (!startDate || invoiceDate >= startDate) &&
+        (!endDate || invoiceDate <= (endDate || new Date()));
 
-    return isSearchMatch && isDateMatch;
-  });
+      return {
+        ...row,
+        startDate: startDate ? startDate.toISOString() : null,
+        endDate: endDate ? endDate.toISOString() : null,
+        isSearchMatch,
+        isDateMatch,
+      };
+    })
+    .filter((row) => row.isSearchMatch && row.isDateMatch);
 
   // handle search
   const handleSearch = (e: any) => {
@@ -203,6 +224,7 @@ const Invoices = () => {
       },
     },
   ];
+
   return (
     <>
       <div className="my-10 mx-4">
@@ -231,7 +253,7 @@ const Invoices = () => {
               <div className="flex flex-col md:flex-row gap-2">
                 <div className="mb-2 md:mb-0">
                   <label className="text-slate-600 block mb-1 text-sm ml-1">
-                    Start Date
+                    From
                   </label>
                   <DatePicker
                     selected={startDate}
@@ -245,7 +267,7 @@ const Invoices = () => {
                 </div>
                 <div>
                   <label className="text-slate-600 block mb-1 text-sm ml-1">
-                    End Date
+                    To
                   </label>
                   <DatePicker
                     selected={endDate}
@@ -273,23 +295,49 @@ const Invoices = () => {
               </div>
             </div>
             <div className="cursor-pointer -mb-5">
-              <Dialog>
+              <button className="btn btn-sm btn-primary" onClick={handlePrint}>
+                <FiMoreVertical className="text-lg text-slate-500" />
+              </button>
+              {/* <Dialog>
+                <DialogTrigger asChild>
+                  <button
+                    className="btn btn-sm btn-primary"
+                    onClick={handlePrint}
+                  >
+                    <FiMoreVertical className="text-lg text-slate-500" />
+                  </button>
+                </DialogTrigger>
+                <DialogContent
+                  style={{ width: "", maxHeight: "80vh", overflowY: "auto" }}
+                  className="min-w-fit min-h-screen"
+                >
+                  <DialogHeader>
+                    <DialogDescription>
+                      <InvoiceCashReportWithRef ref={componentRef} />
+                    </DialogDescription>
+                  </DialogHeader>
+                </DialogContent>
+              </Dialog> */}
+              {/* <Dialog>
                 <DialogTrigger asChild>
                   <button className="btn btn-sm btn-primary">
                     <FiMoreVertical className="text-lg text-slate-500" />
                   </button>
                 </DialogTrigger>
-                <DialogContent style={{ width: "" }} className="min-w-fit">
+                <DialogContent
+                  style={{ width: "", maxHeight: "80vh", overflowY: "auto" }}
+                  className="min-w-fit min-h-screen"
+                >
                   <DialogHeader>
-                    <DialogTitle>Dialog title</DialogTitle>
                     <DialogDescription>
                       <InvoiceCashReport filteredRow={filteredRows} />
                     </DialogDescription>
                   </DialogHeader>
                 </DialogContent>
-              </Dialog>
+              </Dialog> */}
             </div>
           </div>
+          {/* table */}
           <DataGrid
             className="datagrid"
             rows={filteredRows}
@@ -306,6 +354,22 @@ const Invoices = () => {
             }}
             //   checkboxSelection
           />
+          <div
+            style={{
+              visibility: isVisible ? "visible" : "hidden",
+              height: isVisible ? "auto" : 0,
+              overflow: isVisible ? "visible" : "hidden",
+            }}
+          >
+            <InvoiceCashReport ref={componentRef} filteredRow={filteredRows} />
+          </div>
+
+          {/* <button
+            className="btn btn-sm btn-primary"
+            onClick={printButtonClicked}
+          >
+            Print
+          </button> */}
         </div>
       </div>
       <Toaster />

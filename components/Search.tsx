@@ -32,7 +32,7 @@ const Search = () => {
   return (
     <div>
       <Card
-        className="flex items-center gap-2 px-2 py-2 min-w-[15rem] rounded-md cursor-pointer"
+        className="flex items-center gap-2 px-2 py-2 min-w-[15rem] rounded-md cursor-pointer shadow-none"
         onClick={() => setOpen(true)}
       >
         <BiSearch className="h-5 w-5 text-gray-400" />
