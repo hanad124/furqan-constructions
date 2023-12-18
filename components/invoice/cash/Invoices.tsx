@@ -12,8 +12,11 @@ import {
   FiPrinter,
 } from "react-icons/fi";
 import { Button } from "@/components/ui/button";
+import { FiDownload, FiTrash2 } from "react-icons/fi";
 
 import toast, { Toaster } from "react-hot-toast";
+
+const ExcelJS = require("exceljs");
 
 import { Invoice } from "@/types/generalTypes";
 import { deleteCashInvoice } from "@/utils/db/CashInvoice";
@@ -41,15 +44,6 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 
 const Invoices = () => {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
@@ -182,11 +176,7 @@ const Invoices = () => {
           <>
             <div className="cellAction flex gap-3">
               <Link href={`/dashboard/invoices/cash/preview/${params.row.id}`}>
-                <div
-                  className="editButton"
-                  onClick={() => {}}
-                  // onClick={() => editUserBtn(params.row.id)}
-                >
+                <div className="editButton" onClick={() => {}}>
                   <FiEye className="text-lg text-slate-500" />{" "}
                 </div>
               </Link>
@@ -224,6 +214,81 @@ const Invoices = () => {
       },
     },
   ];
+
+  // export to excel
+  const exportExcelFile = () => {
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Cash Invoices");
+
+    // Header styles
+    const headerStyle = {
+      font: { bold: true, color: { argb: "FFFFFF" } }, // White text
+      fill: { type: "pattern", pattern: "solid", fgColor: { argb: "3490DC" } }, // Blue background
+      alignment: { vertical: "middle", horizontal: "center" },
+      height: 40, // Increase header height
+    };
+
+    worksheet.columns = [
+      {
+        header: "Invoice Number",
+        key: "invoice_number",
+        width: 20,
+        style: headerStyle,
+      },
+      { header: "Customer", key: "customer", width: 20, style: headerStyle },
+      {
+        header: "Invoice Date",
+        key: "invoice_date",
+        width: 20,
+        style: headerStyle,
+      },
+      { header: "Total", key: "total", width: 20, style: headerStyle },
+    ];
+
+    // Row styles
+    const evenRowStyle = {
+      font: { color: { argb: "000000" } }, // Black text
+      fill: { type: "pattern", pattern: "solid", fgColor: { argb: "EDF2F7" } }, // Light gray background
+      alignment: { vertical: "middle", horizontal: "center" },
+      height: 30, // Increase row height
+    };
+
+    const oddRowStyle = {
+      font: { color: { argb: "000000" } }, // Black text
+      fill: { type: "pattern", pattern: "solid", fgColor: { argb: "FFFFFF" } }, // White background
+      alignment: { vertical: "middle", horizontal: "center" },
+      height: 30, // Increase row height
+    };
+
+    // Add rows data
+    filteredRows.forEach((invoice, index) => {
+      const rowStyle = index % 2 === 0 ? evenRowStyle : oddRowStyle;
+
+      worksheet
+        .addRow({
+          invoice_number: invoice.invoice_number,
+          customer: invoice.customer,
+          invoice_date: invoice.invoice_date,
+          total: invoice.total,
+        })
+        .eachCell((cell: any) => {
+          cell.style = rowStyle;
+        });
+    });
+
+    // Generate Excel File with given name
+    workbook.xlsx.writeBuffer().then((data: any) => {
+      const blob = new Blob([data], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "Cash_Invoices.xlsx");
+      document.body.appendChild(link);
+      link.click();
+    });
+  };
 
   return (
     <>
@@ -295,46 +360,33 @@ const Invoices = () => {
               </div>
             </div>
             <div className="cursor-pointer -mb-5">
-              <button className="btn btn-sm btn-primary" onClick={handlePrint}>
-                <FiMoreVertical className="text-lg text-slate-500" />
-              </button>
-              {/* <Dialog>
-                <DialogTrigger asChild>
-                  <button
-                    className="btn btn-sm btn-primary"
-                    onClick={handlePrint}
-                  >
+              {/* filtering and export section */}{" "}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <div className="cursor-pointer">
                     <FiMoreVertical className="text-lg text-slate-500" />
-                  </button>
-                </DialogTrigger>
-                <DialogContent
-                  style={{ width: "", maxHeight: "80vh", overflowY: "auto" }}
-                  className="min-w-fit min-h-screen"
-                >
-                  <DialogHeader>
-                    <DialogDescription>
-                      <InvoiceCashReportWithRef ref={componentRef} />
-                    </DialogDescription>
-                  </DialogHeader>
-                </DialogContent>
-              </Dialog> */}
-              {/* <Dialog>
-                <DialogTrigger asChild>
-                  <button className="btn btn-sm btn-primary">
-                    <FiMoreVertical className="text-lg text-slate-500" />
-                  </button>
-                </DialogTrigger>
-                <DialogContent
-                  style={{ width: "", maxHeight: "80vh", overflowY: "auto" }}
-                  className="min-w-fit min-h-screen"
-                >
-                  <DialogHeader>
-                    <DialogDescription>
-                      <InvoiceCashReport filteredRow={filteredRows} />
-                    </DialogDescription>
-                  </DialogHeader>
-                </DialogContent>
-              </Dialog> */}
+                  </div>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56">
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem
+                      className="cursor-pointer flex items-center gap-3"
+                      onClick={handlePrint}
+                    >
+                      <FiDownload className="text-lg text-slate-700" />
+                      <span>Export as PDF</span>
+                    </DropdownMenuItem>
+                    {/* download it as excel */}
+                    <DropdownMenuItem
+                      className="cursor-pointer flex items-center gap-3"
+                      onClick={exportExcelFile}
+                    >
+                      <FiDownload className="text-lg text-slate-700" />
+                      <span>Export as Excel</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
           {/* table */}

@@ -52,6 +52,8 @@
     "date-fns": "^2.30.0",
     "eslint": "8.53.0",
     "eslint-config-next": "14.0.2",
+    "exceljs": "^4.4.0",
+    "file-saver": "^2.0.5",
     "firebase": "^10.6.0",
     "lucide-react": "^0.292.0",
     "mongodb": "^6.2.0",
