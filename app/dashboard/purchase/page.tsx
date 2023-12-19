@@ -3,13 +3,30 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { BiPlusCircle, BiSearch } from "react-icons/bi";
+import { FiMoreVertical } from "react-icons/fi";
 import { DataGrid } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 
 import toast, { Toaster } from "react-hot-toast";
+import { useQueryState } from "next-usequerystate";
 
 import { deletePurchase, getPurchases } from "@/utils/db/Purchase";
 import { purchaseColumns } from "@/data/purchaseColumns";
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 // create a type for the data
 interface Purchase {
@@ -30,7 +47,8 @@ const Page = () => {
   const [data, setData] = useState<readonly Purchase[]>([]);
   const [salesStatus, setSalesStatus] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useQueryState("search");
+  const [status, setStatus] = useQueryState("status");
 
   const fetchPurchases = async () => {
     try {
@@ -59,17 +77,33 @@ const Page = () => {
   }, []);
 
   // filtered data
-  const filteredData = data.filter((purchase) => {
-    return (
-      purchase.item.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      purchase.supplier.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      purchase.status.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  });
+  const filteredData = data
+    .map((purchase) => {
+      const isSearchMatch =
+        purchase.item.toLowerCase().includes(searchTerm?.toLowerCase() || "") ||
+        purchase.supplier
+          .toLowerCase()
+          .includes(searchTerm?.toLowerCase() || "");
+
+      const isStatusMatch =
+        !status || purchase.status.toLowerCase() === status.toLowerCase();
+
+      return {
+        ...purchase,
+        isSearchMatch,
+        isStatusMatch,
+      };
+    })
+    .filter((purchase) => purchase.isSearchMatch && purchase.isStatusMatch);
 
   // handle search
   const handleSearch = (e: any) => {
-    setSearchTerm(e.target.value);
+    setSearchTerm(e.target.value.toLowerCase());
+
+    // if search term is empty, reset the search
+    if (e.target.value === "") {
+      setSearchTerm(null);
+    }
   };
 
   // handle form submit
@@ -197,7 +231,7 @@ const Page = () => {
         </Link>
       </div>
       <div className="border rounded mt-7">
-        <div className="flex justify-between items-center p-4 border-b w-full ">
+        <div className="flex gap-10 items-center p-4 border-b w-full ">
           <div
             className="flex items-center gap-2 w-full border border-slate-200 rounded-md p-2 py-3 
           focus-within:border-blue-500
@@ -210,8 +244,55 @@ const Page = () => {
               placeholder="Search purchase"
               className="flex-1 focus:none text-sm 
               outline-none"
+              value={searchTerm || ""}
               onChange={handleSearch}
             />
+          </div>
+          <div className="flex items-center gap-2">
+            {/* filter by status */}
+            <DropdownMenu>
+              <DropdownMenuTrigger className="flex items-center gap-2">
+                <span className="text-slate-600 text-sm">
+                  <FiMoreVertical className="text-lg" />
+                </span>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-48">
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel>Filter by status</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={() => {
+                      setStatus(null);
+                    }}
+                    className="cursor-pointer"
+                  >
+                    <span className="flex items-center gap-2">
+                      <span className="text-sm">All</span>
+                    </span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      setStatus("pending");
+                    }}
+                    className="cursor-pointer"
+                  >
+                    <span className="flex items-center gap-2">
+                      <span className="text-sm">Pending</span>
+                    </span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      setStatus("transferred");
+                    }}
+                    className="cursor-pointer"
+                  >
+                    <span className="flex items-center gap-2">
+                      <span className="text-sm">Transferred</span>
+                    </span>
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
         <DataGrid
