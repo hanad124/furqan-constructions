@@ -78,12 +78,14 @@ const InvoiceCards = () => {
           <div className="flex items-center justify-between">
             <CardHeader>
               <CardTitle>
-                <p className="text-md text-slate-500 font-normal">Clients</p>
+                <span className="text-md text-slate-500 font-normal">
+                  Clients
+                </span>
               </CardTitle>
               <CardDescription className="">
-                <p className="text-2xl mt-2 text-slate-600 dark:text-slate-200 font-semibold">
+                <span className="text-2xl mt-2 text-slate-600 dark:text-slate-200 font-semibold">
                   {formatNumber(customers)}
-                </p>
+                </span>
                 {/* <p className="text-green-500 mt-1 font-semibold">+2.5%</p> */}
               </CardDescription>
             </CardHeader>
@@ -96,12 +98,14 @@ const InvoiceCards = () => {
           <div className="flex items-center justify-between">
             <CardHeader>
               <CardTitle>
-                <p className="text-md text-slate-500 font-normal">Invoices</p>
+                <span className="text-md text-slate-500 font-normal">
+                  Invoices
+                </span>
               </CardTitle>
               <CardDescription>
-                <p className="text-2xl text-slate-600 mt-2 dark:text-slate-200 font-semibold">
+                <span className="text-2xl text-slate-600 mt-2 dark:text-slate-200 font-semibold">
                   {formatNumber(invoices)}
-                </p>
+                </span>
                 {/* <p className="text-green-500 mt-1 font-semibold">+2.5%</p> */}
               </CardDescription>
             </CardHeader>
@@ -114,12 +118,12 @@ const InvoiceCards = () => {
           <div className="flex items-center justify-between">
             <CardHeader>
               <CardTitle>
-                <p className="text-md text-slate-500 font-normal">Paid</p>
+                <span className="text-md text-slate-500 font-normal">Paid</span>
               </CardTitle>
               <CardDescription>
-                <p className="text-2xl mt-2 text-slate-600 dark:text-slate-200 font-semibold">
+                <span className="text-2xl mt-2 text-slate-600 dark:text-slate-200 font-semibold">
                   ${formatNumber(totalAmount)}
-                </p>
+                </span>
                 {/* <p className="text-green-500 mt-1 font-semibold">+2.5%</p> */}
               </CardDescription>
             </CardHeader>
@@ -132,12 +136,14 @@ const InvoiceCards = () => {
           <div className="flex items-center justify-between">
             <CardHeader>
               <CardTitle>
-                <p className="text-md text-slate-500 font-normal">Unpaid</p>
+                <span className="text-md text-slate-500 font-normal">
+                  Unpaid
+                </span>
               </CardTitle>
               <CardDescription>
-                <p className="text-2xl text-slate-600 mt-2 dark:text-slate-200 font-semibold">
+                <span className="text-2xl text-slate-600 mt-2 dark:text-slate-200 font-semibold">
                   ${formatNumber(0)}
-                </p>
+                </span>
                 {/* <p className="text-red-500 mt-1 font-semibold">+2.5%</p> */}
               </CardDescription>
             </CardHeader>

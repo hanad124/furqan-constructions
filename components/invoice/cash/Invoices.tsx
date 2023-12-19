@@ -222,10 +222,10 @@ const Invoices = () => {
 
     // Header styles
     const headerStyle = {
-      font: { bold: true, color: { argb: "FFFFFF" } }, // White text
-      fill: { type: "pattern", pattern: "solid", fgColor: { argb: "3490DC" } }, // Blue background
+      font: { bold: true, color: { argb: "FFFFFF" } },
+      fill: { type: "pattern", pattern: "solid", fgColor: { argb: "3490DC" } },
       alignment: { vertical: "middle", horizontal: "center" },
-      height: 40, // Increase header height
+      height: 40,
     };
 
     worksheet.columns = [
@@ -245,36 +245,43 @@ const Invoices = () => {
       { header: "Total", key: "total", width: 20, style: headerStyle },
     ];
 
-    // Row styles
+    // Row styles for data rows
     const evenRowStyle = {
-      font: { color: { argb: "000000" } }, // Black text
-      fill: { type: "pattern", pattern: "solid", fgColor: { argb: "EDF2F7" } }, // Light gray background
+      font: { color: { argb: "000000" } },
+      fill: { type: "pattern", pattern: "solid", fgColor: { argb: "EDF2F7" } },
       alignment: { vertical: "middle", horizontal: "center" },
-      height: 30, // Increase row height
+      height: 30,
     };
 
     const oddRowStyle = {
-      font: { color: { argb: "000000" } }, // Black text
-      fill: { type: "pattern", pattern: "solid", fgColor: { argb: "FFFFFF" } }, // White background
+      font: { color: { argb: "000000" } },
+      fill: { type: "pattern", pattern: "solid", fgColor: { argb: "FFFFFF" } },
       alignment: { vertical: "middle", horizontal: "center" },
-      height: 30, // Increase row height
+      height: 30,
     };
 
-    // Add rows data
+    // Add data rows
     filteredRows.forEach((invoice, index) => {
       const rowStyle = index % 2 === 0 ? evenRowStyle : oddRowStyle;
 
-      worksheet
-        .addRow({
-          invoice_number: invoice.invoice_number,
-          customer: invoice.customer,
-          invoice_date: invoice.invoice_date,
-          total: invoice.total,
-        })
-        .eachCell((cell: any) => {
+      const row = worksheet.addRow({
+        invoice_number: invoice.invoice_number,
+        customer: invoice.customer,
+        invoice_date: invoice.invoice_date,
+        total: invoice.total,
+      });
+
+      row.eachCell((cell: any) => {
+        if (cell.value) {
+          // Apply row style to non-empty cells
           cell.style = rowStyle;
-        });
+        }
+      });
     });
+
+    // make the file name dynamic as date range from and to
+    const oldestDate = filteredRows[0]?.invoice_date;
+    const newestDate = filteredRows[filteredRows.length - 1]?.invoice_date;
 
     // Generate Excel File with given name
     workbook.xlsx.writeBuffer().then((data: any) => {
@@ -284,7 +291,10 @@ const Invoices = () => {
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", "Cash_Invoices.xlsx");
+      link.setAttribute(
+        "download",
+        `Cash Invoices Report ${oldestDate} - ${newestDate}.xlsx`
+      );
       document.body.appendChild(link);
       link.click();
     });
@@ -369,19 +379,21 @@ const Invoices = () => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56">
                   <DropdownMenuGroup>
+                    {/* pdf button */}
                     <DropdownMenuItem
-                      className="cursor-pointer flex items-center gap-3"
+                      className="cursor-pointer text-slate-600  flex items-center gap-3"
                       onClick={handlePrint}
                     >
-                      <FiDownload className="text-lg text-slate-700" />
+                      <FiDownload className="" />
                       <span>Export as PDF</span>
                     </DropdownMenuItem>
                     {/* download it as excel */}
+                    <DropdownMenuSeparator />
                     <DropdownMenuItem
-                      className="cursor-pointer flex items-center gap-3"
+                      className="cursor-pointer text-slate-600 flex items-center gap-3"
                       onClick={exportExcelFile}
                     >
-                      <FiDownload className="text-lg text-slate-700" />
+                      <FiDownload className="" />
                       <span>Export as Excel</span>
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
@@ -402,9 +414,7 @@ const Invoices = () => {
             pageSizeOptions={[5, 10]}
             sx={{
               border: "none",
-              // borderColor: "red",
             }}
-            //   checkboxSelection
           />
           <div
             style={{
@@ -415,13 +425,6 @@ const Invoices = () => {
           >
             <InvoiceCashReport ref={componentRef} filteredRow={filteredRows} />
           </div>
-
-          {/* <button
-            className="btn btn-sm btn-primary"
-            onClick={printButtonClicked}
-          >
-            Print
-          </button> */}
         </div>
       </div>
       <Toaster />
