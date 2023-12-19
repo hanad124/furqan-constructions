@@ -3,7 +3,8 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { BiPlusCircle, BiSearch } from "react-icons/bi";
-import { FiMoreVertical } from "react-icons/fi";
+
+import { FiMoreVertical, FiPlusCircle } from "react-icons/fi";
 import { DataGrid } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 
@@ -224,9 +225,14 @@ const Page = () => {
       <div className="flex justify-between items-center">
         <h1 className="text-xl text-slate-600 font-bold">Purchases</h1>
         <Link href="/dashboard/newPurchase">
-          <Button className="text-white py-5">
-            <BiPlusCircle className=" mr-2" />
-            <span className="">new Purchase</span>
+          <Button
+            className="flex items-center gap-2 p-6"
+            variant="default"
+            color="primary"
+            size={"lg"}
+          >
+            <FiPlusCircle className="text-lg" />
+            <span>Create Purchase</span>
           </Button>
         </Link>
       </div>
