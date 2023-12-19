@@ -33,11 +33,13 @@ export const createTransfer = async (formData: any) => {
     const stockItem = await prisma.stock.findFirst({
       where: {
         item: item,
+        stock: to,
       },
     });
 
     if (stockItem) {
       console.log("item already exists");
+      console.log("stockItem: ", stockItem);
       // return;
       // update the stock
       const updateStock = await prisma.stock.update({
@@ -66,7 +68,7 @@ export const createTransfer = async (formData: any) => {
       });
       await updatePurchaseStatus(id, "Transferred");
       console.log("created stock: ", createStock);
-    }  
+    }
 
     // Revalidate the path after creating the transfer
     revalidatePath("/dashboard/transfer");

@@ -289,9 +289,7 @@ export default function Newtransfer() {
                                 return (
                                   <option
                                     key={purchase.id}
-                                    value={
-                                      purchase.item + " - " + purchase.quantity
-                                    }
+                                    value={purchase.item}
                                   >
                                     {purchase.item + " - " + purchase.quantity}
                                   </option>

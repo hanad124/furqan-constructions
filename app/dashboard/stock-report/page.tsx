@@ -3,7 +3,7 @@
 import React, { useRef } from "react";
 import { useReactToPrint } from "react-to-print";
 
-import AllStocks from "@/components/report/stock/AllStocks";
+// import AllStocks from "@/components/report/stock/AllStocks";
 import Link from "next/link";
 import { BiPrinter } from "react-icons/bi";
 import { Button } from "@/components/ui/button";
@@ -22,7 +22,7 @@ const StockReportPage = () => {
           <span className="">Print report</span>
         </Button>
       </div>{" "}
-      <AllStocks ref={componentRef} />
+      {/* <AllStocks ref={componentRef} /> */}
     </div>
   );
 };
