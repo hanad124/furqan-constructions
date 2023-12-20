@@ -13,6 +13,7 @@ import { useQueryState } from "next-usequerystate";
 
 import { deletePurchase, getPurchases } from "@/utils/db/Purchase";
 import { purchaseColumns } from "@/data/purchaseColumns";
+import UpdatePurchases from "@/components/modal/UpdatePurchase";
 
 import {
   DropdownMenu,
@@ -28,6 +29,14 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 // create a type for the data
 interface Purchase {
@@ -142,11 +151,21 @@ const Page = () => {
         return (
           <>
             <div className="cellAction flex gap-3">
-              <Link href={`/dashboard/purchase/edit-purchase/${params.row.id}`}>
-                <div className="editButton px-3 py-1 border border-yellow-500 text-yellow-500 rounded-md border-dotted">
-                  Edit
-                </div>
-              </Link>
+              {/* <Link href={`/dashboard/purchase/edit-purchase/${params.row.id}`}> */}
+              <div className="editButton px-3 py-1 border border-yellow-500 text-yellow-500 rounded-md border-dotted">
+                {/* edit purchase as modal */}
+                <Dialog>
+                  <DialogTrigger>
+                    <span>Edit</span>
+                  </DialogTrigger>
+                  <DialogContent className=" min-w-fit">
+                    <div className="flex flex-col gap-4">
+                      <UpdatePurchases id={params.row.id} />
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              </div>
+              {/* </Link> */}
 
               <form
                 onSubmit={(e) => {

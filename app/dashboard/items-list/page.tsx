@@ -116,7 +116,6 @@ const ItemsListPage = () => {
                 </button>
               </form>
             </div>
-            <Toaster />
           </>
         );
       },
@@ -124,27 +123,30 @@ const ItemsListPage = () => {
   ];
 
   return (
-    <div className="p-4">
-      <div className="flex justify-between items-center">
-        <h1 className="text-xl text-slate-600 font-bold">Items</h1>
-        <Link href="/dashboard/newItem">
-          <Button className="text-white">
-            <BiPlus className="text-lg mr-2" />
-            <span className="">Add new Item</span>
-          </Button>
-        </Link>
+    <>
+      <div className="p-4">
+        <div className="flex justify-between items-center">
+          <h1 className="text-xl text-slate-600 font-bold">Items</h1>
+          <Link href="/dashboard/newItem">
+            <Button className="text-white">
+              <BiPlus className="text-lg mr-2" />
+              <span className="">Add new Item</span>
+            </Button>
+          </Link>
+        </div>
+        <div className="datatable mt-10">
+          <DataGrid
+            className="datagrid dark:text-slate-200"
+            rows={data}
+            columns={itemColumns.concat(actionColumn)}
+            // pageSize={9}
+            // rowsPerPageOptions={[9]}
+            // checkboxSelection
+          />
+        </div>
       </div>
-      <div className="datatable mt-10">
-        <DataGrid
-          className="datagrid dark:text-slate-200"
-          rows={data}
-          columns={itemColumns.concat(actionColumn)}
-          // pageSize={9}
-          // rowsPerPageOptions={[9]}
-          // checkboxSelection
-        />
-      </div>
-    </div>
+      <Toaster />
+    </>
   );
 };
 
