@@ -25,6 +25,7 @@ import React, { useState, useEffect, useRef } from "react";
 
 import { getCashInvoiceItem, getCashInvoices } from "@/utils/db/CashInvoice";
 import InvoiceCashReport from "@/components/report/invoice/InvoiceCashReport";
+import exportExcelFile from "@/providers/exportExcelFile";
 
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -223,89 +224,13 @@ const Invoices = () => {
     },
   ];
 
+  const oldestDate = filteredRows[0]?.invoice_date;
+  const newestDate = filteredRows[filteredRows.length - 1]?.invoice_date;
+
   // export to excel
-  const exportExcelFile = () => {
-    const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet("Cash Invoices");
-
-    // Header styles
-    const headerStyle = {
-      font: { bold: true, color: { argb: "FFFFFF" } },
-      fill: { type: "pattern", pattern: "solid", fgColor: { argb: "3490DC" } },
-      alignment: { vertical: "middle", horizontal: "center" },
-      height: 40,
-    };
-
-    worksheet.columns = [
-      {
-        header: "Invoice Number",
-        key: "invoice_number",
-        width: 20,
-        style: headerStyle,
-      },
-      { header: "Customer", key: "customer", width: 20, style: headerStyle },
-      {
-        header: "Invoice Date",
-        key: "invoice_date",
-        width: 20,
-        style: headerStyle,
-      },
-      { header: "Total", key: "total", width: 20, style: headerStyle },
-    ];
-
-    // Row styles for data rows
-    const evenRowStyle = {
-      font: { color: { argb: "000000" } },
-      fill: { type: "pattern", pattern: "solid", fgColor: { argb: "EDF2F7" } },
-      alignment: { vertical: "middle", horizontal: "center" },
-      height: 30,
-    };
-
-    const oddRowStyle = {
-      font: { color: { argb: "000000" } },
-      fill: { type: "pattern", pattern: "solid", fgColor: { argb: "FFFFFF" } },
-      alignment: { vertical: "middle", horizontal: "center" },
-      height: 30,
-    };
-
-    // Add data rows
-    filteredRows.forEach((invoice, index) => {
-      const rowStyle = index % 2 === 0 ? evenRowStyle : oddRowStyle;
-
-      const row = worksheet.addRow({
-        invoice_number: invoice.invoice_number,
-        customer: invoice.customer,
-        invoice_date: invoice.invoice_date,
-        total: invoice.total,
-      });
-
-      row.eachCell((cell: any) => {
-        if (cell.value) {
-          // Apply row style to non-empty cells
-          cell.style = rowStyle;
-        }
-      });
-    });
-
-    // make the file name dynamic as date range from and to
-    const oldestDate = filteredRows[0]?.invoice_date;
-    const newestDate = filteredRows[filteredRows.length - 1]?.invoice_date;
-
-    // Generate Excel File with given name
-    workbook.xlsx.writeBuffer().then((data: any) => {
-      const blob = new Blob([data], {
-        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      });
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute(
-        "download",
-        `Cash Invoices Report ${oldestDate} - ${newestDate}.xlsx`
-      );
-      document.body.appendChild(link);
-      link.click();
-    });
+  const handleExportExcel = () => {
+    // Pass the necessary data and file name to exportExcelFile
+    exportExcelFile(filteredRows, oldestDate, newestDate);
   };
 
   return (
@@ -400,7 +325,7 @@ const Invoices = () => {
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
                       className="cursor-pointer text-slate-600 flex items-center gap-3"
-                      onClick={exportExcelFile}
+                      onClick={handleExportExcel}
                     >
                       <FiDownload className="" />
                       <span>Export as Excel</span>

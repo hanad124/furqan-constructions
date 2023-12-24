@@ -1,68 +1,84 @@
-import ExcelJS, { Workbook, Worksheet, Column } from "exceljs";
+import ExcelJS from "exceljs";
 
-interface ExportExcelOptions {
-  workbook: Workbook;
-  worksheetName: string;
-  columns: {
-    header: string;
-    key: string;
-    width: number;
-  }[];
-  data: any[]; // Adjust the type based on the actual data structure
+interface Invoice {
+  startDate: string | null;
+  endDate: string | null;
+  isSearchMatch: boolean;
+  isDateMatch: boolean;
+  id: string;
+  invoice_number: string;
+  customer: string;
+  invoice_date: string;
+  total: string;
 }
 
-const ExportExcelFile = (options: ExportExcelOptions) => {
-  const { workbook, worksheetName, columns, data } = options;
+const exportExcelFile = (
+  data: Invoice[],
+  startDate: string,
+  endDate: string
+) => {
+  const fileName = `Cash Invoices | ${startDate} - ${endDate}.xlsx`;
 
-  const worksheet: Worksheet = workbook.addWorksheet(worksheetName);
+  const workbook = new ExcelJS.Workbook();
+  const worksheet = workbook.addWorksheet("Cash Invoices");
 
   // Header styles
-  const headerStyle = {
+  const headerStyle: Partial<ExcelJS.Style> = {
     font: { bold: true, color: { argb: "FFFFFF" } },
     fill: { type: "pattern", pattern: "solid", fgColor: { argb: "3490DC" } },
-    alignment: { vertical: "middle", horizontal: "center" as const },
-    height: 40, 
+    alignment: { vertical: "middle", horizontal: "center" },
   };
 
-  worksheet.columns = columns.map((column) => ({
-    header: column.header,
-    key: column.key,
-    width: column.width,
-    style: { ...headerStyle }, // Copy the headerStyle object
-  }));
+  worksheet.columns = [
+    {
+      header: "Invoice Number",
+      key: "invoice_number",
+      width: 20,
+      style: headerStyle,
+    },
+    { header: "Customer", key: "customer", width: 20, style: headerStyle },
+    {
+      header: "Invoice Date",
+      key: "invoice_date",
+      width: 20,
+      style: headerStyle,
+    },
+    { header: "Total", key: "total", width: 20, style: headerStyle },
+  ];
 
   // Row styles for data rows
   const evenRowStyle = {
     font: { color: { argb: "000000" } },
     fill: { type: "pattern", pattern: "solid", fgColor: { argb: "EDF2F7" } },
-    alignment: { vertical: "middle", horizontal: "center" as const },
+    alignment: { vertical: "middle", horizontal: "center" },
     height: 30,
   };
 
   const oddRowStyle = {
     font: { color: { argb: "000000" } },
     fill: { type: "pattern", pattern: "solid", fgColor: { argb: "FFFFFF" } },
-    alignment: { vertical: "middle", horizontal: "center" as const },
+    alignment: { vertical: "middle", horizontal: "center" },
     height: 30,
   };
 
   // Add data rows
-  data.forEach((row, index) => {
+  data.forEach((invoice, index) => {
     const rowStyle = index % 2 === 0 ? evenRowStyle : oddRowStyle;
 
-    const newRow = worksheet.addRow(row);
+    const row = worksheet.addRow({
+      invoice_number: invoice.invoice_number,
+      customer: invoice.customer,
+      invoice_date: invoice.invoice_date,
+      total: invoice.total,
+    });
 
-    newRow.eachCell((cell: any) => {
+    row.eachCell((cell: any) => {
       if (cell.value) {
         // Apply row style to non-empty cells
-        cell.style = { ...rowStyle }; // Copy the rowStyle object
+        cell.style = rowStyle;
       }
     });
   });
-
-  // Make the file name dynamic as date range from and to
-  const oldestDate = data[0]?.invoice_date;
-  const newestDate = data[data.length - 1]?.invoice_date;
 
   // Generate Excel File with given name
   workbook.xlsx.writeBuffer().then((buffer: any) => {
@@ -73,13 +89,10 @@ const ExportExcelFile = (options: ExportExcelOptions) => {
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.setAttribute(
-      "download",
-      `${worksheetName} Report ${oldestDate} - ${newestDate}.xlsx`
-    );
+    link.setAttribute("download", fileName);
     document.body.appendChild(link);
     link.click();
   });
 };
 
-export default ExportExcelFile;
+export default exportExcelFile;
