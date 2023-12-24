@@ -151,21 +151,28 @@ const Page = () => {
         return (
           <>
             <div className="cellAction flex gap-3">
-              {/* <Link href={`/dashboard/purchase/edit-purchase/${params.row.id}`}> */}
               <div className="editButton px-3 py-1 border border-yellow-500 text-yellow-500 rounded-md border-dotted">
                 {/* edit purchase as modal */}
                 <Dialog>
                   <DialogTrigger>
                     <span>Edit</span>
                   </DialogTrigger>
-                  <DialogContent className=" min-w-fit">
+
+                  {/* content */}
+                  <DialogContent className="min-w-fit">
+                    {" "}
+                    {/* title */}
+                    <DialogTitle>
+                      <h1 className="text-xl text-slate-600 font-bold mt-8">
+                        Update Purchase
+                      </h1>
+                    </DialogTitle>
                     <div className="flex flex-col gap-4">
-                      <UpdatePurchases id={params.row.id} />
+                      <UpdatePurchases updateteID={params.row.id} />
                     </div>
                   </DialogContent>
                 </Dialog>
               </div>
-              {/* </Link> */}
 
               <form
                 onSubmit={(e) => {
@@ -188,7 +195,6 @@ const Page = () => {
                 </button>
               </form>
             </div>
-            <Toaster />
           </>
         );
       },
@@ -240,103 +246,107 @@ const Page = () => {
   let columns = purchaseColumns.concat(statusColumn);
 
   return (
-    <div className="p-4">
-      <div className="flex justify-between items-center">
-        <h1 className="text-xl text-slate-600 font-bold">Purchases</h1>
-        <Link href="/dashboard/newPurchase">
-          <Button
-            className="flex items-center gap-2 p-6"
-            variant="default"
-            color="primary"
-            size={"lg"}
-          >
-            <FiPlusCircle className="text-lg" />
-            <span>Create Purchase</span>
-          </Button>
-        </Link>
-      </div>
-      <div className="border rounded mt-7">
-        <div className="flex gap-10 items-center p-4 border-b w-full ">
-          <div
-            className="flex items-center gap-2 w-full border border-slate-200 rounded-md p-2 py-3 
+    <>
+      {" "}
+      <div className="p-4">
+        <div className="flex justify-between items-center">
+          <h1 className="text-xl text-slate-600 font-bold">Purchases</h1>
+          <Link href="/dashboard/newPurchase">
+            <Button
+              className="flex items-center gap-2 p-6"
+              variant="default"
+              color="primary"
+              size={"lg"}
+            >
+              <FiPlusCircle className="text-lg" />
+              <span>Create Purchase</span>
+            </Button>
+          </Link>
+        </div>
+        <div className="border rounded mt-7">
+          <div className="flex gap-10 items-center p-4 border-b w-full ">
+            <div
+              className="flex items-center gap-2 w-full border border-slate-200 rounded-md p-2 py-3 
           focus-within:border-blue-500
           focus-within:border-1 text-slate-600
           "
-          >
-            <BiSearch className="text-slate-400 text-lg" />
-            <input
-              type="text"
-              placeholder="Search purchase"
-              className="flex-1 focus:none text-sm 
+            >
+              <BiSearch className="text-slate-400 text-lg" />
+              <input
+                type="text"
+                placeholder="Search purchase"
+                className="flex-1 focus:none text-sm 
               outline-none"
-              value={searchTerm || ""}
-              onChange={handleSearch}
-            />
+                value={searchTerm || ""}
+                onChange={handleSearch}
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              {/* filter by status */}
+              <DropdownMenu>
+                <DropdownMenuTrigger className="flex items-center gap-2">
+                  <span className="text-slate-600 text-sm">
+                    <FiMoreVertical className="text-lg" />
+                  </span>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-48">
+                  <DropdownMenuGroup>
+                    <DropdownMenuLabel>Filter by status</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                      onClick={() => {
+                        setStatus(null);
+                      }}
+                      className="cursor-pointer"
+                    >
+                      <span className="flex items-center gap-2">
+                        <span className="text-sm">All</span>
+                      </span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => {
+                        setStatus("pending");
+                      }}
+                      className="cursor-pointer"
+                    >
+                      <span className="flex items-center gap-2">
+                        <span className="text-sm">Pending</span>
+                      </span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => {
+                        setStatus("transferred");
+                      }}
+                      className="cursor-pointer"
+                    >
+                      <span className="flex items-center gap-2">
+                        <span className="text-sm">Transferred</span>
+                      </span>
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           </div>
-          <div className="flex items-center gap-2">
-            {/* filter by status */}
-            <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center gap-2">
-                <span className="text-slate-600 text-sm">
-                  <FiMoreVertical className="text-lg" />
-                </span>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-48">
-                <DropdownMenuGroup>
-                  <DropdownMenuLabel>Filter by status</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    onClick={() => {
-                      setStatus(null);
-                    }}
-                    className="cursor-pointer"
-                  >
-                    <span className="flex items-center gap-2">
-                      <span className="text-sm">All</span>
-                    </span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => {
-                      setStatus("pending");
-                    }}
-                    className="cursor-pointer"
-                  >
-                    <span className="flex items-center gap-2">
-                      <span className="text-sm">Pending</span>
-                    </span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => {
-                      setStatus("transferred");
-                    }}
-                    className="cursor-pointer"
-                  >
-                    <span className="flex items-center gap-2">
-                      <span className="text-sm">Transferred</span>
-                    </span>
-                  </DropdownMenuItem>
-                </DropdownMenuGroup>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
+          <DataGrid
+            className="datagrid dark:text-slate-200"
+            rows={filteredData}
+            columns={columns.concat(actionColumn)}
+            initialState={{
+              pagination: {
+                paginationModel: { page: 0, pageSize: 5 },
+              },
+            }}
+            pageSizeOptions={[5, 10]}
+            sx={{
+              border: "none",
+              // borderColor: "red",
+            }}
+          />
         </div>
-        <DataGrid
-          className="datagrid dark:text-slate-200"
-          rows={filteredData}
-          columns={columns.concat(actionColumn)}
-          initialState={{
-            pagination: {
-              paginationModel: { page: 0, pageSize: 5 },
-            },
-          }}
-          pageSizeOptions={[5, 10]}
-          sx={{
-            border: "none",
-            // borderColor: "red",
-          }}
-        />
       </div>
-    </div>
+      <Toaster />
+    </>
   );
 };
 

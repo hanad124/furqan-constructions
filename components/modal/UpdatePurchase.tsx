@@ -117,6 +117,8 @@ export default function UpdatePurchases({ updateteID }: { updateteID: any }) {
   };
 
   const id = updateteID;
+
+  console.log("ID:", id);
   const router = useRouter();
   // create a form instance with useForm
   const form = useForm<z.infer<typeof formSchema>>({
@@ -133,7 +135,7 @@ export default function UpdatePurchases({ updateteID }: { updateteID: any }) {
     },
   });
 
-  // fetch user data by id
+  // fetch purchase data by id
   useEffect(() => {
     const fetchPurchase = async () => {
       const purchase = await getPurchaseById(id);
@@ -203,39 +205,8 @@ export default function UpdatePurchases({ updateteID }: { updateteID: any }) {
 
   return (
     <>
-      <div className="mx-4">
-        {/* back button */}
-        <div className="flex items-center gap-x-2">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-4 w-4 text-slate-600 cursor-pointer"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            onClick={() => {
-              router.replace("/dashboard/purchase");
-            }}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={1.5}
-              d="M10 19l-7-7m0 0l7-7m-7 7h18"
-            />
-          </svg>
-          <p
-            className="text-slate-600 font-bold text-md cursor-pointer"
-            onClick={() => {
-              router.replace("/dashboard/purchase");
-            }}
-          >
-            Back
-          </p>
-        </div>
-        <h1 className="text-xl text-slate-600 font-bold mt-8">
-          Update Purchase
-        </h1>
-        <div className="my-10">
+      <div className="">
+        <div className="my-5">
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
@@ -244,185 +215,186 @@ export default function UpdatePurchases({ updateteID }: { updateteID: any }) {
             >
               <input type="text" hidden name="id" value={id} />
               <div className="flex flex-wrap gap-x-3 gap-y-5 w-full ">
-                {/* supplier field */}
-                <FormField
-                  control={form.control}
-                  name="supplier"
-                  render={({ field }) => (
-                    <FormItem className="w-full md:w-[13rem] ">
-                      <FormLabel> Supplier</FormLabel>
-                      <FormControl>
-                        <select
-                          className="w-full md:w-[13rem] h-[38px] border rounded-md px-2   py-1 focus:outline-none focus:ring-1 focus:ring-primary focus:border-transparent bg-transparent dark:text-white"
-                          {...field}
-                          onChange={handleSupplierChange}
-                        >
-                          <option value="">Select supplier</option>
-                          {filteredSuppliers.map((supplier) => (
-                            <option key={supplier.name} value={supplier.name}>
-                              {supplier.name}
-                            </option>
-                          ))}
-                        </select>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                {/* item field */}
-                <FormField
-                  control={form.control}
-                  name="item"
-                  render={({ field }) => (
-                    <FormItem className="w-full md:w-[13rem]  ">
-                      <FormLabel> Item</FormLabel>
-                      <FormControl>
-                        <select
-                          className="w-full md:w-[13rem] h-[38px] border rounded-md px-2   py-1 focus:outline-none focus:ring-1 focus:ring-primary focus:border-transparent bg-transparent dark:text-white"
-                          {...field}
-                          onChange={handleItemChange}
-                        >
-                          <option value="">Select item</option>
-                          {filteredItems.map((item) => (
-                            <option key={item.name} value={item.description}>
-                              {item.description}
-                            </option>
-                          ))}
-                        </select>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                <div className="flex gap-5 w-full">
+                  <div className="flex flex-col gap-5 flex-1">
+                    {/* supplier field */}
+                    <FormField
+                      control={form.control}
+                      name="supplier"
+                      render={({ field }) => (
+                        <FormItem className="w-full  ">
+                          <FormLabel className="text-sm text-slate-600 ml-2">
+                            {" "}
+                            Supplier
+                          </FormLabel>
+                          <FormControl>
+                            <select
+                              className="w-full  h-[38px] border rounded-md px-2   py-1 focus:outline-none focus:ring-1 focus:ring-primary focus:border-transparent bg-transparent dark:text-white"
+                              {...field}
+                              onChange={handleSupplierChange}
+                            >
+                              <option value="">Select supplier</option>
+                              {filteredSuppliers.map((supplier) => (
+                                <option
+                                  key={supplier.name}
+                                  value={supplier.name}
+                                >
+                                  {supplier.name}
+                                </option>
+                              ))}
+                            </select>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    {/* item field */}
+                    <FormField
+                      control={form.control}
+                      name="item"
+                      render={({ field }) => (
+                        <FormItem className="w-full  ">
+                          <FormLabel> Item</FormLabel>
+                          <FormControl>
+                            <select
+                              className="w-full h-[38px] border rounded-md px-2   py-1 focus:outline-none focus:ring-1 focus:ring-primary focus:border-transparent bg-transparent dark:text-white"
+                              {...field}
+                              onChange={handleItemChange}
+                            >
+                              <option value="">Select item</option>
+                              {filteredItems.map((item) => (
+                                <option
+                                  key={item.name}
+                                  value={item.description}
+                                >
+                                  {item.description}
+                                </option>
+                              ))}
+                            </select>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-                {/* quantity */}
-                <FormField
-                  control={form.control}
-                  name="quantity"
-                  render={({ field }) => (
-                    <FormItem className="w-full md:w-[14rem] ">
-                      <FormLabel>Quantity</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="Quantity"
-                          {...field}
-                          type="number"
-                          onChange={(e) => {
-                            const value = Number(e.target.value);
-                            field.onChange(value);
-                          }}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                {/* price */}
-                <FormField
-                  control={form.control}
-                  name="price"
-                  render={({ field }) => (
-                    <FormItem className="w-full md:w-[14rem] ">
-                      <FormLabel>Price</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="Price"
-                          {...field}
-                          type="number"
-                          onChange={(e) => {
-                            const value = Number(e.target.value);
-                            field.onChange(value);
-                          }}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                {/* place */}
-                <FormField
-                  control={form.control}
-                  name="place"
-                  render={({ field }) => (
-                    <FormItem className="w-full md:w-[14rem]">
-                      <FormLabel>Place</FormLabel>
-                      <FormControl>
-                        <select
-                          id="place"
-                          {...field}
-                          onChange={handlePlaceChange}
-                          className="w-full md:w-[13rem] h-[38px] border rounded-md px-4 py-2 focus:outline-none focus:ring-1 focus:ring-primary focus:border-transparent bg-transparent dark:text-white"
-                        >
-                          <option value="container">container</option>
-                          <option value="market">market</option>
-                        </select>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                {/* total */}
-                <FormField
-                  control={form.control}
-                  name="total"
-                  render={({ field }) => (
-                    <FormItem className="w-full md:w-[14rem] ">
-                      <FormLabel>Total</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="Total"
-                          type="number"
-                          readOnly
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                {/* status */}
-                {/* <FormField
-                  control={form.control}
-                  name="status"
-                  render={({ field }) => (
-                    <FormItem className="w-full md:w-[19rem]">
-                      <FormLabel className="">Status</FormLabel> <br />
-                      <FormControl>
-                        <select
-                          id="status"
-                          {...field}
-                          onChange={handleStatusChange}
-                          className="w-full md:w-[13rem] h-[38px] border rounded-md px-4  py-2 focus:outline-none focus:ring-1 focus:ring-primary focus:border-transparent bg-transparent dark:text-white"
-                        >
-                          <option value="pending">pending</option>
-                          <option value="approved">approved</option>
-                        </select>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                /> */}
+                    {/* quantity */}
+                    <FormField
+                      control={form.control}
+                      name="quantity"
+                      render={({ field }) => (
+                        <FormItem className="w-full  ">
+                          <FormLabel className="text-sm text-slate-600 ml-2">
+                            Quantity
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="Quantity"
+                              {...field}
+                              type="number"
+                              onChange={(e) => {
+                                const value = Number(e.target.value);
+                                field.onChange(value);
+                              }}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <div className="flex flex-col gap-5 flex-1">
+                    {/* price */}
+                    <FormField
+                      control={form.control}
+                      name="price"
+                      render={({ field }) => (
+                        <FormItem className="w-full  ">
+                          <FormLabel className="text-sm text-slate-600 ml-2">
+                            Price
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="Price"
+                              {...field}
+                              type="number"
+                              onChange={(e) => {
+                                const value = Number(e.target.value);
+                                field.onChange(value);
+                              }}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    {/* place */}
+                    <FormField
+                      control={form.control}
+                      name="place"
+                      render={({ field }) => (
+                        <FormItem className="w-full ">
+                          <FormLabel className="text-sm text-slate-600 ml-2">
+                            Place
+                          </FormLabel>
+                          <FormControl>
+                            <select
+                              id="place"
+                              {...field}
+                              onChange={handlePlaceChange}
+                              className="w-full  h-[38px] border rounded-md px-4 py-2 focus:outline-none focus:ring-1 focus:ring-primary focus:border-transparent bg-transparent dark:text-white"
+                            >
+                              <option value="container">container</option>
+                              <option value="market">market</option>
+                            </select>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    {/* total */}
+                    <FormField
+                      control={form.control}
+                      name="total"
+                      render={({ field }) => (
+                        <FormItem className="w-full  ">
+                          <FormLabel className="text-sm text-slate-600 ml-2">
+                            Total
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="Total"
+                              type="number"
+                              readOnly
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
               </div>
 
-              <Button
-                type="submit"
-                size={"lg"}
-                disabled={loading}
-                className={`dark:text-white w-full md:w-[11.5rem] mb-10
-                c
+              <div className="flex justify-end w-full">
+                <Button
+                  type="submit"
+                  size={"lg"}
+                  disabled={loading}
+                  className={`dark:text-white w-24 px-24 mb-10
                  ${
                    loading ? "bg-primary/60 cursor-not-allowed" : "bg-primary"
                  }`}
-              >
-                {/* {loading && <BiLoaderAlt className="animate-spin w-4 h-4" />} */}
-                <span>Submit</span>
-              </Button>
+                >
+                  {/* {loading && <BiLoaderAlt className="animate-spin w-4 h-4" />} */}
+                  <span>Submit</span>
+                </Button>
+              </div>
             </form>
           </Form>
         </div>
       </div>
-      <Toaster />
+      {/* <Toaster /> */}
     </>
   );
 }

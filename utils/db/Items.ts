@@ -126,8 +126,6 @@ export const findItem = async (id: string) => {
 
 // Delete Item
 export const deleteItem = async (id: any) => {
-  console.log("id:", id);
-
   try {
     await connectToDB();
 

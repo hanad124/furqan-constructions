@@ -143,8 +143,8 @@ const Sidebar = ({ user }: any) => {
                     className={`${
                       isActive
                         ? "bg-primary text-white hover:bg-primary cursor-pointer"
-                        : "text-slate-600 dark:text-[#949bbd] hover:bg-primary/10 cursor-pointer"
-                    } flex items-center w-full py-[7px] px-4 font-light rounded-md cursor-pointer`}
+                        : "text-slate-600 font-light dark:text-[#949bbd] hover:bg-primary/10 cursor-pointer"
+                    } flex items-center w-full py-[7px] px-4 rounded-md cursor-pointer`}
                   >
                     <item.icon className="mr-4 text-lg" />
                     <span>{item.text}</span>

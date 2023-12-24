@@ -115,7 +115,7 @@ rgba(0, 0, 0, 0.06) 0px 0px 0px 1px`,
                         <Input
                           type="text"
                           id="username"
-                          placeholder="username name"
+                          placeholder="username"
                           className="shadow-none"
                           {...field}
                         />

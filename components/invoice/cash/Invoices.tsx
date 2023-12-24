@@ -29,6 +29,7 @@ import InvoiceCashReport from "@/components/report/invoice/InvoiceCashReport";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useReactToPrint } from "react-to-print";
+import { useQueryState } from "next-usequerystate";
 
 import {
   DropdownMenu,
@@ -48,7 +49,7 @@ import {
 const Invoices = () => {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useQueryState("search");
   const [startDate, setStartDate] = useState<Date | undefined>(undefined);
   const [endDate, setEndDate] = useState<Date | undefined>(undefined);
   const [isVisible, setIsVisible] = useState(false);
@@ -110,8 +111,10 @@ const Invoices = () => {
       const invoiceDate = new Date(row.invoice_date);
 
       const isSearchMatch =
-        row.customer.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        row.invoice_number.toLowerCase().includes(searchTerm.toLowerCase());
+        row.customer.toLowerCase().includes(searchTerm?.toLowerCase() || "") ||
+        row.invoice_number
+          .toLowerCase()
+          .includes(searchTerm?.toLowerCase() || "");
 
       const isDateMatch =
         (!startDate || invoiceDate >= startDate) &&
@@ -129,7 +132,12 @@ const Invoices = () => {
 
   // handle search
   const handleSearch = (e: any) => {
-    setSearchTerm(e.target.value);
+    setSearchTerm(e.target.value.toLowerCase());
+
+    // if search term is empty, reset the search
+    if (e.target.value === "") {
+      setSearchTerm(null);
+    }
   };
 
   // delete invoice
@@ -364,6 +372,7 @@ const Invoices = () => {
                     type="text"
                     placeholder="Search invoice"
                     className="flex-1 focus:none text-sm outline-none w-full"
+                    value={searchTerm || ""}
                     onChange={handleSearch}
                   />
                 </div>
