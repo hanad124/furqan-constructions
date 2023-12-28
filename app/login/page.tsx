@@ -53,8 +53,7 @@ export default function LoginPage() {
   const onSubmit = async (data: any) => {
     setLoading(true);
     try {
-      const user = await authenticate(data);
-      // toast.success("Login successful");
+      await authenticate(data);
 
       router.push("/dashboard");
     } catch (error) {

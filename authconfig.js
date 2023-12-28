@@ -65,7 +65,10 @@ export const authConfig = {
             const allowedRoutes = [
               "/dashboard/customers",
               "/dashboard/newCustomer",
-              "/dashboard/sales",
+              "/dashboard/invoices/cash",
+              "/dashboard/invoices/cash/create-invoice",
+              "/dashboard/invoices/cash/preview/[id]",
+              "/dashboard/invoices/cash/update/[id]",
             ];
             if (allowedRoutes.includes(request.nextUrl.pathname)) {
               return true;

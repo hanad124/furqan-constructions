@@ -1,6 +1,5 @@
 "use client";
 
-import Table from "@mui/material/Table";
 import { columns } from "../../../data/invoices";
 import { DataGrid } from "@mui/x-data-grid";
 import Link from "next/link";
@@ -9,14 +8,13 @@ import {
   FiMoreVertical,
   FiPlusCircle,
   FiSearch,
-  FiPrinter,
+  FiFileText,
+  FiDownload,
+  FiTrash2,
 } from "react-icons/fi";
 import { Button } from "@/components/ui/button";
-import { FiDownload, FiTrash2 } from "react-icons/fi";
 
 import toast, { Toaster } from "react-hot-toast";
-
-const ExcelJS = require("exceljs");
 
 import { Invoice } from "@/types/generalTypes";
 import { deleteCashInvoice } from "@/utils/db/CashInvoice";
@@ -229,7 +227,6 @@ const Invoices = () => {
 
   // export to excel
   const handleExportExcel = () => {
-    // Pass the necessary data and file name to exportExcelFile
     exportExcelFile(filteredRows, oldestDate, newestDate);
   };
 
@@ -239,17 +236,40 @@ const Invoices = () => {
         {/* create invoice button with icon */}
         <div className="flex justify-between items-center">
           <h1 className="text-2xl font-semibold text-slate-900">Invoices</h1>
-          <Link href="/dashboard/invoices/cash/create-invoice">
-            <Button
-              className="flex items-center gap-2 p-6"
-              variant="default"
-              color="primary"
-              size={"lg"}
-            >
-              <FiPlusCircle className="text-lg" />
-              <span>Create Invoice</span>
-            </Button>
-          </Link>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                className="flex items-center gap-2 p-6"
+                variant="default"
+                color="primary"
+                size={"lg"}
+              >
+                <FiPlusCircle className="text-lg" />
+                <span>Create Invoice</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56">
+              <DropdownMenuGroup>
+                {/* Cash invoice button */}
+                <Link href="/dashboard/invoices/cash/create-invoice">
+                  <DropdownMenuItem className="cursor-pointer text-slate-600  flex items-center gap-3">
+                    <FiFileText className="" />
+                    <span>Cash Invoice</span>
+                  </DropdownMenuItem>
+                </Link>
+
+                {/* Credit Invoice button */}
+                <DropdownMenuSeparator />
+                <Link href="/dashboard/invoices/cash/create-invoice">
+                  {" "}
+                  <DropdownMenuItem className="cursor-pointer text-slate-600 flex items-center gap-3">
+                    <FiFileText className="" />
+                    <span>Credit Invoice</span>
+                  </DropdownMenuItem>
+                </Link>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
         <div
           style={{ height: 400, width: "100%" }}

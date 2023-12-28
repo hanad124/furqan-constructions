@@ -26,7 +26,6 @@ const InvoiceCashReportPriview = React.forwardRef(
     // make summary banner for the report that will show the total of the report
     const total = filteredRow.reduce((acc, item) => {
       // Remove non-numeric characters from the total string using a regular expression
-
       const numericTotal = item.total.replace(/[^\d.]/g, "");
 
       // Add the numeric total to the accumulator

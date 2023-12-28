@@ -216,7 +216,7 @@ export default function CreateInvoice() {
         </button>
       </div>
       <h1 className="text-2xl font-extrabold text-slate-600 mt-5 mb-16">
-        Create New Invoice
+        Create New Cash Invoice
       </h1>
       <InvoiceTitle />
 
